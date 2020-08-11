@@ -1,1 +1,0 @@
-<view class="container"><navigator url="/pages/business/issue-report?id=1" hover-class="navigator-hover"><button type="default">问题上报</button></navigator></view>
