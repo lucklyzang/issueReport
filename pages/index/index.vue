@@ -1,8 +1,8 @@
 <template>
 	<view class="container">
-		<navigator url="/pages/business/issue-report?id=1" hover-class="navigator-hover">
-			<button type="default">问题上报</button>
-		</navigator>
+	<!-- 	<navigator url="/pages/business/issue-report?id=1" hover-class="navigator-hover"> -->
+			<button type="default" @click="skipPage">问题上报</button>
+		<!-- </navigator> -->
 	</view>
 </template>
 
@@ -23,7 +23,11 @@
 			console.log('恰恰',this.ceshi)
 		},
 		methods: {
-
+			skipPage () {
+				uni.navigateTo({
+					url: '/pages/business/issue-report?id=1'
+				});
+			}
 		}
 	}
 </script>

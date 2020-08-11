@@ -16,14 +16,24 @@
 </template>
 
 <script>
+	import {phoneLogin} from '@/api/login.js'
 	export default {
 		data () {
 			return {
 				 chooseImgList: []
 			}
 		},
-		onLoad: function (option) {
-			console.log(option.id)
+		onLoad: (option) => {
+			let loginMessage = {
+			  username: 'cszwxy',
+			  password: 123456,
+			};
+			phoneLogin(loginMessage).then((res) => {
+				
+			})
+			.catch((err) => {
+				
+			})
 		},
 		methods: {
 			takePhoto() {
