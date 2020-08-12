@@ -10,17 +10,19 @@
 			<image mode="widthFix" v-for="(item,index) in chooseImgList" :src="item"></image>
 		</view>
 		<view class="content-botom">
-			我是底部内容
+			{{ceshi}}
 		</view>
 	</view>
 </template>
 
 <script>
 	import {phoneLogin} from '@/api/login.js'
+	import { setCache, getCache } from '@/common/js/utils'
 	export default {
 		data () {
 			return {
-				 chooseImgList: []
+				chooseImgList: [],
+				ceshi: ''
 			}
 		},
 		onLoad: (option) => {
@@ -35,6 +37,11 @@
 				
 			})
 		},
+		
+		mounted () {
+			this.ceshi = getCache('测试')[0]['a']
+		},
+		
 		methods: {
 			takePhoto() {
 				let _this = this;
@@ -62,6 +69,12 @@
 				})
 			},
 			
+			async urlTobase64(url) {
+				for (var i = 0; i < url.length; i++) {
+					await this.asyncFunc(url[i])
+				}
+			},
+			
 			asyncFunc (item) {
 				let _this = this;
 			    return new Promise(function(resolve, reject) {
@@ -76,16 +89,7 @@
 			        	}
 			        })
 			    });
-			},
-			
-			async urlTobase64(url) {
-				this.chooseImgList = [];
-				for (var i = 0; i < url.length; i++) {
-					await this.asyncFunc(url[i])
-				}
-			},
-			
-			
+			}
 		}
 	}
 </script>
