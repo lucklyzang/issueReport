@@ -1,9 +1,69 @@
-{
+{	
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [
+		{
+			"path": "pages/myInfo/myInfo",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"backgroundColorTop": "#75b0f0,",
+				"backgroundColorBottom": "#75b0f0"
+			}
+		},
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "小程序上手项目"
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"backgroundColorTop": "#75b0f0,",
+				"backgroundColorBottom": "#ffffff"
+			}
+		},
+		{
+			"path": "pages/centerTransport/index/index",
+			"style": {
+				"navigationBarTitleText": "中央运送",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		},
+		{
+			"path": "pages/callTask/callTask",
+			"style": {
+				"navigationBarTitleText": "标本",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		},
+		{
+			"path": "pages/task-tail/task-tail",
+			"style": {
+				"navigationBarTitleText": "任务跟踪",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		},
+		{
+			"path": "pages/historyTask/historyTask",
+			"style": {
+				"navigationBarTitleText": "历史任务",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		},
+		{
+			"path": "pages/personInfo/personInfo",
+			"style": {
+				"navigationBarTitleText": "个人资料",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"navigationBarTextStyle": "white",
+				"backgroundColorBottom": "#f7f7f7"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
@@ -15,8 +75,30 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#aa0000",
-		"backgroundColor": "#FFFFFF"
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#FFFFFF",
+		"navigationStyle": "custom"
+	},
+	"tabBar":{
+	"color":"#333",
+	"selectedColor":"deepskyblue",
+	"backgroundColor":"#fff",
+	"borderStyle":"white",
+	"list":[
+			{
+				"pagePath":"pages/index/index",
+				"text":"首页",
+				"iconPath":"static/img/index.png",
+				"selectedIconPath":"static/img/index-current.png"
+			},
+			{
+				"pagePath":"pages/personInfo/personInfo",
+				"text":"我的",
+				"iconPath":"static/img/my.png",
+				"selectedIconPath":"static/img/my-current.png"
+			}
+		]
 	}
+	
 }
