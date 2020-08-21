@@ -105,3 +105,10 @@ export const getDate = () => {
 	return currentFormatDate
 
 }
+
+export const removeAllLocalStorage = () => {
+  // removeStore('userName');
+  // removeStore('userPassword');
+  removeCache('userInfo');
+  removeCache('isLogin')
+}

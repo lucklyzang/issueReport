@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<u-toast ref="uToast" />
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
 		</view>
@@ -7,7 +8,7 @@
 			运送类型
 		</view>
 		<view class="trans-type-list">
-			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item" @click="typeEvent(item,index)">{{item}}</view>
+			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item.value" @click="typeEvent(item,index)">{{item.value}}</view>
 		</view>
 		<view class="bottom-bar">
 			<bottom-bar :itemIndex="-1" @itemEvent="clickEvent"></bottom-bar>
@@ -21,6 +22,7 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache } from '@/common/js/utils'
+	import {queryTransportTypeClass} from '@/api/task.js'
 	import bottomBar from '@/components/bottom-bar/bottom-bar.vue'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
@@ -31,7 +33,7 @@
 		data() {
 			return {
 				typeText: '',
-				transTypeList: ['检查','药品文书','标本'],
+				transTypeList: [{id:1,value:'检查'},{id:2,value:'药品文书'},{id:3,value:'文书'}],
 				typeIndex: null
 			}
 		},
@@ -40,8 +42,24 @@
 		computed: {
 		    ...mapGetters([
 				'titleText',
+				'userInfo',
 				'isToCallTaskPage'
-		    ])
+		    ]),
+			userName () {
+				return this.userInfo.userName
+			},
+			proId () {
+				return this.userInfo.extendData.proId
+			},
+			proName () {
+				return this.userInfo.extendData.proName
+			},
+			workerId () {
+				return this.userInfo.extendData.userId
+			},
+			accountName () {
+				return this.userInfo.name
+			}
 		 },
 		mounted () {
 		},
@@ -51,17 +69,62 @@
 				'changeTitleText',
 				'changeIsToCallTaskPage'
 			]),
+			
 			// 返回上一页
 			backTo () {
 				uni.switchTab({
 				    url: '/pages/index/index'
 				})
 			},
+			
+			// 运送类型点击事件
 			typeEvent (item,index) {
 				this.typeIndex = index;
 				this.typeText = item;
 				this.changeTitleText(item)
 			},
+			
+		//运送类型
+		  parallelFunctionTwo (type) {
+			Promise.all([this.getTransportsType()])
+			.then((res) => {
+			  if (res && res.length > 0) {
+				let [item1] = res;
+				if (item1) {
+				  this.transPortTypeList = [];
+				  for (let item of item1) {
+					this.transTypeList.push({
+					  id: item.id,
+					  value: item.typeName
+					})
+				  }
+				}
+			  }
+			})
+			.catch((err) => {
+			  this.$refs.uToast.show({
+			  	title: `${err}`,
+			  	type: 'warning'
+			  })
+			})
+		  },
+		  
+			// 查询运送类型分类
+			  getTransportsType () {
+				return new Promise((resolve,reject) => {
+				  queryTransportTypeClass({proId: this.proId, state: 0}).then((res) => {
+					if (res && res.data.code == 200) {
+					  if (res.data.data.length > 0) {
+						resolve(res.data.data)
+					  }
+					}
+				  })
+				  .catch((err) => {
+					reject(err.message)
+				  })
+				})
+			  },
+			 // 底部导航栏菜单点击事件
 			clickEvent (item) {
 				if (item.text == '呼叫') {
 					if (this.typeIndex === null) {
@@ -138,7 +201,7 @@
 			}
 		}
 		.bottom-bar {
-			height: 65px;
+			height: 50px;
 			width: 100%;
 		}
 	}

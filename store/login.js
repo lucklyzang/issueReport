@@ -1,11 +1,9 @@
 export default {
   state:{
-    userInfo: null,
-	ceshi: 'hello word'
+    userInfo: null
   },
   getters:{
-    userInfo : state => state.userInfo,
-	ceshi: state => state.ceshi
+    userInfo : state => state.userInfo
   },
   mutations:{
     storeUserInfo (state, playLoad) {

@@ -59,26 +59,27 @@
 		align-content: flex-start;
 		.bar-list {
 			width: 33.3333%;
-			height: 65px;
+			height: 50px;
 			text-align: center;
 			line-height: 65px;
 			color: #fff;
 			background: #3a4863;
-			font-size: 16px;
+			font-size: 14px;
 			position: relative;
-			padding-top: 15px;
 			text {
 				width: 100%;
+				height: 30px;
 				display: inline-block;
-				text-align: center
+				margin-top: 6px;
+				text-align: center;
 			};
 			image {
 				position: absolute;
-				top: 8px;
+				top: 4px;
 				left: 50%;
 				margin-left: -13px;
-				width: 26px;
-				height: 26px
+				width: 24px;
+				height: 24px
 			}
 		};
 		.operate-list-inner-style {

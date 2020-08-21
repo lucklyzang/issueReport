@@ -1,5 +1,9 @@
 <template>
 	<view class="container">
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="登录中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
+		<u-modal v-model="modalShow" :content="modalContent" title=""
+		 :show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
+		</u-modal>
 		<view class="container-content">
 			<view class="title">中央运送</view>
 			<view class="form-box">
@@ -22,15 +26,20 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import {phoneLogin} from '@/api/login.js'
+	import {logIn} from '@/api/login.js'
 	import { setCache, getCache } from '@/common/js/utils'
 	export default {
+	components: {
+	 },
 		data() {
 			return {
 				form: {
 					userName: '',
 					password: ''
-				}
+				},
+				modalShow: false,
+				modalContent: '',
+				showLoadingHint: false
 			}
 		},
 		onReady () {
@@ -40,30 +49,58 @@
 		    ])
 		},
 		mounted () {
-			let loginMessage = {
-			  username: 'cszwxy',
-			  password: 123456,
-			};
-			phoneLogin(loginMessage).then((res) => {
-				
-			})
-			.catch((err) => {
-				
-			})
 		},
 		methods: {
+			...mapMutations([
+				'storeUserInfo'
+			]),
 			// 确认事件
 			sure () {
 				uni.switchTab({
 				    url: '/pages/index/index'
-				})
+				});
+				let loginMessage = {
+					  username: this.form.userName,
+					  password: this.form.password
+				};
+				this.showLoadingHint = true;
+				// logIn(loginMessage).then((res)=>{
+				// 	if (res) {
+				// 		  if (res.data.code == 200) {
+				// 				// 登录用户名密码及用户信息存入Locastorage
+				// 				setCache('userName', this.username);
+				// 				setCache('userPassword', this.password);
+				// 				setCache('userInfo', res.data.data);
+				// 				setCache('isLogin', true);
+				// 				this.storeUserInfo(res.data.data);
+				// 				uni.switchTab({
+				// 					url: '/pages/index/index'
+				// 				})
+				// 		  } else {
+				// 			 this.modalShow = true;
+				// 			 this.modalContent = `${res.data.msg}`
+				// 		  }
+				// 	};
+				// 	this.showLoadingHint = false
+				//    })
+				//   .catch((err) => {
+				// 	   this.showLoadingHint = false;
+				// 	   this.modalShow = true;
+				// 	   this.modalContent = `${res.data.msg}`
+				//   })
 			},
 			// 取消事件
 			cancel () {
 				uni.navigateTo({
 				    url: '/pages/myInfo/myInfo'
 				})
-			}
+			},
+			
+			// 弹框确定事件
+			sureCancel () {},
+			
+			// 弹框取消事件
+			cancelSure () {}
 		}
 	}
 </script>

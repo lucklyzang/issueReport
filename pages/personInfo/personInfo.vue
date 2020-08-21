@@ -1,5 +1,10 @@
 <template>
 	<view class="content-box">
+		<u-toast ref="uToast" />
+		<u-modal v-model="sureCancelShow" :content="content" title="确定取消?"
+		:show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
+		</u-modal>
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="签退中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="2000" :home="false" bgColor="#000" fontColor="#FFF" title="个人资料" @backClick="backTo"></nav-bar>
 		</view>
@@ -49,7 +54,8 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache } from '@/common/js/utils'
+	import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
+	import {userSignOut} from '@/api/login.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
 		components:{
@@ -60,14 +66,32 @@
 				name: 'sasa1',
 				proName: '维修部',
 				userType: '员工',
-				versionNumber: '1.0.1'
+				versionNumber: '1.0.1',
+				sureCancelShow: false,
+				showLoadingHint: false
 			}
 		},
 		onReady () {
 		},
 		computed: {
 		    ...mapGetters([
-		    ])
+				'userInfo'
+		    ]),
+			  userName () {
+				return this.userInfo.userName
+			  },
+			  proId () {
+				return this.userInfo.extendData.proId
+			  },
+			 //  proName () {
+				// return this.userInfo.extendData.proName
+			 //  },
+			  workerId () {
+				return this.userInfo.extendData.userId
+			  },
+			  name () {
+				return this.userInfo.name
+			  }
 		 },
 		mounted () {
 		},
@@ -81,8 +105,37 @@
 			isLoginOut () {
 				uni.navigateTo({
 				    url: '/pages/myInfo/myInfo'
-				})
-			}
+				});
+				// this.sureCancelShow = true
+			},
+			// 弹框确定事件
+			sureCancel () {
+				this.showLoadingHint = true;
+				userSignOut(this.proId,this.workerId).then((res) => {
+				  if (res && res.data.code == 200) {
+					removeAllLocalStorage();
+					uni.navigateTo({
+						url: '/pages/myInfo/myInfo'
+					})
+				  } else {
+					this.$refs.uToast.show({
+						title: `${res.data.msg}`,
+						type: 'warning'
+					})
+				  };
+				  this.showLoadingHint = false
+				}).
+				catch((err) => {
+				  this.$refs.uToast.show({
+					title: `${err.message}`,
+					type: 'warning'
+				  })
+				});
+				this.showLoadingHint = false
+			},
+			
+			// 弹框取消事件
+			cancelSure () {}
 		}
 	}
 </script>

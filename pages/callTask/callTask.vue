@@ -1,5 +1,7 @@
 <template>
 	<view class="container">
+		<u-toast ref="uToast" />
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="创建中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
 		</view>
@@ -8,15 +10,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio 
-							@change="radioChange"
-							active-color="#8dc58d"
-							v-for="(item, index) in priorityList" :key="index" 
-							:name="item.name"
-							:disabled="item.disabled"
-						>
-							{{item.name}}
-						</u-radio>
+						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
+						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
+						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
+						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -26,13 +23,13 @@
 					<text>已选数量</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in transportList" :key="index">{{item}}</view>
+					<view v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex == index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
 				</view>
 			</view>
 			<view class="creat-form">
 				<view>
 					<u-field
-						v-model="number"
+						v-model="bedNumber"
 						label="床号"
 						:border-bottom="true"
 						:border-top="true"
@@ -42,7 +39,7 @@
 				</view>
 				<view>
 					<u-field
-						v-model="name"
+						v-model="patientName"
 						label="姓名"
 						:border-bottom="true"
 						:border-top="true"
@@ -52,7 +49,7 @@
 				</view>
 				<view>
 					<u-field
-						v-model="admissionNumber"
+						v-model="patientNumber"
 						label="住院号"
 						:border-bottom="true"
 						:border-top="true"
@@ -62,7 +59,7 @@
 				</view>
 				<view>
 					<u-field
-						v-model="transportNumber"
+						v-model="actualData"
 						label="运送数量"
 						:border-bottom="true"
 						:border-top="true"
@@ -81,10 +78,10 @@
 								@change="toolChange"
 								active-color="#8dc58d"
 								v-for="(item, index) in toolList" :key="index" 
-								:name="item.name"
+								:name="item.value"
 								:disabled="item.disabled"
 							>
-								{{item.name}}
+								{{item.text}}
 							</u-radio>
 						</u-radio-group>
 					</view>
@@ -95,15 +92,8 @@
 					<view>运送员是否返回</view>
 					<view>
 						<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-							<u-radio 
-								@change="isBackChange"
-								active-color="#8dc58d"
-								v-for="(item, index) in isBackList" :key="index" 
-								:name="item.name"
-								:disabled="item.disabled"
-							>
-								{{item.name}}
-							</u-radio>
+							<u-radio name="0" active-color="#8dc58d">否</u-radio>
+							<u-radio name="1" active-color="#8dc58d">是</u-radio>
 						</u-radio-group>
 					</view>
 				</view>
@@ -137,6 +127,7 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache } from '@/common/js/utils'
+	import {queryTransportTools,queryTransportType, queryAllDestination, generateDispatchTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
 		components:{
@@ -144,68 +135,79 @@
 		},
 		data() {
 			return {
+				showLoadingHint: false,
 				taskTypeText: '',
-				priorityList: [
+				typeText: '',
+				typeValue: '',
+				typeIndex: '',
+				priorityValue: 1,
+				transportList: [
 					{
-						name: '正常',
-						disabled: false
+						text: '三十',
+						disabled: false,
+						value: 1
 					},
 					{
-						name: '重要',
-						disabled: false
+						text: '撒飒飒',
+						disabled: false,
+						value: 2
 					},
 					{
-						name: '紧急',
-						disabled: false
+						text: 'SaSa',
+						disabled: false,
+						value: 3
 					},
-					{
-						name: '紧急重要',
-						disabled: false
-					}
 				],
-				priorityValue: '正常',
-				transportList: ['类型一','类型二','类型一','类型一'],
-				number: '',
-				name: '',
-				admissionNumber: '',
-				transportNumber: '',
-				toolValue: '无',
+				bedNumber: '',
+				patientName: '',
+				patientNumber: '',
+				actualData: '',
+				toolValue: '',
+				toolName: '',
 				toolList: [
 					{
-						name: '无',
-						disabled: false
+						text: '无',
+						disabled: false,
+						value: 1
 					},
 					{
-						name: '平车',
-						disabled: false
+						text: '平车',
+						disabled: false,
+						value: 2
 					},
 					{
-						name: '轮椅',
-						disabled: false
-					},
+						text: '轮椅',
+						disabled: false,
+						value: 3
+					}
 				],
-				isBackValue: '否',
-				isBackList: [
-					{
-						name: '否',
-						disabled: false
-					},
-					{
-						name: '是',
-						disabled: false
-					},
-				],
+				isBackValue: 0,
 				taskDescribe: ''
 			}
 		},
 		onLoad (options) {
-			this.taskTypeText = this.titleText
+			this.taskTypeText = this.titleText.value
 		},
 		computed: {
 		    ...mapGetters([
 				'titleText',
 				'isToCallTaskPage'
-		    ])
+		    ]),
+			userName () {
+				return this.userInfo.userName
+			},
+			proId () {
+				return this.userInfo.extendData.proId
+			},
+			proName () {
+				return this.userInfo.extendData.proName
+			},
+			workerId () {
+				return this.userInfo.extendData.userId
+			},
+			accountName () {
+				return this.userInfo.name
+			}
 		},
 		
 		mounted () {
@@ -218,14 +220,24 @@
 				'changeBottomBarIndex',
 				'changeIsToCallTaskPage'
 			]),
+			
 			// 返回上一页
 			backTo () {
 				this.changeBottomBarIndex(-1);
-				uni.navigateTo({
+				uni.redirectTo({
 				    url: '/pages/centerTransport/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
 			},
+			
+			// 运送类型点击事件
+			  typeEvent (item,index) {
+				this.typeIndex = index;
+				this.typeText = item.text;
+				this.typeValue = item.value
+			  },
+			
+			// 底部按钮点击
 			clickEvent (item) {
 				if (item.text == "呼叫") {
 					if (this.isToCallTaskPage) {
@@ -251,9 +263,6 @@
 					this.changeIsToCallTaskPage(true)
 				} 
 			},
-			radioChange(e) {
-				console.log(e);
-			},
 			radioGroupChange(e) {
 				console.log(e);
 			},
@@ -263,16 +272,173 @@
 			toolGroupChange(e) {
 				console.log(e);
 			},
-			isBackChange(e) {
-				console.log(e);
-			},
 			isBackGroupChange(e) {
 				console.log(e);
 			},
-			sure () {},
-			cancel () {
+			
+			 // 查询目的地
+			  getAllDestination () {
+				return new Promise((resolve,reject) => {
+				  queryAllDestination(this.proId).then((res) => {
+					if (res && res.data.code == 200) {
+					  resolve(res.data.data)
+					}
+				  })
+				  .catch((err) => {
+					reject(err.message)
+				  })
+				})
+			  },
+			
+			  // 查询转运工具
+			  getTransportTools () {
+				return new Promise((resolve,reject) => {
+				  queryTransportTools({proId: this.proId, state: 0})
+				  .then((res) => {
+					if (res && res.data.code == 200) {
+					  resolve(res.data.data)
+					}
+				  })
+				  .catch((err) => {
+					reject(err.message)
+				  })
+				})
+			  },
+			  
+			// 查询运送类型
+			getTransPorttype (data) {
+			  return new Promise((resolve,reject) => {
+				queryTransportType(data)
+				.then((res) => {
+				  if (res && res.data.code == 200) {
+					resolve(res.data.data)
+				  }
+				})
+				.catch((err) => {
+				  reject(err.message)
+				})
+			  })
+			},
+			
+		  // 并行查询目的地、转运工具、运送类型
+		  parallelFunction (type) {
+			Promise.all([this.getAllDestination(),this.getTransportTools(), this.getTransPorttype({
+			  proId: this.proId,
+			  state: 0,
+			  // parentId: this.transportantTaskMessage.id
+			})])
+			.then((res) => {
+			  if (res && res.length > 0) {
+				this.toolList = [];
+				this.transportList = [];
+				this.destinationList.push({text: '无', value: 0});
+				let [item1,item2,item3] = res;
+				if (item1) {
+				  Object.keys(item1).forEach((item) => {
+					this.destinationList.push({
+					  text: item1[item],
+					  value: item
+					})
+				  })
+				};
+				if (item2) {
+				  for (let item of item2) {
+					this.toolList.push({
+					  text: item.toolName,
+					  value: item.id,
+					  disabled: false
+					})
+				  }
+				};
+				if (item3) {
+				  for(let item of item3) {
+					this.transportList.push({
+					  text: item.typeName, 
+					  value: item.id
+					})
+				  }
+				}
+			  }
+			})
+			.catch((err) => {
+			  this.$refs.uToast.show({
+			  	title: `${err}`,
+			  	type: 'warning'
+			  })
+			})
+		  },
+		  
+		 // 生成调度任务
+		postGenerateDispatchTask (data) {
+		  this.showLoadingHint = true;
+		  generateDispatchTask(data).then((res) => {
+			if (res && res.data.code == 200) {
+				this.$refs.uToast.show({
+					title: `${res.data.msg}`,
+					type: 'success'
+				});
 				this.backTo()
-			}
+			} else {
+			  this.$refs.uToast.show({
+			  	title: `${res.data.msg}`,
+			  	type: 'warning'
+			  })
+			};
+			this.showLoadingHint = false;
+		  })
+		  .catch((err) => {
+			this.$refs.uToast.show({
+				title: `${err.message}`,
+				type: 'error'
+			})
+			this.showLoadingHint = false;
+		  })
+		},
+
+		 // 运送类型信息确认事件
+		  dispatchTaskSure () {
+			// 获取选中的运送工具信息
+			let currentTool = this.toolList.filter((res) => { return res.disabled == true})[0];
+			this.toolName = currentTool['text'];
+			let taskMessage = {
+			  setOutPlaceId: this.userInfo.depId,  //出发地ID
+			  setOutPlaceName: this.userInfo.depName,  //出发地名称
+			  destinationId: '',   //目的地ID
+			  destinationName: '',  //目的地名称
+			  parentTypeId:  this.titleText.value, //运送父类型Id
+			  parentTypeName: this.titleText.value,//运送父类型名称
+			  taskTypeId: this.typeValue,  //运送类型 ID
+			  taskTypeName: this.typeText,  //运送类型 名 称
+			  priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
+			  toolId: this.toolValue,   //运送工具ID
+			  toolName: this.toolName,  //运送工具名称
+			  actualCount: this.actualData,   //实际数量
+			  patientName: this.patientName,  //病人姓名
+			  sex: 0,    //病人性别  0-未指定,1-男, 2-女
+			  age: "",   //年龄
+			  number: this.patientNumber,   //住院号
+			  bedNumber: this.bedNumber,  //床号
+			  taskRemark: this.taskDescribe,   //备注
+			  createId: this.workerId,   //创建者ID  当前登录者
+			  createName: this.userName,   //创建者名称  当前登陆者
+			  proId: this.proId,   //项目ID
+			  proName: this.proName,   //项目名称
+			  isBack: this.isBackValue,  //是否返回出发地  0-不返回，1-返回
+			  createType: 1   //创建类型   0-调度员，1-医务人员 固定传 1
+			};
+			// 创建调度任务
+			this.postGenerateDispatchTask(taskMessage)
+		  },
+			
+		// 调度任务生成
+		sure () {
+			this.dispatchTaskSure()
+		},
+		
+		// 调度任务取消
+		cancel () {
+			this.backTo()
+		}
 		}
 	}
 </script>
@@ -354,6 +520,11 @@
 					align-content: flex-start;
 					padding:0 4px;
 					box-sizing: border-box;
+					.transTypeListStyle {
+						background: #75b0f0;
+						color: #fff;
+						border: none
+					};
 					> view {
 						width: 45%;
 						margin-bottom: 4px;
@@ -442,7 +613,7 @@
 			}
 		}
 		.bottom-bar {
-			height: 65px;
+			height: 50px;
 			width: 100%;
 		}
 	}

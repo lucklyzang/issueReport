@@ -1,6 +1,8 @@
 <template>
 	<view class="container">
 		<u-calendar v-model="show" :mode="mode" @change="dateChange"></u-calendar>
+		<u-toast ref="uToast" />
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="加载中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="历史任务" @backClick="backTo"></nav-bar>
 		</view>
@@ -14,22 +16,25 @@
 			</view>
 		</view>
 		<view class="search">
-			<button @click="searchEvent">搜索</button>
+			<button @click="searchCompleteTask">搜索</button>
 		</view>
 		<view class="task-tail-content-box">
-			<u-tabs :list="list" :is-scroll="false" :current="current" @change="tabChange"></u-tabs>
+			<u-tabs :list="list" :is-scroll="false" font-size="35" :current="current" @change="tabChange"></u-tabs>
 			<view class="task-tail-content" v-show="current == 0">
-				<view class="task-tail-content-item" v-for="(item,index) in completeTaskLit" :key="index">
+				<view class="empty-info" v-show="noDataShow">
+					<u-empty text="数据为空" mode="list"></u-empty>
+				</view>
+				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
 						<view class="item-top-left">
 							<view class="number">
 								<text>编号: {{item.number}}</text>
 							</view>
 							<view class="start-point">
-								<text>出发地: {{item.startPoint}}</text>
+								<text>出发地: {{item.setOutPlaceName}}</text>
 							</view>
 							<view class="transport-type">
-								<text>运送类型: {{item.transportType}}</text>
+								<text>运送类型: {{item.taskTypeName}}</text>
 							</view>
 							<view class="bed-number">
 								<text>床号: {{item.bedNumber}}</text>
@@ -39,17 +44,18 @@
 							</view>
 						</view>
 						<view class="item-top-right">
-							<view class="priority">
-								<text>状态: {{item.status}}</text>
+							<view class="priority status">
+								<text>状态:</text>&nbsp;
+								<text>{{stateTransfer(item.state)}}</text>
 							</view>
 							<view class="destination-point">
-								<text>目的地: {{item.destinationPoint}}</text>
+								<text>目的地: {{item.destinationName}}</text>
 							</view>
 							<view class="transport-people">
-								<text>运送人: {{item.transportPeople}}</text>
+								<text>运送人: {{item.workerName}}</text>
 							</view>
 							<view class="transport-tool">
-								<text>转运工具: {{item.transportTool}}</text>
+								<text>转运工具: {{item.toolName}}</text>
 							</view>
 							<view class="transport-tool">
 								<text>耗时: {{item.consumeTime}}</text>
@@ -59,34 +65,38 @@
 				</view>
 			</view>
 			<view class="task-tail-content task-tail-content-going" v-show="current == 1">
-				<view class="task-tail-content-item" v-for="(item,index) in cancelTaskLit" :key="index">
+				<view class="empty-info" v-show="noDataShow">
+					<u-empty text="数据为空" mode="list"></u-empty>
+				</view>
+				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
 						<view class="item-top-left">
 							<view class="number">
 								<text>编号: {{item.number}}</text>
 							</view>
 							<view class="start-point">
-								<text>出发地: {{item.startPoint}}</text>
+								<text>出发地: {{item.setOutPlaceName}}</text>
 							</view>
 							<view class="transport-type">
-								<text>运送类型: {{item.transportType}}</text>
+								<text>运送类型: {{item.taskTypeName}}</text>
 							</view>
 							<view class="bed-number">
 								<text>床号: {{item.bedNumber}}</text>
 							</view>
 						</view>
 						<view class="item-top-right">
-							<view class="priority">
-								<text>状态: {{item.status}}</text>
+							<view class="priority status">
+								<text>状态:</text>&nbsp;
+								<text>{{stateTransfer(item.state)}}</text>
 							</view>
 							<view class="destination-point">
-								<text>目的地: {{item.destinationPoint}}</text>
+								<text>目的地: {{item.destinationName}}</text>
 							</view>
 							<view class="transport-people">
-								<text>运送人: {{item.transportPeople}}</text>
+								<text>运送人: {{item.workerName}}</text>
 							</view>
 							<view class="transport-tool">
-								<text>转运工具: {{item.transportTool}}</text>
+								<text>转运工具: {{item.toolName}}</text>
 							</view>
 						</view>
 					</view>
@@ -102,6 +112,7 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache, getDate } from '@/common/js/utils'
+	import {getDispatchTaskComplete} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
 		components:{
@@ -114,67 +125,21 @@
 				show: false,
 				mode: 'range',
 				content: '',
+				showLoadingHint: false,
+				noDataShow: false,
 				list: [{name: '已完成'}, {name: '已取消'}],
-				completeTaskLit: [
+				stateCompleteList: [
 					{
 						number: 'sasas1212',
-						startPoint: '科室一',
-						transportType: '检查',
+						setOutPlaceName: '科室一',
+						taskTypeName: '检查',
 						bedNumber: 'a-10',
-						destinationPoint: '科室一',
-						transportPeople: '张三',
-						transportTool: '平车',
-						status: '未获取',
+						destinationName: '科室一',
+						patientName: '张三',
+						toolName: '平车',
+						state: '未获取',
 						createTime: '2020-8-30 13:00',
 						consumeTime: '2020-8-30 13:00'
-					},
-					{
-						number: 'sasas1212',
-						startPoint: '科室一',
-						transportType: '检查',
-						bedNumber: 'a-10',
-						destinationPoint: '科室一',
-						transportPeople: '张三',
-						transportTool: '平车',
-						status: '未获取',
-						createTime: '2020-8-30 13:00',
-						consumeTime: '2020-8-30 13:00'
-					},
-					{
-						number: 'sasas1212',
-						startPoint: '科室一',
-						transportType: '检查',
-						bedNumber: 'a-10',
-						destinationPoint: '科室一',
-						transportPeople: '张三',
-						transportTool: '平车',
-						status: '未获取',
-						createTime: '2020-8-30 13:00',
-						consumeTime: '2020-8-30 13:00'
-					}
-				],
-				cancelTaskLit: [
-					{
-						number: 'sasas1212',
-						startPoint: '科室一',
-						transportType: '检查',
-						bedNumber: 'a-10',
-						destinationPoint: '科室一',
-						transportPeople: '张三',
-						transportTool: '平车',
-						status: '未获取',
-						cancelTime: '2020-8-30 13:00'
-					},
-					{
-						number: 'sasas1212',
-						startPoint: '科室一',
-						transportType: '检查',
-						bedNumber: 'a-10',
-						destinationPoint: '科室一',
-						transportPeople: '张三',
-						transportTool: '平车',
-						status: '未获取',
-						cancelTime: '2020-8-30 13:00'
 					}
 				],
 				current: 0
@@ -186,8 +151,24 @@
 		computed: {
 		    ...mapGetters([
 				'titleText',
-				'isToCallTaskPage'
-		    ])
+				'isToCallTaskPage',
+				'userInfo'
+		    ]),
+			userName () {
+				return this.userInfo.userName
+			},
+			proId () {
+				return this.userInfo.extendData.proId
+			},
+			proName () {
+				return this.userInfo.extendData.proName
+			},
+			workerId () {
+				return this.userInfo.extendData.userId
+			},
+			accountName () {
+				return this.userInfo.name
+			}
 		},
 		
 		mounted () {
@@ -206,10 +187,145 @@
 				this.show = true
 			},
 			
+			// 任务优先级转换
+		  priorityTransfer (index) {
+			switch(index) {
+			  case 1 :
+				return '正常'
+				break;
+			  case 2 :
+				return '重要'
+				break;
+			  case 3 :
+				return '紧急'
+				break;
+			  case 4 :
+				return '紧急重要'
+				break;
+			}
+		  },
+						
+			// 任务状态转换
+			stateTransfer (index) {
+				switch(index) {
+				  case 0 :
+					return '未分配'
+					break;
+				  case 1 :
+					return '未查阅'
+					break;
+				  case 2 :
+					return '未开始'
+					break;
+				  case 3 :
+					return '进行中'
+					break;
+				  case 4 :
+					return '未结束'
+					break;
+				  case 5 :
+					return '已延迟'
+					break;
+				  case 6 :
+					return '已取消'
+					break;
+				  case 7 :
+					return '已完成'
+					break;
+				}
+			},
+			
 			// tab切换改变事件
 			tabChange (index) {
 				this.current = index;
+				if (index == 1) {
+				  this.queryCompleteDispatchTask(
+					{
+					  proId:this.proId, workerId:'',state:6,
+					  startDate: this.dateStart, endDate: this.dateEnd,
+					  departmentId: this.userInfo.depId
+					},"历史任务",name
+				  )
+				} else {
+				  this.queryCompleteDispatchTask(
+					{
+					  proId:this.proId, workerId:'',state:7,
+					  startDate: this.dateStart, endDate: this.dateEnd,
+					  departmentId: this.userInfo.depId
+					},"历史任务",name
+				  )
+				}
 			},
+			
+			// 搜索完成的任务
+			  searchCompleteTask () {
+				if (this.current == 0) {
+				  this.queryCompleteDispatchTask(
+					{
+					  proId:this.proId, workerId:'',state:7,
+					  startDate: this.dateStart, endDate: this.dateEnd,
+					  departmentId: this.userInfo.depId
+					},"历史任务",0
+				  )
+				} else {
+				  this.queryCompleteDispatchTask(
+					{
+					  proId:this.proId, workerId:'',state:6,
+					  startDate: this.dateStart, endDate: this.dateEnd,
+					  departmentId: this.userInfo.depId
+					},"历史任务",1
+				  )
+				}
+			  },
+			  
+			  // 查询历史调度任务(已完成)
+				queryCompleteDispatchTask (data, type, name) {
+				  this.noDataShow = false;
+				  this.showLoadingHint = true;
+				  getDispatchTaskComplete(data).then((res) => {
+					this.showLoadingHint = false;
+					if (res && res.data.code == 200) {
+					  this.stateCompleteList = [];
+					  if (res.data.data.length > 0) {
+						this.noDataShow = false;
+						for (let item of res.data.data) {
+						  if (type == "历史任务") {
+							this.stateCompleteList.push({
+							  createTime: item.createTime,
+							  planUseTime: item.planUseTime,
+							  planStartTime: item.planStartTime,
+							  state: item.state,
+							  setOutPlaceName: item.setOutPlaceName,
+							  destinationName: item.destinationName,
+							  taskTypeName: item.taskTypeName,
+							  toolName: item.toolName,
+							  priority: item.priority,
+							  id: item.id,
+							  distName: item.distName,
+							  patientName: item.patientName,
+							  bedNumber: item.bedNumber,
+							  startPhoto: item.startPhoto,
+							  endPhoto: item.endPhoto,
+							  isBack: item.isBack,
+							  isSign: item.isSign,
+							  workerName: item.workerName,
+							})
+						  }
+						}
+					  } else {
+						this.noDataShow = true
+					  }
+					}
+				  })
+				  .catch((err) => {
+					this.$refs.uToast.show({
+						title: `${err.message}`,
+						type: 'error'
+					})
+					this.showLoadingHint = false;
+					this.noDataShow = true;
+				  })
+				},
 			
 			// 初始化当前日期
 			initDate () {
@@ -220,7 +336,7 @@
 			// 返回上一页
 			backTo () {
 				this.changeBottomBarIndex(-1);
-				uni.navigateTo({
+				uni.redirectTo({
 				    url: '/pages/centerTransport/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
@@ -228,14 +344,8 @@
 			
 			// 日期变化事件
 			dateChange(e) {
-				console.log(e);
 				this.dateStart = e.startDate;
 				this.dateEnd = e.endDate
-			},
-			
-			// 搜索事件
-			searchEvent () {
-				
 			},
 			
 			clickEvent (item) {
@@ -337,12 +447,22 @@
 			.task-tail-content {
 				height: 94%;
 				overflow: auto;
+				background: #f7f7f7;
+				position: relative;
+				.empty-info {
+					position: absolute;
+					top: 0;
+					left: 0;
+					bottom: 0;
+					right: 0;
+					margin: auto
+				};
 				.task-tail-content-item {
-					padding: 10px;
-					box-sizing: border-box;
-					border-top: 1px solid #ccc;
-					border-bottom: 1px solid #ccc;
+					background: #FFFFFF;
+					width: 98%;
+					margin: 0 auto;
 					margin-bottom: 6px;
+					border-radius: 4px;
 					&:last-child {
 						margin-bottom: 0
 					};
@@ -351,7 +471,6 @@
 						display: inline-block;
 						font-size: 16px;
 						color: black;
-						font-weight: bold;
 						.item-top-left {
 							width: 55%;
 							float: left;
@@ -377,6 +496,13 @@
 								text {
 									font-size: 14px
 								}
+							};
+							.status {
+								text {
+									&:last-child {
+										color: red
+									}
+								}
 							}
 						}
 					}
@@ -394,7 +520,7 @@
 		}
 	};
 	.bottom-bar {
-		height: 65px;
+		height: 50px;
 		width: 100%;
 	}
 </style>

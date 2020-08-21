@@ -41,10 +41,14 @@
 		mounted () {
 		},
 		methods: {
+			...mapMutations([
+				'changeBottomBarIndex'
+			]),
 			skipPage () {
 				uni.navigateTo({
 					url: '/pages/centerTransport/index/index'
 				});
+				this.changeBottomBarIndex(-1);
 			}
 		}
 	}
