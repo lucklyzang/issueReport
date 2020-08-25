@@ -39,14 +39,16 @@
 			"path": "pages/task-tail/task-tail",
 			"style": {
 				"navigationBarTitleText": "任务跟踪",
-				"navigationBarBackgroundColor": "#000000"
+				"navigationBarBackgroundColor": "#000000",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/historyTask/historyTask",
 			"style": {
 				"navigationBarTitleText": "历史任务",
-				"navigationBarBackgroundColor": "#000000"
+				"navigationBarBackgroundColor": "#000000",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -60,6 +62,14 @@
 		},
 		{
 			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/weixinLogin/weixinLogin",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#75b0f0",

@@ -10,20 +10,19 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="0" active-color="#8dc58d">正常</u-radio>
+						<u-radio name="1" active-color="#8dc58d">重要</u-radio>
+						<u-radio name="2" active-color="#8dc58d">紧急</u-radio>
+						<u-radio name="3" active-color="#8dc58d">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
 					<text>运送类型:</text>
-					<text>已选数量</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex == index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
+					<view v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
 				</view>
 			</view>
 			<view class="creat-form">
@@ -140,47 +139,15 @@
 				typeText: '',
 				typeValue: '',
 				typeIndex: '',
-				priorityValue: 1,
-				transportList: [
-					{
-						text: '三十',
-						disabled: false,
-						value: 1
-					},
-					{
-						text: '撒飒飒',
-						disabled: false,
-						value: 2
-					},
-					{
-						text: 'SaSa',
-						disabled: false,
-						value: 3
-					},
-				],
+				priorityValue: 0,
+				transportList: [],
 				bedNumber: '',
 				patientName: '',
 				patientNumber: '',
 				actualData: '',
 				toolValue: '',
 				toolName: '',
-				toolList: [
-					{
-						text: '无',
-						disabled: false,
-						value: 1
-					},
-					{
-						text: '平车',
-						disabled: false,
-						value: 2
-					},
-					{
-						text: '轮椅',
-						disabled: false,
-						value: 3
-					}
-				],
+				toolList: [],
 				isBackValue: 0,
 				taskDescribe: ''
 			}
@@ -191,7 +158,8 @@
 		computed: {
 		    ...mapGetters([
 				'titleText',
-				'isToCallTaskPage'
+				'isToCallTaskPage',
+				'userInfo'
 		    ]),
 			userName () {
 				return this.userInfo.userName
@@ -211,7 +179,7 @@
 		},
 		
 		mounted () {
-			
+			this.parallelFunction()
 		},
 		
 		methods: {
@@ -234,7 +202,7 @@
 			  typeEvent (item,index) {
 				this.typeIndex = index;
 				this.typeText = item.text;
-				this.typeValue = item.value
+				this.typeValue = item.value;
 			  },
 			
 			// 底部按钮点击
@@ -271,6 +239,12 @@
 			},
 			toolGroupChange(e) {
 				console.log(e);
+				for (let item of this.toolList) {
+					if (e == item.value) {
+						this.toolName = item.text
+					}
+				};
+				console.log(this.toolList);
 			},
 			isBackGroupChange(e) {
 				console.log(e);
@@ -331,23 +305,21 @@
 			  if (res && res.length > 0) {
 				this.toolList = [];
 				this.transportList = [];
-				this.destinationList.push({text: '无', value: 0});
 				let [item1,item2,item3] = res;
-				if (item1) {
-				  Object.keys(item1).forEach((item) => {
-					this.destinationList.push({
-					  text: item1[item],
-					  value: item
-					})
-				  })
-				};
+				// if (item1) {
+				//   Object.keys(item1).forEach((item) => {
+				// 	this.destinationList.push({
+				// 	  text: item1[item],
+				// 	  value: item
+				// 	})
+				//   })
+				// };
 				if (item2) {
 				  for (let item of item2) {
 					this.toolList.push({
 					  text: item.toolName,
-					  value: item.id,
-					  disabled: false
-					})
+					  value: item.id
+					});
 				  }
 				};
 				if (item3) {
@@ -377,14 +349,16 @@
 					title: `${res.data.msg}`,
 					type: 'success'
 				});
-				this.backTo()
+				setTimeout(()=> {
+					this.backTo()
+				},1000)
 			} else {
 			  this.$refs.uToast.show({
 			  	title: `${res.data.msg}`,
 			  	type: 'warning'
 			  })
 			};
-			this.showLoadingHint = false;
+			this.showLoadingHint = false
 		  })
 		  .catch((err) => {
 			this.$refs.uToast.show({
@@ -398,14 +372,12 @@
 		 // 运送类型信息确认事件
 		  dispatchTaskSure () {
 			// 获取选中的运送工具信息
-			let currentTool = this.toolList.filter((res) => { return res.disabled == true})[0];
-			this.toolName = currentTool['text'];
 			let taskMessage = {
 			  setOutPlaceId: this.userInfo.depId,  //出发地ID
 			  setOutPlaceName: this.userInfo.depName,  //出发地名称
 			  destinationId: '',   //目的地ID
 			  destinationName: '',  //目的地名称
-			  parentTypeId:  this.titleText.value, //运送父类型Id
+			  parentTypeId:  this.titleText.id, //运送父类型Id
 			  parentTypeName: this.titleText.value,//运送父类型名称
 			  taskTypeId: this.typeValue,  //运送类型 ID
 			  taskTypeName: this.typeText,  //运送类型 名 称

@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
-		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="登录中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
-		<u-modal v-model="modalShow" :content="modalContent" title=""
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="登录中,请稍候···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
+		<u-modal v-model="modalShow" :content="modalContent"
 		 :show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
 		</u-modal>
 		<view class="container-content">
@@ -49,45 +49,47 @@
 		    ])
 		},
 		mounted () {
+			 this.username = getCache('userName') ? getCache('userName') : '';
+			 this.password = getCache('userPassword') ? getCache('userPassword') : '';
 		},
 		methods: {
 			...mapMutations([
-				'storeUserInfo'
+				'storeUserInfo',
+				'changeOverDueWay'
 			]),
 			// 确认事件
 			sure () {
-				uni.switchTab({
-				    url: '/pages/index/index'
-				});
 				let loginMessage = {
 					  username: this.form.userName,
 					  password: this.form.password
 				};
 				this.showLoadingHint = true;
-				// logIn(loginMessage).then((res)=>{
-				// 	if (res) {
-				// 		  if (res.data.code == 200) {
-				// 				// 登录用户名密码及用户信息存入Locastorage
-				// 				setCache('userName', this.username);
-				// 				setCache('userPassword', this.password);
-				// 				setCache('userInfo', res.data.data);
-				// 				setCache('isLogin', true);
-				// 				this.storeUserInfo(res.data.data);
-				// 				uni.switchTab({
-				// 					url: '/pages/index/index'
-				// 				})
-				// 		  } else {
-				// 			 this.modalShow = true;
-				// 			 this.modalContent = `${res.data.msg}`
-				// 		  }
-				// 	};
-				// 	this.showLoadingHint = false
-				//    })
-				//   .catch((err) => {
-				// 	   this.showLoadingHint = false;
-				// 	   this.modalShow = true;
-				// 	   this.modalContent = `${res.data.msg}`
-				//   })
+				logIn(loginMessage).then((res)=>{
+					if (res) {
+						  if (res.data.code == 200) {
+							   this.changeOverDueWay(false);
+							   setCache('storeOverDueWay',false);
+								// 登录用户名密码及用户信息存入Locastorage
+								setCache('userName', this.username);
+								setCache('userPassword', this.password);
+								setCache('userInfo', res.data.data);
+								setCache('isLogin', true);
+								this.storeUserInfo(res.data.data);
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+						  } else {
+							 this.modalShow = true;
+							 this.modalContent = `${res.data.msg}`
+						  }
+					};
+					this.showLoadingHint = false
+				   })
+				  .catch((err) => {
+					   this.showLoadingHint = false;
+					   this.modalShow = true;
+					   this.modalContent = `${err.message}`
+				  })
 			},
 			// 取消事件
 			cancel () {

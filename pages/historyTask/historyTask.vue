@@ -2,6 +2,9 @@
 	<view class="container">
 		<u-calendar v-model="show" :mode="mode" @change="dateChange"></u-calendar>
 		<u-toast ref="uToast" />
+		<view class="empty-info" v-show="noDataShow">
+			<u-empty text="数据为空" mode="list"></u-empty>
+		</view>
 		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="加载中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="历史任务" @backClick="backTo"></nav-bar>
@@ -21,9 +24,6 @@
 		<view class="task-tail-content-box">
 			<u-tabs :list="list" :is-scroll="false" font-size="35" :current="current" @change="tabChange"></u-tabs>
 			<view class="task-tail-content" v-show="current == 0">
-				<view class="empty-info" v-show="noDataShow">
-					<u-empty text="数据为空" mode="list"></u-empty>
-				</view>
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
 						<view class="item-top-left">
@@ -49,7 +49,8 @@
 								<text>{{stateTransfer(item.state)}}</text>
 							</view>
 							<view class="destination-point">
-								<text>目的地: {{item.destinationName}}</text>
+								<text>目的地: </text>
+								<text v-for="(item,index) in item.distName">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -58,16 +59,13 @@
 								<text>转运工具: {{item.toolName}}</text>
 							</view>
 							<view class="transport-tool">
-								<text>耗时: {{item.consumeTime}}</text>
+								<text>耗时: {{consueTime(item.responseTime,item.finishTime)}}</text>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
 			<view class="task-tail-content task-tail-content-going" v-show="current == 1">
-				<view class="empty-info" v-show="noDataShow">
-					<u-empty text="数据为空" mode="list"></u-empty>
-				</view>
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
 						<view class="item-top-left">
@@ -90,7 +88,8 @@
 								<text>{{stateTransfer(item.state)}}</text>
 							</view>
 							<view class="destination-point">
-								<text>目的地: {{item.destinationName}}</text>
+								<text>目的地: </text>
+								<text v-for="(item,index) in item.distName">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -112,6 +111,7 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache, getDate } from '@/common/js/utils'
+	import SOtime from '@/common/js/utils/SOtime.js'
 	import {getDispatchTaskComplete} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
@@ -123,30 +123,39 @@
 				dateStart: '',
 				dateEnd: '',
 				show: false,
+				isFresh: false,
 				mode: 'range',
 				content: '',
 				showLoadingHint: false,
 				noDataShow: false,
 				list: [{name: '已完成'}, {name: '已取消'}],
-				stateCompleteList: [
-					{
-						number: 'sasas1212',
-						setOutPlaceName: '科室一',
-						taskTypeName: '检查',
-						bedNumber: 'a-10',
-						destinationName: '科室一',
-						patientName: '张三',
-						toolName: '平车',
-						state: '未获取',
-						createTime: '2020-8-30 13:00',
-						consumeTime: '2020-8-30 13:00'
-					}
-				],
+				stateCompleteList: [],
 				current: 0
 			}
 		},
 		onLoad (options) {
 			this.taskTypeText = this.titleText
+		},
+		// 监听页面下拉刷新事件
+		onPullDownRefresh() {
+			this.isFresh = true;
+			if (this.current === 0) {
+			  this.queryCompleteDispatchTask(
+				{
+				  proId:this.proId, workerId:'',state:7,
+				  startDate: this.dateStart, endDate: this.dateEnd,
+				  departmentId: this.userInfo.depId
+				}
+			  )
+			} else {
+			  this.queryCompleteDispatchTask(
+				{
+				  proId:this.proId, workerId:'',state:6,
+				  startDate: this.dateStart, endDate: this.dateEnd,
+				  departmentId: this.userInfo.depId
+				}
+			  )
+			}
 		},
 		computed: {
 		    ...mapGetters([
@@ -172,7 +181,14 @@
 		},
 		
 		mounted () {
-			this.initDate()
+			this.initDate();
+			this.queryCompleteDispatchTask(
+				{
+				  proId:this.proId, workerId:'',state:7,
+				  startDate: this.dateStart, endDate: this.dateEnd,
+				  departmentId: this.userInfo.depId
+				}
+			)
 		},
 		
 		methods: {
@@ -190,19 +206,26 @@
 			// 任务优先级转换
 		  priorityTransfer (index) {
 			switch(index) {
-			  case 1 :
+			  case 0 :
 				return '正常'
 				break;
-			  case 2 :
+			  case 1 :
 				return '重要'
 				break;
-			  case 3 :
+			  case 2 :
 				return '紧急'
 				break;
-			  case 4 :
+			  case 3 :
 				return '紧急重要'
 				break;
 			}
+		  },
+		  
+		  // 耗时
+		  consueTime (t1,t2) {
+			  if (t1 && t2) {
+				return SOtime.time5(t1,t2)
+			  }
 		  },
 						
 			// 任务状态转换
@@ -238,34 +261,34 @@
 			// tab切换改变事件
 			tabChange (index) {
 				this.current = index;
-				if (index == 1) {
-				  this.queryCompleteDispatchTask(
-					{
-					  proId:this.proId, workerId:'',state:6,
-					  startDate: this.dateStart, endDate: this.dateEnd,
-					  departmentId: this.userInfo.depId
-					},"历史任务",name
-				  )
-				} else {
+				if (index === 0) {
 				  this.queryCompleteDispatchTask(
 					{
 					  proId:this.proId, workerId:'',state:7,
 					  startDate: this.dateStart, endDate: this.dateEnd,
 					  departmentId: this.userInfo.depId
-					},"历史任务",name
+					}
+				  )
+				} else {
+				  this.queryCompleteDispatchTask(
+					{
+					  proId:this.proId, workerId:'',state:6,
+					  startDate: this.dateStart, endDate: this.dateEnd,
+					  departmentId: this.userInfo.depId
+					}
 				  )
 				}
 			},
 			
 			// 搜索完成的任务
 			  searchCompleteTask () {
-				if (this.current == 0) {
+				if (this.current === 0) {
 				  this.queryCompleteDispatchTask(
 					{
 					  proId:this.proId, workerId:'',state:7,
 					  startDate: this.dateStart, endDate: this.dateEnd,
 					  departmentId: this.userInfo.depId
-					},"历史任务",0
+					}
 				  )
 				} else {
 				  this.queryCompleteDispatchTask(
@@ -273,34 +296,39 @@
 					  proId:this.proId, workerId:'',state:6,
 					  startDate: this.dateStart, endDate: this.dateEnd,
 					  departmentId: this.userInfo.depId
-					},"历史任务",1
+					}
 				  )
 				}
 			  },
 			  
 			  // 查询历史调度任务(已完成)
-				queryCompleteDispatchTask (data, type, name) {
+				queryCompleteDispatchTask (data) {
 				  this.noDataShow = false;
 				  this.showLoadingHint = true;
 				  getDispatchTaskComplete(data).then((res) => {
 					this.showLoadingHint = false;
+					this.stateCompleteList = [];
+					if (this.isFresh) {
+						uni.stopPullDownRefresh();
+						this.isFresh = false
+					};
 					if (res && res.data.code == 200) {
-					  this.stateCompleteList = [];
 					  if (res.data.data.length > 0) {
 						this.noDataShow = false;
 						for (let item of res.data.data) {
-						  if (type == "历史任务") {
 							this.stateCompleteList.push({
 							  createTime: item.createTime,
-							  planUseTime: item.planUseTime,
+							  responseTime: item.responseTime,
 							  planStartTime: item.planStartTime,
 							  state: item.state,
 							  setOutPlaceName: item.setOutPlaceName,
 							  destinationName: item.destinationName,
 							  taskTypeName: item.taskTypeName,
 							  toolName: item.toolName,
+							  finishTime: item.finishTime,
 							  priority: item.priority,
 							  id: item.id,
+							  number: item.taskNumber,
 							  distName: item.distName,
 							  patientName: item.patientName,
 							  bedNumber: item.bedNumber,
@@ -310,7 +338,6 @@
 							  isSign: item.isSign,
 							  workerName: item.workerName,
 							})
-						  }
 						}
 					  } else {
 						this.noDataShow = true
@@ -324,6 +351,10 @@
 					})
 					this.showLoadingHint = false;
 					this.noDataShow = true;
+					if (this.isFresh) {
+						uni.stopPullDownRefresh();
+						this.isFresh = false
+					}
 				  })
 				},
 			
@@ -381,6 +412,15 @@
 	@import "~@/common/stylus/variable.scss";
 	.container {
 		@include content-wrapper;
+		position: relative;
+		.empty-info {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			margin: auto
+		};
 		.nav {
 			width: 100%;
 		};
@@ -447,7 +487,6 @@
 			.task-tail-content {
 				height: 94%;
 				overflow: auto;
-				background: #f7f7f7;
 				position: relative;
 				.empty-info {
 					position: absolute;
@@ -458,7 +497,7 @@
 					margin: auto
 				};
 				.task-tail-content-item {
-					background: #FFFFFF;
+					background: #f7f7f7;
 					width: 98%;
 					margin: 0 auto;
 					margin-bottom: 6px;
@@ -481,7 +520,7 @@
 							.number {
 								text {
 									font-size: 14px;
-									color: #b3babb;
+									color: #278ee6;
 								}
 							}
 						};
@@ -495,6 +534,13 @@
 							.priority {
 								text {
 									font-size: 14px
+								}
+							};
+							.destination-point {
+								text {
+									&:not(:first-child) {
+										margin-right: 4px
+									}
 								}
 							};
 							.status {

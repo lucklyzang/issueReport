@@ -1,10 +1,10 @@
 <template>
 	<view class="content-box">
 		<u-toast ref="uToast" />
-		<u-modal v-model="sureCancelShow" :content="content" title="确定取消?"
+		<u-modal v-model="sureCancelShow" :content="content" title="确定退出登录?"
 		:show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
 		</u-modal>
-		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="签退中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="签退中,请稍候···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="2000" :home="false" bgColor="#000" fontColor="#FFF" title="个人资料" @backClick="backTo"></nav-bar>
 		</view>
@@ -18,7 +18,7 @@
 			<view class="content-top-other">
 			  <text>姓名</text>
 			  <text>
-				{{name}}
+				{{userName}}
 			  </text>
 			</view>
 			<view class="content-top-other">
@@ -63,9 +63,7 @@
 		},
 		data() {
 			return {
-				name: 'sasa1',
-				proName: '维修部',
-				userType: '员工',
+				content: '',
 				versionNumber: '1.0.1',
 				sureCancelShow: false,
 				showLoadingHint: false
@@ -83,19 +81,25 @@
 			  proId () {
 				return this.userInfo.extendData.proId
 			  },
-			 //  proName () {
-				// return this.userInfo.extendData.proName
-			 //  },
+			  proName () {
+				return this.userInfo.extendData.proName
+			  },
 			  workerId () {
 				return this.userInfo.extendData.userId
 			  },
-			  name () {
+			  accountName () {
 				return this.userInfo.name
+			  },
+			  userType () {
+				  return this.userInfo.extendData.userType
 			  }
 		 },
 		mounted () {
 		},
 		methods: {
+			...mapMutations([
+				'changeOverDueWay'
+			]),
 			// 返回上一页
 			backTo () {
 				uni.navigateTo({
@@ -103,25 +107,22 @@
 				})
 			},
 			isLoginOut () {
-				uni.navigateTo({
-				    url: '/pages/myInfo/myInfo'
-				});
-				// this.sureCancelShow = true
+				this.sureCancelShow = true
 			},
 			// 弹框确定事件
 			sureCancel () {
 				this.showLoadingHint = true;
+				this.changeOverDueWay(true);
+				setCache('storeOverDueWay',true);
 				userSignOut(this.proId,this.workerId).then((res) => {
 				  if (res && res.data.code == 200) {
-					removeAllLocalStorage();
-					uni.navigateTo({
-						url: '/pages/myInfo/myInfo'
-					})
 				  } else {
 					this.$refs.uToast.show({
 						title: `${res.data.msg}`,
 						type: 'warning'
-					})
+					});
+					this.changeOverDueWay(false);
+					setCache('storeOverDueWay',false)
 				  };
 				  this.showLoadingHint = false
 				}).
@@ -129,7 +130,9 @@
 				  this.$refs.uToast.show({
 					title: `${err.message}`,
 					type: 'warning'
-				  })
+				  });
+				  this.changeOverDueWay(false);
+				  setCache('storeOverDueWay',false)
 				});
 				this.showLoadingHint = false
 			},

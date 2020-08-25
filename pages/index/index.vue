@@ -39,6 +39,7 @@
 		    ])
 		 },
 		mounted () {
+			this.initStoreInfo()
 		},
 		methods: {
 			...mapMutations([
@@ -49,6 +50,16 @@
 					url: '/pages/centerTransport/index/index'
 				});
 				this.changeBottomBarIndex(-1);
+			},
+			initStoreInfo () {
+				// 页面刷新时重新存入用户信息
+				if (getCache('userInfo')) {
+				  this.$store.commit('storeUserInfo',getCache('userInfo'));
+				};
+				// 页面刷新重新存入请求token
+				if (getCache('questToken')) {
+				  this.$store.commit('changeToken', getCache('questToken'));
+				};
 			}
 		}
 	}

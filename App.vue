@@ -6,14 +6,12 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
-		console.log(this.ceshi);
 	},
 	onHide: function() {
 		console.log('App Hide');
 	},
 	computed: {
 	    ...mapGetters([
-			'ceshi'
 	    ])
 	 }
 };

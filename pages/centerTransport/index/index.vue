@@ -33,7 +33,7 @@
 		data() {
 			return {
 				typeText: '',
-				transTypeList: [{id:1,value:'检查'},{id:2,value:'药品文书'},{id:3,value:'文书'}],
+				transTypeList: [],
 				typeIndex: null
 			}
 		},
@@ -62,6 +62,7 @@
 			}
 		 },
 		mounted () {
+			this.parallelFunctionTwo()
 		},
 		methods: {
 			...mapMutations([
@@ -85,7 +86,7 @@
 			},
 			
 		//运送类型
-		  parallelFunctionTwo (type) {
+		 parallelFunctionTwo () {
 			Promise.all([this.getTransportsType()])
 			.then((res) => {
 			  if (res && res.length > 0) {
@@ -110,7 +111,7 @@
 		  },
 		  
 			// 查询运送类型分类
-			  getTransportsType () {
+			getTransportsType () {
 				return new Promise((resolve,reject) => {
 				  queryTransportTypeClass({proId: this.proId, state: 0}).then((res) => {
 					if (res && res.data.code == 200) {
@@ -124,7 +125,8 @@
 				  })
 				})
 			  },
-			 // 底部导航栏菜单点击事件
+			  
+			// 底部导航栏菜单点击事件
 			clickEvent (item) {
 				if (item.text == '呼叫') {
 					if (this.typeIndex === null) {

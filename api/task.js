@@ -70,3 +70,11 @@ export function updateDispatchTask(data) {
     data
   })
 };
+
+// 调度任务催单
+export function taskReminder(proId,taskId) {
+  return request({
+    url: `task/reminder/${proId}/${taskId}`,
+    method: 'get'
+  })
+};

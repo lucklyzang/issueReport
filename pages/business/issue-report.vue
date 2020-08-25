@@ -10,7 +10,6 @@
 			<image mode="widthFix" v-for="(item,index) in chooseImgList" :src="item"></image>
 		</view>
 		<view class="content-botom">
-			{{ceshi}}
 		</view>
 	</view>
 </template>
