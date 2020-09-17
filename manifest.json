@@ -1,7 +1,7 @@
 {
-    "name" : "mainMantApp",
+    "name" : "福斯特智慧后勤",
     "appid" : "",
-    "description" : "",
+    "description" : "服务于医院环境的一款集调度任务生成和维修任务上报的小程序",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -42,7 +42,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx84a2d3ace3c4dc9d",
+        "appid" : "wxe7ea58a8f75b0816",
         "setting" : {
             "urlCheck" : true,
             "minified" : true,

@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="container-content">
 			<view class="conten-text">
-				<button type="primary" @click="wexinLogin">使用微信登陆</button>
+				<button type="primary" @click="wexinLogin">微信登陆</button>
 				<button type="primary" @click="skipAccountPage">用户名密码登陆</button>
 			</view>
 		</view>
@@ -37,12 +37,12 @@
 		},
 		methods: {
 			skipAccountPage () {
-				uni.navigateTo({
+				uni.redirectTo({
 				    url: '/pages/login/login'
 				})
 			},
 			wexinLogin () {
-				uni.navigateTo({
+				uni.redirectTo({
 				    url: '/pages/weixinLogin/weixinLogin'
 				})
 			}

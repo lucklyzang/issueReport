@@ -60,6 +60,9 @@
 				if (getCache('questToken')) {
 				  this.$store.commit('changeToken', getCache('questToken'));
 				};
+				if (getCache('weixinInfo')) {
+				  this.$store.commit('changeWeixinInfo', getCache('weixinInfo'));
+				};
 			}
 		}
 	}

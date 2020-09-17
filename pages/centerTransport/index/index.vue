@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
 		<u-toast ref="uToast" />
+		<view class="empty-info" v-show="noDataShow">
+			<u-empty text="数据为空" mode="list"></u-empty>
+		</view>
+		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="加载中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
 		</view>
@@ -34,7 +38,9 @@
 			return {
 				typeText: '',
 				transTypeList: [],
-				typeIndex: null
+				typeIndex: null,
+				showLoadingHint: false,
+				noDataShow: false
 			}
 		},
 		onReady () {
@@ -87,9 +93,13 @@
 			
 		//运送类型
 		 parallelFunctionTwo () {
+			this.showLoadingHint = true;
+			this.noDataShow = false;
 			Promise.all([this.getTransportsType()])
 			.then((res) => {
+			  this.showLoadingHint = false;
 			  if (res && res.length > 0) {
+				this.noDataShow = false;
 				let [item1] = res;
 				if (item1) {
 				  this.transPortTypeList = [];
@@ -100,9 +110,12 @@
 					})
 				  }
 				}
+			  } else {
+				  this.noDataShow = true
 			  }
 			})
 			.catch((err) => {
+			  this.showLoadingHint = false;
 			  this.$refs.uToast.show({
 			  	title: `${err}`,
 			  	type: 'warning'
@@ -170,6 +183,15 @@
 	@import "~@/common/stylus/variable.scss";
 	.container {
 		@include content-wrapper;
+		position: relative;
+		.empty-info {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			margin: auto
+		};
 		.container-title {
 			height: 60px;
 			width: 100%;
@@ -180,7 +202,7 @@
 			color: black;
 		};
 		.trans-type-list {
-			padding: 10px;
+			padding: 0 10px 10px 10px;
 			flex: 1;
 			overflow: auto;
 			display: flex;

@@ -3,7 +3,7 @@
 		<u-modal v-model="sureCancelShow"  title="取消原因" 
 		:show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
 			<view class="slot-content">
-			  <view :class="{spanStyle:cancelIndex === index}" v-for="(item,index) in cancelReasonLlist" :key="`${item.text}`" @click="cancelReasonCheck(item,index)">
+			  <view :class="{'spanStyle':cancelIndex == index}" v-for="(item,index) in cancelReasonLlist" :key="index" @click="cancelReasonCheck(item.text,index)">
 				{{item.text}}
 			  </view> 	
 			</view>
@@ -18,7 +18,7 @@
 		</view>
 		<view class="task-tail-content-box">
 			<view class="task-tail-title">
-				<u-tabs :list="list" :is-scroll="false" font-size="35" :current="current" @change="tabChange"></u-tabs>
+				<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
 			</view>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
@@ -44,7 +44,7 @@
 							</view>
 							<view class="destination-point">
 								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName">{{item}}</text>
+								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -99,7 +99,7 @@
 							</view>
 							<view class="destination-point">
 								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName">{{item}}</text>
+								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -151,7 +151,7 @@
 				showLoadingHint: false,
 				noDataShow: false,
 				idFresh : false,
-				cancelIndex: '',
+				cancelIndex: null,
 				list: [{name: '待办任务'}, {name: '进行中'}],
 				stateCompleteList: [],
 				current: 0,
@@ -232,16 +232,16 @@
 			// 任务优先级转换
 			  priorityTransfer (index) {
 				switch(index) {
-				  case 0 :
+				  case 1 :
 					return '正常'
 					break;
-				  case 1 :
+				  case 2 :
 					return '重要'
 					break;
-				  case 2 :
+				  case 3 :
 					return '紧急'
 					break;
-				  case 3 :
+				  case 4 :
 					return '紧急重要'
 					break;
 				}
@@ -304,7 +304,7 @@
 			// 取消原因列表点击事件
 			cancelReasonCheck (item,index) {
 			  this.cancelIndex = index;
-			  this.taskCancelReason = item.text
+			  this.taskCancelReason = item
 			},
 			  
 			// 调度任务的取消
@@ -434,7 +434,7 @@
 			// 取消事件
 			cancel (item) {
 				this.sureCancelShow = true;
-				this.cancelIndex = '';
+				this.cancelIndex = null;
 				this.taskCancelReason = '';
 				this.getDispatchTaskCancelReason({proId: this.proId, state: 0});
 				this.taskId = item.id
@@ -536,14 +536,15 @@
 			.task-tail-content {
 				height: 93%;
 				overflow: auto;
+				background: #f7f7f7;
 				.task-tail-content-item {
 					width: 98%;
 					margin: 0 auto;
-					margin-bottom: 6px;
+					margin-top: 6px;
 					border-radius: 4px;
-					background: #f7f7f7;
+					background: #FFFFFF;
 					&:last-child {
-						margin-bottom: 0
+						margin-bottom: 6px
 					};
 					.item-top {
 						width: 100%;

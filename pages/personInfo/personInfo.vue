@@ -12,7 +12,7 @@
 			<view class="content-top-name">
 			  <text>头像</text>
 			  <view>
-				<image src="/static/img/default-person.jpg">
+				<image :src="juddgeAvatarUrl()">
 			  </view>
 			</view>
 			<view class="content-top-other">
@@ -73,7 +73,8 @@
 		},
 		computed: {
 		    ...mapGetters([
-				'userInfo'
+				'userInfo',
+				'weixinInfo'
 		    ]),
 			  userName () {
 				return this.userInfo.userName
@@ -85,7 +86,7 @@
 				return this.userInfo.extendData.proName
 			  },
 			  workerId () {
-				return this.userInfo.extendData.userId
+				return this.userInfo.userName
 			  },
 			  accountName () {
 				return this.userInfo.name
@@ -98,14 +99,26 @@
 		},
 		methods: {
 			...mapMutations([
-				'changeOverDueWay'
+				'changeOverDueWay',
+				'changeWeixinInfo'
 			]),
+			
 			// 返回上一页
 			backTo () {
 				uni.navigateTo({
 				    url: '/pages/centerTransport/index/index'
 				})
 			},
+			
+			// 判断头像
+			juddgeAvatarUrl () {
+				if (this.weixinInfo && this.weixinInfo.avatarUrl) {
+					return this.weixinInfo.avatarUrl
+				} else {
+					return '/static/img/default-person.jpg'
+				}
+			},
+			
 			isLoginOut () {
 				this.sureCancelShow = true
 			},
@@ -116,6 +129,8 @@
 				setCache('storeOverDueWay',true);
 				userSignOut(this.proId,this.workerId).then((res) => {
 				  if (res && res.data.code == 200) {
+					  removeAllLocalStorage();
+					  this.changeWeixinInfo(null)
 				  } else {
 					this.$refs.uToast.show({
 						title: `${res.data.msg}`,
@@ -132,9 +147,9 @@
 					type: 'warning'
 				  });
 				  this.changeOverDueWay(false);
-				  setCache('storeOverDueWay',false)
-				});
-				this.showLoadingHint = false
+				  setCache('storeOverDueWay',false);
+				  this.showLoadingHint = false
+				})
 			},
 			
 			// 弹框取消事件

@@ -9,7 +9,7 @@
 			<view class="form-box">
 				<u-form :model="form" ref="uForm">
 					<u-form-item label="账号" right-icon="account-fill" :label-style="{'font-size':'15px'}" :right-icon-style="{'font-size':'20px'}">
-						<u-input v-model="form.userName" placeholder="请输入账号"/>
+						<u-input v-model="form.username" placeholder="请输入账号"/>
 					</u-form-item>
 					<u-form-item label="密码" right-icon="lock-fill" :label-style="{'font-size':'15px'}" :right-icon-style="{'font-size':'20px'}">
 						<u-input v-model="form.password" placeholder="请输入密码" type="password"/>
@@ -34,7 +34,7 @@
 		data() {
 			return {
 				form: {
-					userName: '',
+					username: '',
 					password: ''
 				},
 				modalShow: false,
@@ -49,8 +49,8 @@
 		    ])
 		},
 		mounted () {
-			 this.username = getCache('userName') ? getCache('userName') : '';
-			 this.password = getCache('userPassword') ? getCache('userPassword') : '';
+			 this.form.username = getCache('userName') ? getCache('userName') : '';
+			 this.form.password = getCache('userPassword') ? getCache('userPassword') : '';
 		},
 		methods: {
 			...mapMutations([
@@ -60,18 +60,18 @@
 			// 确认事件
 			sure () {
 				let loginMessage = {
-					  username: this.form.userName,
+					  username: this.form.username,
 					  password: this.form.password
 				};
 				this.showLoadingHint = true;
-				logIn(loginMessage).then((res)=>{
+				logIn(loginMessage).then((res) => {
 					if (res) {
 						  if (res.data.code == 200) {
 							   this.changeOverDueWay(false);
-							   setCache('storeOverDueWay',false);
+							   setCache('storeOverDueWay',false); 
 								// 登录用户名密码及用户信息存入Locastorage
-								setCache('userName', this.username);
-								setCache('userPassword', this.password);
+								setCache('userName', this.form.username);
+								setCache('userPassword', this.form.password);
 								setCache('userInfo', res.data.data);
 								setCache('isLogin', true);
 								this.storeUserInfo(res.data.data);

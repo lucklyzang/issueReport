@@ -5,7 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "axios-miniprogram": "^1.2.2",
-    "uview-ui": "^1.6.2"
+    "uview-ui": "^1.6.3"
   },
   "devDependencies": {},
   "scripts": {

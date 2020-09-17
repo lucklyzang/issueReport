@@ -1,6 +1,14 @@
 import request from '@/api/request';
 
-// 用户登录
+// 获取医院列表
+export function getHospitalList() {
+	return request({
+	    url: 'project/queryAll',
+	    method: 'get'
+	  })
+}
+
+// 账号密码登录
 export function logIn(data) {
 	return request({
 	    url: 'login/login',
@@ -16,3 +24,30 @@ export function userSignOut(proId,workerId) {
     method: 'get'
   })
 };
+
+// 微信登录
+export function weixinLogIn(code) {
+	return request({
+	    url: `login/wx/${code}`,
+	    method: 'get'
+	})
+}
+
+// 微信授权绑定已存在账号
+export function boundExist(code,data) {
+	return request({
+	    url: `login/wx/boundExist/${code}`,
+	    method: 'post',
+		data
+	})
+}
+
+// 微信授权不绑定账号
+export function boundNotExist(proId,code) {
+	return request({
+	    url: `login/wx/boundNotExist/${proId}/${code}`,
+	    method: 'post',
+		data: {
+		}
+	})
+}

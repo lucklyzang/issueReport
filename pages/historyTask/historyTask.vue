@@ -22,7 +22,7 @@
 			<button @click="searchCompleteTask">搜索</button>
 		</view>
 		<view class="task-tail-content-box">
-			<u-tabs :list="list" :is-scroll="false" font-size="35" :current="current" @change="tabChange"></u-tabs>
+			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
@@ -50,7 +50,7 @@
 							</view>
 							<view class="destination-point">
 								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName">{{item}}</text>
+								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -89,7 +89,7 @@
 							</view>
 							<view class="destination-point">
 								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName">{{item}}</text>
+								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
 							</view>
 							<view class="transport-people">
 								<text>运送人: {{item.workerName}}</text>
@@ -206,16 +206,16 @@
 			// 任务优先级转换
 		  priorityTransfer (index) {
 			switch(index) {
-			  case 0 :
+			  case 1 :
 				return '正常'
 				break;
-			  case 1 :
+			  case 2 :
 				return '重要'
 				break;
-			  case 2 :
+			  case 3 :
 				return '紧急'
 				break;
-			  case 3 :
+			  case 4 :
 				return '紧急重要'
 				break;
 			}
@@ -348,7 +348,7 @@
 					this.$refs.uToast.show({
 						title: `${err.message}`,
 						type: 'error'
-					})
+					});
 					this.showLoadingHint = false;
 					this.noDataShow = true;
 					if (this.isFresh) {
@@ -444,7 +444,7 @@
 				height: 100%;
 				float: left;
 				/deep/ .u-field {
-					border: 1px solid #aaa;
+					border: 1px solid #d8d7d7;
 					padding: 5px 15px;
 					.u-label {
 						flex: 0 0 0 !important
@@ -459,7 +459,7 @@
 				height: 100%;
 				float: right;
 				/deep/ .u-field {
-					border: 1px solid #aaa;
+					border: 1px solid #d8d7d7;
 					padding: 5px 15px;
 					.u-label {
 						flex: 0 0 0 !important
@@ -488,6 +488,7 @@
 				height: 94%;
 				overflow: auto;
 				position: relative;
+				background: #f7f7f7;
 				.empty-info {
 					position: absolute;
 					top: 0;
@@ -497,13 +498,13 @@
 					margin: auto
 				};
 				.task-tail-content-item {
-					background: #f7f7f7;
+					background: #FFFFFF;
 					width: 98%;
 					margin: 0 auto;
-					margin-bottom: 6px;
+					margin-top: 6px;
 					border-radius: 4px;
 					&:last-child {
-						margin-bottom: 0
+						margin-bottom: 6px
 					};
 					.item-top {
 						width: 100%;

@@ -5,9 +5,8 @@ import uView from "uview-ui"
 import ourLoading from '@/components/our-loading/our-loading.vue'
 import { getCache } from '@/common/js/utils'
 Vue.component('ourLoading', ourLoading)
-Vue.use(uView);
+Vue.use(uView)
 Vue.config.productionTip = false
-
 App.mpType = 'app'
 
 const app = new Vue({
@@ -22,6 +21,22 @@ const app = new Vue({
 		if (getCache('questToken')) {
 		  store.commit('changeToken', getCache('questToken'));
 		};
+		// 页面刷新重新存入用户微信信息
+		if (getCache('weixinInfo')) {
+		  store.commit('changeWeixinInfo', getCache('weixinInfo'));
+		};
+		// 判断是否登录过
+		let login = getCache('isLogin');
+		if (login) {
+			uni.switchTab({
+				url: '/pages/index/index'
+			})
+		  } else {
+			uni.redirectTo({
+				url: '/pages/myInfo/myInfo'
+			})
+		}
 	}
-})
-app.$mount()
+});
+app.$mount();
+

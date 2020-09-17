@@ -92,7 +92,7 @@
 	},
 	"tabBar":{
 	"color":"#333",
-	"selectedColor":"deepskyblue",
+	"selectedColor":"#75b0f0",
 	"backgroundColor":"#fff",
 	"borderStyle":"white",
 	"list":[

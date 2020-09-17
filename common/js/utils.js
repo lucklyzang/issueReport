@@ -112,5 +112,6 @@ export const removeAllLocalStorage = () => {
   removeCache('userInfo');
   removeCache('isLogin');
   removeCache('questToken');
-  removeCache('storeOverDueWay')
+  removeCache('storeOverDueWay');
+  removeCache('weixinInfo')
 }

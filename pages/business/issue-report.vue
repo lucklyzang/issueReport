@@ -7,7 +7,7 @@
 			<button type="default" @click="takePhoto">拍照</button>
 			<button type="primary" @click="choosePhoto">从相册中选择</button>
 			<view>预览</view>
-			<image mode="widthFix" v-for="(item,index) in chooseImgList" :src="item"></image>
+			<image mode="widthFix" v-for="(item,index) in chooseImgList" :key="index" :src="item"></image>
 		</view>
 		<view class="content-botom">
 		</view>

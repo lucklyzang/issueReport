@@ -10,10 +10,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="0" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="1" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="2" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
+						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
+						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
+						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -68,33 +68,29 @@
 					</u-field>
 				</view>
 			</view>
-			<view class="creat-box">
-				<view class="creat-priority">
-					<view>转运工具</view>
-					<view>
-						<u-radio-group v-model="toolValue" @change="toolGroupChange">
-							<u-radio 
-								@change="toolChange"
-								active-color="#8dc58d"
-								v-for="(item, index) in toolList" :key="index" 
-								:name="item.value"
-								:disabled="item.disabled"
-							>
-								{{item.text}}
-							</u-radio>
-						</u-radio-group>
-					</view>
+			<view class="creat-priority">
+				<view>转运工具</view>
+				<view>
+					<u-radio-group v-model="toolValue" @change="toolGroupChange">
+						<u-radio 
+							@change="toolChange"
+							active-color="#8dc58d"
+							v-for="(item, index) in toolList" :key="index" 
+							:name="item.value"
+							:disabled="item.disabled"
+						>
+							{{item.text}}
+						</u-radio>
+					</u-radio-group>
 				</view>
 			</view>
-			<view class="creat-box">
-				<view class="creat-priority creat-is-back">
-					<view>运送员是否返回</view>
-					<view>
-						<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-							<u-radio name="0" active-color="#8dc58d">否</u-radio>
-							<u-radio name="1" active-color="#8dc58d">是</u-radio>
-						</u-radio-group>
-					</view>
+			<view class="creat-priority creat-is-back">
+				<view>运送员是否返回</view>
+				<view>
+					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
+						<u-radio name="0" active-color="#8dc58d">否</u-radio>
+						<u-radio name="1" active-color="#8dc58d">是</u-radio>
+					</u-radio-group>
 				</view>
 			</view>
 			<view class="task-describe">
@@ -139,7 +135,7 @@
 				typeText: '',
 				typeValue: '',
 				typeIndex: '',
-				priorityValue: 0,
+				priorityValue: 1,
 				transportList: [],
 				bedNumber: '',
 				patientName: '',
@@ -428,12 +424,14 @@
 			flex: 1;
 			overflow: auto;
 			font-size: 14px;
-			margin-top: 4px;
 			color: black;
+			display: flex;
+			flex-direction: column;
 			.creat-priority {
 				width: 100%;
 				height: 50px;
 				line-height: 50px;
+			    margin-top: 6px;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
 				> view {
@@ -464,6 +462,7 @@
 				overflow: auto;
 				margin-top: 6px;
 				display: flex;
+				flex: 1;
 				flex-direction: column;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
@@ -492,6 +491,7 @@
 					align-content: flex-start;
 					padding:0 4px;
 					box-sizing: border-box;
+					overflow: auto;
 					.transTypeListStyle {
 						background: #75b0f0;
 						color: #fff;
@@ -503,7 +503,7 @@
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
-						border: 1px solid #b7b7b7
+						border: 1px solid #dfdfdf
 					}
 				}
 			}
@@ -514,7 +514,6 @@
 				margin-top: 6px;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
-				flex: 1;
 				display: flex;
 				width: 100%;
 				flex-direction: row;
@@ -565,7 +564,7 @@
 			flex-direction: row;
 			flex-wrap: wrap;
 			justify-content: space-between;
-			align-content: flex-start;
+			align-items: center;
 			view {
 				width: 45%;
 				&:first-child {
