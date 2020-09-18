@@ -493,6 +493,9 @@
 	.container {
 		@include content-wrapper;
 		position: relative;
+		padding-bottom: 0;
+		padding-bottom: constant(safe-area-inset-bottom);  
+		padding-bottom: env(safe-area-inset-bottom);
 		.empty-info {
 			position: absolute;
 			top: 0;

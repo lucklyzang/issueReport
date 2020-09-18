@@ -57,9 +57,11 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-content: flex-start;
-		// padding-bottom: 0;  
-	 //    padding-bottom: constant(safe-area-inset-bottom);  
-		// padding-bottom: env(safe-area-inset-bottom);  
+		padding-bottom: 0;
+		padding-bottom: constant(safe-area-inset-bottom);  
+		padding-bottom: env(safe-area-inset-bottom);
+		z-index: 1000;
+		background: #fff;
 		.bar-list {
 			width: 33.3333%;
 			height: 50px;

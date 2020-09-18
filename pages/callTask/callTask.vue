@@ -415,6 +415,9 @@
 	@import "~@/common/stylus/variable.scss";
 	.container {
 		@include content-wrapper;
+		padding-bottom: 0;
+		padding-bottom: constant(safe-area-inset-bottom);  
+		padding-bottom: env(safe-area-inset-bottom);
 		.nav {
 			width: 100%;
 		};
@@ -545,7 +548,7 @@
 				}
 			};
 			.task-describe {
-				margin-top: 6px;
+				margin: 6px 0;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
 				/deep/ .u-field {
@@ -557,7 +560,10 @@
 			}
 		}
 		.btn-box {
-			width: 90%;
+			width: 100%;
+			box-sizing: border-box;
+			border-top: 1px solid #bcbcbc;
+			padding: 0 20px;
 			margin: 0 auto;
 			height: 80px;
 			display: flex;
