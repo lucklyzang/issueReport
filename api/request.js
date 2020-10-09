@@ -36,6 +36,9 @@ instance.interceptors.response.use(function (response) {
 		   setCache('questToken', response.headers['token']);
 		 };
 		 if (!response.headers.hasOwnProperty('token')) {
+		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆`) {
+				return response
+		   };
 		   removeAllLocalStorage();
 		   if (!store.getters.overDueWay) {
 			uni.showToast({

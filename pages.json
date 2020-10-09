@@ -4,20 +4,19 @@
 	},
 	"pages": [
 		{
-			"path": "pages/myInfo/myInfo",
+			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#75b0f0",
-				"backgroundColorTop": "#75b0f0,",
-				"backgroundColorBottom": "#75b0f0"
+				"navigationBarTextStyle": "black"
 			}
 		},
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#75b0f0",
-				"backgroundColorTop": "#75b0f0,",
+				"navigationBarBackgroundColor": "#ffffff",
+				"backgroundColorTop": "#ffffff,",
 				"backgroundColorBottom": "#ffffff"
 			}
 		},
@@ -25,7 +24,9 @@
 			"path": "pages/centerTransport/index/index",
 			"style": {
 				"navigationBarTitleText": "中央运送",
-				"navigationBarBackgroundColor": "#000000"
+				"navigationBarBackgroundColor": "#ffffff",
+        "backgroundColorTop": "#ededed,",
+        "backgroundColorBottom": "#ededed"
 			}
 		},
 		{
@@ -58,14 +59,6 @@
 				"navigationBarBackgroundColor": "#75b0f0",
 				"navigationBarTextStyle": "white",
 				"backgroundColorBottom": "#f7f7f7"
-			}
-		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#75b0f0",
-				"navigationBarTextStyle": "black"
 			}
 		},
 		{

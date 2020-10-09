@@ -45,26 +45,26 @@
 			takePhoto() {
 				let _this = this;
 				uni.chooseImage({
-				    count: 6, //默认9
-				    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-				    sourceType: ['camera'], //拍照
-				    success: function (res) {
-						let tempImg = res.tempFilePaths[0];
-						_this.urlTobase64(tempImg)
-				    }
+          count: 6, //默认9
+          sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['camera'], //拍照
+          success: function (res) {
+            let tempImg = res.tempFilePaths[0];
+            _this.urlTobase64(tempImg)
+          }
 				});
 			},
 			
 			choosePhoto() {
 				let _this = this;
 				uni.chooseImage({
-				    count: 6, //默认9
-				    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-				    sourceType: ['album'], //从相册选择
-				    success: function (res) {
-						let tempImg = res.tempFilePaths;
-						_this.urlTobase64(tempImg)
-				    }
+          count: 6, //默认9
+          sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album'], //从相册选择
+          success: function (res) {
+            let tempImg = res.tempFilePaths;
+            _this.urlTobase64(tempImg)
+          }
 				})
 			},
 			
@@ -77,17 +77,17 @@
 			asyncFunc (item) {
 				let _this = this;
 			    return new Promise(function(resolve, reject) {
-			        uni.getFileSystemManager().readFile({
-			        	filePath: item, //选择图片返回的相对路径
-			        	encoding: 'base64', //编码格式
-			        	success: res => { //成功的回调
-			        		let base64 = 'data:image/jpeg;base64,' + res.data //不加上这串字符，在页面无法显示的哦
-			        		_this.chooseImgList.push(base64);
-			        		console.log(_this.chooseImgList);
-							resolve()
-			        	}
-			        })
-			    });
+            uni.getFileSystemManager().readFile({
+              filePath: item, //选择图片返回的相对路径
+              encoding: 'base64', //编码格式
+              success: res => { //成功的回调
+                let base64 = 'data:image/jpeg;base64,' + res.data //不加上这串字符，在页面无法显示的哦
+                _this.chooseImgList.push(base64);
+                console.log(_this.chooseImgList);
+                resolve()
+              }
+            })
+			   });
 			}
 		}
 	}

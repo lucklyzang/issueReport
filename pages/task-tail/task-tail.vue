@@ -205,7 +205,7 @@
 			accountName () {
 				return this.userInfo.name
 			}
-		 },
+		},
 		mounted () {
 			this.queryCompleteDispatchTask(
 				{
@@ -229,8 +229,8 @@
 				this.changeIsToCallTaskPage(false)
 			},
 			
-			// 任务优先级转换
-			  priorityTransfer (index) {
+		    // 任务优先级转换
+		    priorityTransfer (index) {
 				switch(index) {
 				  case 1 :
 					return '正常'
@@ -245,61 +245,61 @@
 					return '紧急重要'
 					break;
 				}
-			  },
+		    },
 			
-		  // 任务状态转换
-		  stateTransfer (index) {
-			switch(index) {
-			  case 0 :
-				return '未分配'
-				break;
-			  case 1 :
-				return '未查阅'
-				break;
-			  case 2 :
-				return '未开始'
-				break;
-			  case 3 :
-				return '进行中'
-				break;
-			  case 4 :
-				return '未结束'
-				break;
-			  case 5 :
-				return '已延迟'
-				break;
-			  case 6 :
-				return '已取消'
-				break;
-			  case 7 :
-				return '已完成'
-				break;
-			}
-		  },
+			// 任务状态转换
+			stateTransfer (index) {
+				switch(index) {
+				  case 0 :
+					return '未分配'
+					break;
+				  case 1 :
+					return '未查阅'
+					break;
+				  case 2 :
+					return '未开始'
+					break;
+				  case 3 :
+					return '进行中'
+					break;
+				  case 4 :
+					return '未结束'
+					break;
+				  case 5 :
+					return '已延迟'
+					break;
+				  case 6 :
+					return '已取消'
+					break;
+				  case 7 :
+					return '已完成'
+					break;
+				}
+			},
 		  
-		  // 获取取消原因列表
-		      getDispatchTaskCancelReason (data) {
-		        queryDispatchTaskCancelReason(data).then((res) => {
-		          if (res && res.data.code == 200) {
-		            this.cancelReasonLlist = [];
-		            for (let item of res.data.data) {
-		              let temporaryWorkerMessageArray = [];
-		              for (let innerItem in item) {
-		                if (innerItem == 'id') {
-		                  temporaryWorkerMessageArray.push(item[innerItem])
-		                };
-		                if (innerItem == 'cancelName') {
-		                  temporaryWorkerMessageArray.push(item[innerItem])
-		                }
-		              };
-		              this.cancelReasonLlist.push({text: temporaryWorkerMessageArray[1], value: temporaryWorkerMessageArray[1]})
-		            };
-		          }
-		        })
-		        .catch((err) => {
-		          console.log(err)
-		        })
-		      },
+			// 获取取消原因列表
+		    getDispatchTaskCancelReason (data) {
+				queryDispatchTaskCancelReason(data).then((res) => {
+				  if (res && res.data.code == 200) {
+					this.cancelReasonLlist = [];
+					for (let item of res.data.data) {
+					  let temporaryWorkerMessageArray = [];
+					  for (let innerItem in item) {
+						if (innerItem == 'id') {
+						  temporaryWorkerMessageArray.push(item[innerItem])
+						};
+						if (innerItem == 'cancelName') {
+						  temporaryWorkerMessageArray.push(item[innerItem])
+						}
+					  };
+					  this.cancelReasonLlist.push({text: temporaryWorkerMessageArray[1], value: temporaryWorkerMessageArray[1]})
+					};
+				  }
+				})
+				.catch((err) => {
+				  console.log(err)
+				})
+		    },
 			  
 			// 取消原因列表点击事件
 			cancelReasonCheck (item,index) {
@@ -337,7 +337,7 @@
 			  })
 			},
 			  
-		   // 调度任务催单
+		    // 调度任务催单
 			reminder(item) {
 			  taskReminder(this.proId,item.id).then((res) => {
 				if (res && res.data.code == 200) {

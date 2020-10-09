@@ -8,11 +8,17 @@
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
 		</view>
-		<view class="container-title">
-			运送类型
-		</view>
 		<view class="trans-type-list">
-			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item.value" @click="typeEvent(item,index)">{{item.value}}</view>
+			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item.value" @click="typeEvent(item,index)">
+        <view>
+          <fa-icon v-show="item.value == '标本'" type="flask" size="100" color="#065da7"></fa-icon>
+          <fa-icon v-show="item.value == '药、物、文书'" type="plus-square-o" size="100" color="#065da7"></fa-icon>
+          <fa-icon v-show="item.value == '检查'" type="user-circle-o" size="100" color="#065da7"></fa-icon>
+        </view>
+        <text>
+          {{item.value}}
+        </text>
+      </view>
 		</view>
 		<view class="bottom-bar">
 			<bottom-bar :itemIndex="-1" @itemEvent="clickEvent"></bottom-bar>
@@ -29,13 +35,15 @@
 	import {queryTransportTypeClass} from '@/api/task.js'
 	import bottomBar from '@/components/bottom-bar/bottom-bar.vue'
 	import navBar from "@/components/zhouWei-navBar"
+  import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	export default {
 		components:{
 			bottomBar,
-			navBar
+			navBar,
+      faIcon
 		},
 		data() {
-			return {
+      return {
 				typeText: '',
 				transTypeList: [],
 				typeIndex: null,
@@ -46,11 +54,11 @@
 		onReady () {
 		},
 		computed: {
-		    ...mapGetters([
-				'titleText',
-				'userInfo',
-				'isToCallTaskPage'
-		    ]),
+      ...mapGetters([
+        'titleText',
+        'userInfo',
+        'isToCallTaskPage'
+      ]),
 			userName () {
 				return this.userInfo.userName
 			},
@@ -66,7 +74,7 @@
 			accountName () {
 				return this.userInfo.name
 			}
-		 },
+		},
 		mounted () {
 			this.parallelFunctionTwo()
 		},
@@ -88,79 +96,72 @@
 			typeEvent (item,index) {
 				this.typeIndex = index;
 				this.typeText = item;
-				this.changeTitleText(item)
+				this.changeTitleText(item);
+        this.changeBottomBarIndex(0);
+        uni.redirectTo({
+        	url: '/pages/callTask/callTask?title='+this.typeText
+        });
+        this.changeIsToCallTaskPage(true)
 			},
 			
-		//运送类型
-		 parallelFunctionTwo () {
-			this.showLoadingHint = true;
-			this.noDataShow = false;
-			Promise.all([this.getTransportsType()])
-			.then((res) => {
-			  this.showLoadingHint = false;
-			  if (res && res.length > 0) {
-				this.noDataShow = false;
-				let [item1] = res;
-				if (item1) {
-				  this.transPortTypeList = [];
-				  for (let item of item1) {
-					this.transTypeList.push({
-					  id: item.id,
-					  value: item.typeName
-					})
-				  }
-				}
-			  } else {
-				  this.noDataShow = true
-			  }
-			})
-			.catch((err) => {
-			  this.showLoadingHint = false;
-			  this.$refs.uToast.show({
-			  	title: `${err}`,
-			  	type: 'warning'
-			  })
-			})
-		  },
+      //运送类型
+      parallelFunctionTwo () {
+        this.showLoadingHint = true;
+        this.noDataShow = false;
+        Promise.all([this.getTransportsType()])
+        .then((res) => {
+          this.showLoadingHint = false;
+          if (res && res.length > 0) {
+            this.noDataShow = false;
+            let [item1] = res;
+            if (item1) {
+              this.transPortTypeList = [];
+              for (let item of item1) {
+                this.transTypeList.push({
+                  id: item.id,
+                  value: item.typeName
+                })
+              }
+            }
+          } else {
+            this.noDataShow = true
+          }
+        })
+        .catch((err) => {
+          this.showLoadingHint = false;
+          this.$refs.uToast.show({
+            title: `${err}`,
+            type: 'warning'
+          })
+        })
+      },
 		  
 			// 查询运送类型分类
 			getTransportsType () {
 				return new Promise((resolve,reject) => {
 				  queryTransportTypeClass({proId: this.proId, state: 0}).then((res) => {
-					if (res && res.data.code == 200) {
-					  if (res.data.data.length > 0) {
-						resolve(res.data.data)
-					  }
-					}
+            if (res && res.data.code == 200) {
+              if (res.data.data.length > 0) {
+                resolve(res.data.data)
+              }
+            }
 				  })
 				  .catch((err) => {
-					reject(err.message)
+            reject(err.message)
 				  })
 				})
-			  },
+			},
 			  
 			// 底部导航栏菜单点击事件
 			clickEvent (item) {
 				if (item.text == '呼叫') {
-					if (this.typeIndex === null) {
-						this.$refs.uToast.show({
-							title: '请选择运送类型',
-						});
-						return
-					};
 					if (this.isToCallTaskPage) {
 						uni.redirectTo({
 						    url: '/pages/centerTransport/index/index'
 						});
 						this.changeBottomBarIndex(-1)
-					} else {
-						this.changeBottomBarIndex(0);
-						uni.redirectTo({
-							url: '/pages/callTask/callTask?title='+this.typeText
-						});
-						this.changeIsToCallTaskPage(true)
-					}
-			    } else if (item.text == '任务跟踪') {
+					} 
+			  } else if (item.text == '任务跟踪') {
 					this.changeBottomBarIndex(1);
 					uni.redirectTo({
 						url: '/pages/task-tail/task-tail'
@@ -195,36 +196,29 @@
 			right: 0;
 			margin: auto
 		};
-		.container-title {
-			height: 60px;
-			width: 100%;
-			margin: 0 auto;
-			line-height: 60px;
-			text-align: center;
-			font-size: 24px;
-			color: black;
-		};
 		.trans-type-list {
-			padding: 0 10px 10px 10px;
+			padding: 50px 0;
 			flex: 1;
 			overflow: auto;
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 			flex-wrap: wrap;
 			justify-content: space-between;
 			align-content: flex-start;
+      background: #ededed;
 			.transTypeListStyle {
 				background: #75b0f0
 			};
 			> view {
-				width: 48%;
-				height: 60px;
+				width: 100%;
 				background: #ececec;
 				color: black;
 				font-size: 20px;
 				text-align: center;
-				line-height: 60px;
-				margin-bottom: 4%
+				margin-bottom: 10px;
+        &:last-child {
+          margin-bottom: 0;
+        }
 			}
 		}
 		.bottom-bar {

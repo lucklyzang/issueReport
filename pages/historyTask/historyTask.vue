@@ -141,28 +141,28 @@
 			this.isFresh = true;
 			if (this.current === 0) {
 			  this.queryCompleteDispatchTask(
-				{
-				  proId:this.proId, workerId:'',state:7,
-				  startDate: this.dateStart, endDate: this.dateEnd,
-				  departmentId: this.userInfo.depId
-				}
+          {
+            proId:this.proId, workerId:'',state:7,
+            startDate: this.dateStart, endDate: this.dateEnd,
+            departmentId: this.userInfo.depId
+          }
 			  )
 			} else {
 			  this.queryCompleteDispatchTask(
-				{
-				  proId:this.proId, workerId:'',state:6,
-				  startDate: this.dateStart, endDate: this.dateEnd,
-				  departmentId: this.userInfo.depId
-				}
+          {
+            proId:this.proId, workerId:'',state:6,
+            startDate: this.dateStart, endDate: this.dateEnd,
+            departmentId: this.userInfo.depId
+          }
 			  )
 			}
 		},
 		computed: {
-		    ...mapGetters([
-				'titleText',
-				'isToCallTaskPage',
-				'userInfo'
-		    ]),
+      ...mapGetters([
+        'titleText',
+        'isToCallTaskPage',
+        'userInfo'
+      ]),
 			userName () {
 				return this.userInfo.userName
 			},
@@ -205,26 +205,26 @@
 			
 			// 任务优先级转换
 		  priorityTransfer (index) {
-			switch(index) {
-			  case 1 :
-				return '正常'
-				break;
-			  case 2 :
-				return '重要'
-				break;
-			  case 3 :
-				return '紧急'
-				break;
-			  case 4 :
-				return '紧急重要'
-				break;
-			}
+        switch(index) {
+          case 1 :
+          return '正常'
+          break;
+          case 2 :
+          return '重要'
+          break;
+          case 3 :
+          return '紧急'
+          break;
+          case 4 :
+          return '紧急重要'
+          break;
+        }
 		  },
 		  
 		  // 耗时
 		  consueTime (t1,t2) {
 			  if (t1 && t2) {
-				return SOtime.time5(t1,t2)
+          return SOtime.time5(t1,t2)
 			  }
 		  },
 						
@@ -263,100 +263,100 @@
 				this.current = index;
 				if (index === 0) {
 				  this.queryCompleteDispatchTask(
-					{
-					  proId:this.proId, workerId:'',state:7,
-					  startDate: this.dateStart, endDate: this.dateEnd,
-					  departmentId: this.userInfo.depId
-					}
+            {
+              proId:this.proId, workerId:'',state:7,
+              startDate: this.dateStart, endDate: this.dateEnd,
+              departmentId: this.userInfo.depId
+            }
 				  )
 				} else {
 				  this.queryCompleteDispatchTask(
-					{
-					  proId:this.proId, workerId:'',state:6,
-					  startDate: this.dateStart, endDate: this.dateEnd,
-					  departmentId: this.userInfo.depId
-					}
+            {
+              proId:this.proId, workerId:'',state:6,
+              startDate: this.dateStart, endDate: this.dateEnd,
+              departmentId: this.userInfo.depId
+            }
 				  )
 				}
 			},
 			
-			// 搜索完成的任务
-			  searchCompleteTask () {
-				if (this.current === 0) {
-				  this.queryCompleteDispatchTask(
-					{
-					  proId:this.proId, workerId:'',state:7,
-					  startDate: this.dateStart, endDate: this.dateEnd,
-					  departmentId: this.userInfo.depId
-					}
-				  )
-				} else {
-				  this.queryCompleteDispatchTask(
-					{
-					  proId:this.proId, workerId:'',state:6,
-					  startDate: this.dateStart, endDate: this.dateEnd,
-					  departmentId: this.userInfo.depId
-					}
-				  )
-				}
-			  },
+      // 搜索完成的任务
+      searchCompleteTask () {
+        if (this.current === 0) {
+          this.queryCompleteDispatchTask(
+            {
+              proId:this.proId, workerId:'',state:7,
+              startDate: this.dateStart, endDate: this.dateEnd,
+              departmentId: this.userInfo.depId
+            }
+          )
+        } else {
+          this.queryCompleteDispatchTask(
+            {
+              proId:this.proId, workerId:'',state:6,
+              startDate: this.dateStart, endDate: this.dateEnd,
+              departmentId: this.userInfo.depId
+            }
+          )
+        }
+      },
 			  
-			  // 查询历史调度任务(已完成)
-				queryCompleteDispatchTask (data) {
-				  this.noDataShow = false;
-				  this.showLoadingHint = true;
-				  getDispatchTaskComplete(data).then((res) => {
-					this.showLoadingHint = false;
-					this.stateCompleteList = [];
-					if (this.isFresh) {
-						uni.stopPullDownRefresh();
-						this.isFresh = false
-					};
-					if (res && res.data.code == 200) {
-					  if (res.data.data.length > 0) {
-						this.noDataShow = false;
-						for (let item of res.data.data) {
-							this.stateCompleteList.push({
-							  createTime: item.createTime,
-							  responseTime: item.responseTime,
-							  planStartTime: item.planStartTime,
-							  state: item.state,
-							  setOutPlaceName: item.setOutPlaceName,
-							  destinationName: item.destinationName,
-							  taskTypeName: item.taskTypeName,
-							  toolName: item.toolName,
-							  finishTime: item.finishTime,
-							  priority: item.priority,
-							  id: item.id,
-							  number: item.taskNumber,
-							  distName: item.distName,
-							  patientName: item.patientName,
-							  bedNumber: item.bedNumber,
-							  startPhoto: item.startPhoto,
-							  endPhoto: item.endPhoto,
-							  isBack: item.isBack,
-							  isSign: item.isSign,
-							  workerName: item.workerName,
-							})
-						}
-					  } else {
-						this.noDataShow = true
-					  }
-					}
-				  })
-				  .catch((err) => {
-					this.$refs.uToast.show({
-						title: `${err.message}`,
-						type: 'error'
-					});
-					this.showLoadingHint = false;
-					this.noDataShow = true;
-					if (this.isFresh) {
-						uni.stopPullDownRefresh();
-						this.isFresh = false
-					}
-				  })
-				},
+      // 查询历史调度任务(已完成)
+      queryCompleteDispatchTask (data) {
+        this.noDataShow = false;
+        this.showLoadingHint = true;
+        getDispatchTaskComplete(data).then((res) => {
+          this.showLoadingHint = false;
+          this.stateCompleteList = [];
+          if (this.isFresh) {
+            uni.stopPullDownRefresh();
+            this.isFresh = false
+          };
+          if (res && res.data.code == 200) {
+            if (res.data.data.length > 0) {
+              this.noDataShow = false;
+              for (let item of res.data.data) {
+                this.stateCompleteList.push({
+                  createTime: item.createTime,
+                  responseTime: item.responseTime,
+                  planStartTime: item.planStartTime,
+                  state: item.state,
+                  setOutPlaceName: item.setOutPlaceName,
+                  destinationName: item.destinationName,
+                  taskTypeName: item.taskTypeName,
+                  toolName: item.toolName,
+                  finishTime: item.finishTime,
+                  priority: item.priority,
+                  id: item.id,
+                  number: item.taskNumber,
+                  distName: item.distName,
+                  patientName: item.patientName,
+                  bedNumber: item.bedNumber,
+                  startPhoto: item.startPhoto,
+                  endPhoto: item.endPhoto,
+                  isBack: item.isBack,
+                  isSign: item.isSign,
+                  workerName: item.workerName,
+                })
+              }
+            } else {
+              this.noDataShow = true
+            }
+          }
+        })
+        .catch((err) => {
+          this.$refs.uToast.show({
+            title: `${err.message}`,
+            type: 'error'
+          });
+          this.showLoadingHint = false;
+          this.noDataShow = true;
+          if (this.isFresh) {
+            uni.stopPullDownRefresh();
+            this.isFresh = false
+          }
+        })
+      },
 			
 			// 初始化当前日期
 			initDate () {

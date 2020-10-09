@@ -2,12 +2,12 @@ export default {
   state:{
     titleText: '',
 	bottomBarIndex: -1,
-	isToCallTaskPage: false
+	isToCallTaskPage: false,
   },
   getters:{
     titleText: state => state.titleText,
 	bottomBarIndex: state => state.bottomBarIndex,
-	isToCallTaskPage: state => state.isToCallTaskPage
+	isToCallTaskPage: state => state.isToCallTaskPage,
   },
   mutations:{
     changeTitleText (state, playLoad) {

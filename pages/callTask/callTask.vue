@@ -152,11 +152,11 @@
 			this.taskTypeText = this.titleText.value
 		},
 		computed: {
-		    ...mapGetters([
-				'titleText',
-				'isToCallTaskPage',
-				'userInfo'
-		    ]),
+      ...mapGetters([
+        'titleText',
+        'isToCallTaskPage',
+        'userInfo'
+      ]),
 			userName () {
 				return this.userInfo.userName
 			},
@@ -195,11 +195,11 @@
 			},
 			
 			// 运送类型点击事件
-			  typeEvent (item,index) {
-				this.typeIndex = index;
-				this.typeText = item.text;
-				this.typeValue = item.value;
-			  },
+      typeEvent (item,index) {
+        this.typeIndex = index;
+        this.typeText = item.text;
+        this.typeValue = item.value;
+      },
 			
 			// 底部按钮点击
 			clickEvent (item) {
@@ -246,167 +246,167 @@
 				console.log(e);
 			},
 			
-			 // 查询目的地
-			  getAllDestination () {
-				return new Promise((resolve,reject) => {
-				  queryAllDestination(this.proId).then((res) => {
-					if (res && res.data.code == 200) {
-					  resolve(res.data.data)
-					}
-				  })
-				  .catch((err) => {
-					reject(err.message)
-				  })
-				})
-			  },
+     // 查询目的地
+      getAllDestination () {
+        return new Promise((resolve,reject) => {
+          queryAllDestination(this.proId).then((res) => {
+            if (res && res.data.code == 200) {
+              resolve(res.data.data)
+            }
+          })
+          .catch((err) => {
+            reject(err.message)
+          })
+        })
+      },
 			
-			  // 查询转运工具
-			  getTransportTools () {
-				return new Promise((resolve,reject) => {
-				  queryTransportTools({proId: this.proId, state: 0})
-				  .then((res) => {
-					if (res && res.data.code == 200) {
-					  resolve(res.data.data)
-					}
-				  })
-				  .catch((err) => {
-					reject(err.message)
-				  })
-				})
-			  },
+      // 查询转运工具
+      getTransportTools () {
+        return new Promise((resolve,reject) => {
+          queryTransportTools({proId: this.proId, state: 0})
+          .then((res) => {
+            if (res && res.data.code == 200) {
+              resolve(res.data.data)
+            }
+          })
+          .catch((err) => {
+            reject(err.message)
+          })
+        })
+      },
 			  
 			// 查询运送类型
 			getTransPorttype (data) {
 			  return new Promise((resolve,reject) => {
-				queryTransportType(data)
-				.then((res) => {
-				  if (res && res.data.code == 200) {
-					resolve(res.data.data)
-				  }
-				})
-				.catch((err) => {
-				  reject(err.message)
-				})
+          queryTransportType(data)
+          .then((res) => {
+            if (res && res.data.code == 200) {
+              resolve(res.data.data)
+            }
+          })
+          .catch((err) => {
+            reject(err.message)
+          })
 			  })
 			},
 			
 		  // 并行查询目的地、转运工具、运送类型
 		  parallelFunction (type) {
-			Promise.all([this.getAllDestination(),this.getTransportTools(), this.getTransPorttype({
-			  proId: this.proId,
-			  state: 0,
-			  // parentId: this.transportantTaskMessage.id
-			})])
-			.then((res) => {
-			  if (res && res.length > 0) {
-				this.toolList = [];
-				this.transportList = [];
-				let [item1,item2,item3] = res;
-				// if (item1) {
-				//   Object.keys(item1).forEach((item) => {
-				// 	this.destinationList.push({
-				// 	  text: item1[item],
-				// 	  value: item
-				// 	})
-				//   })
-				// };
-				if (item2) {
-				  for (let item of item2) {
-					this.toolList.push({
-					  text: item.toolName,
-					  value: item.id
-					});
-				  }
-				};
-				if (item3) {
-				  for(let item of item3) {
-					this.transportList.push({
-					  text: item.typeName, 
-					  value: item.id
-					})
-				  }
-				}
-			  }
-			})
-			.catch((err) => {
-			  this.$refs.uToast.show({
-			  	title: `${err}`,
-			  	type: 'warning'
-			  })
-			})
+        Promise.all([this.getAllDestination(),this.getTransportTools(), this.getTransPorttype({
+          proId: this.proId,
+          state: 0,
+          parentId: this.titleText.id
+        })])
+        .then((res) => {
+          if (res && res.length > 0) {
+            this.toolList = [];
+            this.transportList = [];
+            let [item1,item2,item3] = res;
+            // if (item1) {
+            //   Object.keys(item1).forEach((item) => {
+            // 	this.destinationList.push({
+            // 	  text: item1[item],
+            // 	  value: item
+            // 	})
+            //   })
+            // };
+            if (item2) {
+              for (let item of item2) {
+                this.toolList.push({
+                  text: item.toolName,
+                  value: item.id
+                })
+              }
+            };
+            if (item3) {
+              for(let item of item3) {
+                this.transportList.push({
+                  text: item.typeName, 
+                  value: item.id
+                })
+              }
+            }
+          }
+        })
+        .catch((err) => {
+          this.$refs.uToast.show({
+            title: `${err}`,
+            type: 'warning'
+          })
+        })
 		  },
 		  
-		 // 生成调度任务
-		postGenerateDispatchTask (data) {
-		  this.showLoadingHint = true;
-		  generateDispatchTask(data).then((res) => {
-			if (res && res.data.code == 200) {
-				this.$refs.uToast.show({
-					title: `${res.data.msg}`,
-					type: 'success'
-				});
-				setTimeout(()=> {
-					this.backTo()
-				},1000)
-			} else {
-			  this.$refs.uToast.show({
-			  	title: `${res.data.msg}`,
-			  	type: 'warning'
-			  })
-			};
-			this.showLoadingHint = false
-		  })
-		  .catch((err) => {
-			this.$refs.uToast.show({
-				title: `${err.message}`,
-				type: 'error'
-			})
-			this.showLoadingHint = false;
-		  })
-		},
+      // 生成调度任务
+      postGenerateDispatchTask (data) {
+        this.showLoadingHint = true;
+        generateDispatchTask(data).then((res) => {
+          if (res && res.data.code == 200) {
+            this.$refs.uToast.show({
+              title: `${res.data.msg}`,
+              type: 'success'
+            });
+            setTimeout(()=> {
+              this.backTo()
+            },1000)
+          } else {
+            this.$refs.uToast.show({
+              title: `${res.data.msg}`,
+              type: 'warning'
+            })
+          };
+          this.showLoadingHint = false
+        })
+        .catch((err) => {
+          this.$refs.uToast.show({
+            title: `${err.message}`,
+            type: 'error'
+          })
+          this.showLoadingHint = false;
+        })
+      },
 
-		 // 运送类型信息确认事件
+      // 运送类型信息确认事件
 		  dispatchTaskSure () {
-			// 获取选中的运送工具信息
-			let taskMessage = {
-			  setOutPlaceId: this.userInfo.depId,  //出发地ID
-			  setOutPlaceName: this.userInfo.depName,  //出发地名称
-			  destinationId: '',   //目的地ID
-			  destinationName: '',  //目的地名称
-			  parentTypeId:  this.titleText.id, //运送父类型Id
-			  parentTypeName: this.titleText.value,//运送父类型名称
-			  taskTypeId: this.typeValue,  //运送类型 ID
-			  taskTypeName: this.typeText,  //运送类型 名 称
-			  priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-			  toolId: this.toolValue,   //运送工具ID
-			  toolName: this.toolName,  //运送工具名称
-			  actualCount: this.actualData,   //实际数量
-			  patientName: this.patientName,  //病人姓名
-			  sex: 0,    //病人性别  0-未指定,1-男, 2-女
-			  age: "",   //年龄
-			  number: this.patientNumber,   //住院号
-			  bedNumber: this.bedNumber,  //床号
-			  taskRemark: this.taskDescribe,   //备注
-			  createId: this.workerId,   //创建者ID  当前登录者
-			  createName: this.userName,   //创建者名称  当前登陆者
-			  proId: this.proId,   //项目ID
-			  proName: this.proName,   //项目名称
-			  isBack: this.isBackValue,  //是否返回出发地  0-不返回，1-返回
-			  createType: 1   //创建类型   0-调度员，1-医务人员 固定传 1
-			};
-			// 创建调度任务
-			this.postGenerateDispatchTask(taskMessage)
+        // 获取选中的运送工具信息
+        let taskMessage = {
+          setOutPlaceId: this.userInfo.depId,  //出发地ID
+          setOutPlaceName: this.userInfo.depName,  //出发地名称
+          destinationId: '',   //目的地ID
+          destinationName: '',  //目的地名称
+          parentTypeId:  this.titleText.id, //运送父类型Id
+          parentTypeName: this.titleText.value,//运送父类型名称
+          taskTypeId: this.typeValue,  //运送类型 ID
+          taskTypeName: this.typeText,  //运送类型 名 称
+          priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
+          toolId: this.toolValue,   //运送工具ID
+          toolName: this.toolName,  //运送工具名称
+          actualCount: this.actualData,   //实际数量
+          patientName: this.patientName,  //病人姓名
+          sex: 0,    //病人性别  0-未指定,1-男, 2-女
+          age: "",   //年龄
+          number: this.patientNumber,   //住院号
+          bedNumber: this.bedNumber,  //床号
+          taskRemark: this.taskDescribe,   //备注
+          createId: this.workerId,   //创建者ID  当前登录者
+          createName: this.userName,   //创建者名称  当前登陆者
+          proId: this.proId,   //项目ID
+          proName: this.proName,   //项目名称
+          isBack: this.isBackValue,  //是否返回出发地  0-不返回，1-返回
+          createType: 1   //创建类型   0-调度员，1-医务人员 固定传 1
+        };
+        // 创建调度任务
+        this.postGenerateDispatchTask(taskMessage)
 		  },
 			
-		// 调度任务生成
-		sure () {
-			this.dispatchTaskSure()
-		},
+      // 调度任务生成
+      sure () {
+        this.dispatchTaskSure()
+      },
 		
-		// 调度任务取消
-		cancel () {
-			this.backTo()
-		}
+      // 调度任务取消
+      cancel () {
+        this.backTo()
+      }
 		}
 	}
 </script>

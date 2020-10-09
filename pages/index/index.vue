@@ -1,13 +1,19 @@
 <template>
 	<view class="container">
-		<view class="bg-icon">	
-			<text>BLINK</text>
+		<view class="bg-icon">
+		  <text>BLINK</text>
 		</view>
 		<view class="title-wrapper">
-			<view class="center-transport">
-				<text @click="skipPage">中央运送系统</text>
+			<view class="center-transport" @click="skipPage">
+        <view>
+          <fa-icon type="plus-square" size="100" color="#065da7"></fa-icon>
+        </view>
+				<text>中央运送系统</text>
 			</view>
 			<view class="project-manage">
+        <view>
+          <fa-icon type="wrench" size="100" color="#065da7"></fa-icon>
+        </view>
 				<text>工程管理系统</text>
 			</view>
 		</view>
@@ -17,7 +23,11 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache } from '@/common/js/utils'
+  import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	export default {
+    components: {
+      faIcon
+    },
 		data() {
 			return {
 			}
@@ -35,9 +45,9 @@
 			})
 		},
 		computed: {
-		    ...mapGetters([
-		    ])
-		 },
+      ...mapGetters([
+      ])
+		},
 		mounted () {
 			this.initStoreInfo()
 		},
@@ -62,7 +72,7 @@
 				};
 				if (getCache('weixinInfo')) {
 				  this.$store.commit('changeWeixinInfo', getCache('weixinInfo'));
-				};
+				}
 			}
 		}
 	}
@@ -75,33 +85,30 @@
 		font-size: 14px;
 		.bg-icon {
 			width: 100%;
-			height: 200px;
-			background: #75b0f0;
-			text {
-				display: inline-block;
-				width: 100%;
-				height: 200px;
-				text-align: center;
-				line-height: 200px;
-				color: black;
-				font-weight: blod;
-				font-size: 50px
-			}
+			height: 190px;
+			line-height: 190px;
+			text-align: center;
+			color: black;
+			font-size: 26px;
+			color: #065da7;
+			font-weight: bold;
+			font-size: 50px;
+			  span {
+			    box-shadow: 0 8px 6px -6px black
+			  }
 		};
 		.title-wrapper {
 			flex: 1;
 			padding-top: 20px;
 			font-size: 20px;
-			color: deepskyblue;
+			color: #333;
 			box-sizing: border-box;
 			> view {
 				width: 200px;
 				height: 150px;
 				margin: 0 auto;
 				text-align: center;
-				line-height: 150px;
-				border: 1px solid deepskyblue
-			}
+			};
 			.center-transport {
 				margin-bottom: 20px
 			}

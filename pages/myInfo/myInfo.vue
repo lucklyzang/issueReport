@@ -23,16 +23,16 @@
 			});
 			uni.setNavigationBarColor({
 				backgroundColor: '#00aaff',
-				 animation: {
+				animation: {
 					duration: 400,
 					timingFunc: 'easeIn'
-				  }
+				}
 			})
 		},
 		computed: {
 		    ...mapGetters([
 		    ])
-		 },
+		},
 		mounted () {
 		},
 		methods: {

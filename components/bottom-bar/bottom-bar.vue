@@ -31,10 +31,10 @@
 		onReady () {
 		},
 		computed: {
-		    ...mapGetters([
-				'bottomBarIndex'
-		    ])
-		 },
+      ...mapGetters([
+        'bottomBarIndex'
+      ])
+		},
 		mounted () {
 			this.listIndex = this.itemIndex
 		},

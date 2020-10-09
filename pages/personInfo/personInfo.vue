@@ -64,7 +64,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '1.0.2',
+				versionNumber: '1.0.5',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
@@ -72,29 +72,29 @@
 		onReady () {
 		},
 		computed: {
-		    ...mapGetters([
-				'userInfo',
-				'weixinInfo'
-		    ]),
-			  userName () {
-				return this.userInfo.userName
-			  },
-			  proId () {
-				return this.userInfo.extendData.proId
-			  },
-			  proName () {
-				return this.userInfo.extendData.proName
-			  },
-			  workerId () {
-				return this.userInfo.userName
-			  },
-			  accountName () {
-				return this.userInfo.name
-			  },
-			  userType () {
-				  return this.userInfo.extendData.userType
-			  }
-		 },
+      ...mapGetters([
+        'userInfo',
+        'weixinInfo'
+      ]),
+      userName () {
+        return this.userInfo.userName
+      },
+      proId () {
+        return this.userInfo.extendData.proId
+      },
+      proName () {
+        return this.userInfo.extendData.proName
+      },
+      workerId () {
+        return this.userInfo.userName
+      },
+      accountName () {
+        return this.userInfo.name
+      },
+      userType () {
+        return this.userInfo.extendData.userType
+      }
+		},
 		mounted () {
 		},
 		methods: {
@@ -130,21 +130,24 @@
 				userSignOut(this.proId,this.workerId).then((res) => {
 				  if (res && res.data.code == 200) {
 					  removeAllLocalStorage();
-					  this.changeWeixinInfo(null)
+					  this.changeWeixinInfo(null);
+            uni.redirectTo({
+                url: '/pages/login/login'
+            })
 				  } else {
-					this.$refs.uToast.show({
-						title: `${res.data.msg}`,
-						type: 'warning'
-					});
-					this.changeOverDueWay(false);
-					setCache('storeOverDueWay',false)
+            this.$refs.uToast.show({
+              title: `${res.data.msg}`,
+              type: 'warning'
+            });
+            this.changeOverDueWay(false);
+            setCache('storeOverDueWay',false)
 				  };
 				  this.showLoadingHint = false
 				}).
 				catch((err) => {
 				  this.$refs.uToast.show({
-					title: `${err.message}`,
-					type: 'warning'
+            title: `${err.message}`,
+            type: 'warning'
 				  });
 				  this.changeOverDueWay(false);
 				  setCache('storeOverDueWay',false);
