@@ -99,19 +99,34 @@
 		};
 		.title-wrapper {
 			flex: 1;
-			padding-top: 20px;
+      overflow: auto;
 			font-size: 20px;
 			color: #333;
-			box-sizing: border-box;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
 			> view {
 				width: 200px;
-				height: 150px;
-				margin: 0 auto;
-				text-align: center;
+				flex-basis: 200px;
+				border-radius: 50%;
+				color: black;
+				display: flex;
+				flex-flow: column nowrap;
+				justify-content: center;
+				align-items: center;
+				border: 1px solid #d6d3d3;
+				box-shadow: 0 15px 10px -15px #6d6d6d;
+				margin-bottom: 20px;
+        &:last-child {
+          margin-bottom: 0
+        }
 			};
 			.center-transport {
-				margin-bottom: 20px
-			}
+			};
+      .project-manage {
+        visibility: hidden;
+      }
 		}
 	}
 </style>

@@ -2,7 +2,7 @@ import axios from 'axios-miniprogram'
 import store from '@/store'
 import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
 const instance = axios.create({
-  baseURL: 'https://blink.blinktech.cn/trans',
+  baseURL: 'https://blinktech.cn/trans',
   headers: {
     // common: {
     //   'Accept': 'application/json, test/plain,'
@@ -36,20 +36,20 @@ instance.interceptors.response.use(function (response) {
 		   setCache('questToken', response.headers['token']);
 		 };
 		 if (!response.headers.hasOwnProperty('token')) {
-		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆`) {
+		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆` || response.data.msg == `当前登陆用户[${getCache('userName')}]不存在`) {
 				return response
 		   };
 		   removeAllLocalStorage();
 		   if (!store.getters.overDueWay) {
-			uni.showToast({
-				title: 'token已过期,请重新登录',
-				duration: 2000
-			});
-			 setTimeout(() => {
-			   uni.redirectTo({
-					url: '/pages/myInfo/myInfo',
-			   })
-			 },2000);
+        uni.showToast({
+          title: 'token已过期,请重新登录',
+          duration: 2000
+        });
+         setTimeout(() => {
+           uni.redirectTo({
+            url: '/pages/myInfo/myInfo',
+           })
+         },2000);
 		   } else {
 			   uni.redirectTo({
 					url: '/pages/myInfo/myInfo',

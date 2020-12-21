@@ -3,10 +3,11 @@
 		<u-toast ref="uToast" />
 		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="创建中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
+			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo">
+      </nav-bar>
 		</view>
 		<view class="creat-box">
-			<view class="creat-priority">
+			<view class="creat-priority priority-box">
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
@@ -17,6 +18,24 @@
 					</u-radio-group>
 				</view>
 			</view>
+      <view class="creat-chooseHospital">
+        <view>科室选择</view>
+        <view>
+           <xfl-select 
+              :list="hospitalList"
+              :clearable="false"
+              :showItemNum="5" 
+              :isCanInput="true"
+              :showList="controlListShow"
+              :style_Container="'height: 50px; font-size: 16px;'"
+              :initValue="depName"
+              @change="listChangeEvent"
+              @input="inputEvent"
+              @visible-change="visibleChange"
+          >
+          </xfl-select>
+        </view>
+      </view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
 					<text>运送类型:</text>
@@ -72,12 +91,12 @@
 				<view>转运工具</view>
 				<view>
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
-						<u-radio 
-							@change="toolChange"
+						<u-radio
+              @change="toolChange"
 							active-color="#8dc58d"
-							v-for="(item, index) in toolList" :key="index" 
+              shape="circle"
+							v-for="(item, index) in toolList" :key="index"
 							:name="item.value"
-							:disabled="item.disabled"
 						>
 							{{item.text}}
 						</u-radio>
@@ -113,9 +132,9 @@
 				<button type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
-		<view class="bottom-bar">
+	<!-- 	<view class="bottom-bar">
 			<bottom-bar :itemIndex="0" @itemEvent="clickEvent"></bottom-bar>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -124,28 +143,35 @@
 	import { setCache, getCache } from '@/common/js/utils'
 	import {queryTransportTools,queryTransportType, queryAllDestination, generateDispatchTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
+  import xflSelect from '@/components/xfl-select/xfl-select.vue';
 	export default {
 		components:{
-			navBar
+			navBar,
+      xflSelect 
 		},
 		data() {
 			return {
 				showLoadingHint: false,
+        controlListShow: false,
 				taskTypeText: '',
 				typeText: '',
 				typeValue: '',
-				typeIndex: '',
+				typeIndex: null,
 				priorityValue: 1,
 				transportList: [],
+        hospitalList: [],
+        temporaryHospitalList: [],
 				bedNumber: '',
 				patientName: '',
 				patientNumber: '',
 				actualData: '',
-				toolValue: '',
+				toolValue: null,
 				toolName: '',
 				toolList: [],
 				isBackValue: 0,
-				taskDescribe: ''
+				taskDescribe: '',
+        startPointId: '',
+        startPointName: ''
 			}
 		},
 		onLoad (options) {
@@ -160,6 +186,12 @@
 			userName () {
 				return this.userInfo.userName
 			},
+      depName () {
+        return this.userInfo.depName
+      },
+      depId () {
+        return this.userInfo.depId
+      },
 			proId () {
 				return this.userInfo.extendData.proId
 			},
@@ -175,6 +207,8 @@
 		},
 		
 		mounted () {
+      this.startPointId = this.depId;
+      this.startPointName = this.depName;
 			this.parallelFunction()
 		},
 		
@@ -187,12 +221,30 @@
 			
 			// 返回上一页
 			backTo () {
-				this.changeBottomBarIndex(-1);
+				this.changeBottomBarIndex(0);
 				uni.redirectTo({
 				    url: '/pages/centerTransport/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
 			},
+      
+      // 科室选择列表变化时
+      listChangeEvent (val) {
+        this.startPointId = val.orignItem.id;
+        this.startPointName = val.orignItem.value;
+      },
+      
+      // 下拉框隐藏或显示时事件
+      visibleChange () {
+        this.hospitalList = this.temporaryHospitalList
+      },
+      
+      // input中的数据变化时触发
+      inputEvent (val) {
+        this.controlListShow = Math.random();
+        let innerList = this.temporaryHospitalList;
+        this.hospitalList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
+      },
 			
 			// 运送类型点击事件
       typeEvent (item,index) {
@@ -234,13 +286,9 @@
 				console.log(e);
 			},
 			toolGroupChange(e) {
-				console.log(e);
-				for (let item of this.toolList) {
-					if (e == item.value) {
-						this.toolName = item.text
-					}
-				};
-				console.log(this.toolList);
+        this.toolValue = e;
+        let currentText = this.toolList.filter((item) => { return item.value == e });
+        this.toolName = currentText[0]['text']
 			},
 			isBackGroupChange(e) {
 				console.log(e);
@@ -301,22 +349,26 @@
           if (res && res.length > 0) {
             this.toolList = [];
             this.transportList = [];
+            this.hospitalList = [];
             let [item1,item2,item3] = res;
-            // if (item1) {
-            //   Object.keys(item1).forEach((item) => {
-            // 	this.destinationList.push({
-            // 	  text: item1[item],
-            // 	  value: item
-            // 	})
-            //   })
-            // };
+            if (item1) {
+              Object.keys(item1).forEach((item) => {
+                this.hospitalList.push({
+                  value: item1[item],
+                  id: item
+                })
+              });
+              this.temporaryHospitalList = this.hospitalList
+            };
             if (item2) {
               for (let item of item2) {
                 this.toolList.push({
                   text: item.toolName,
-                  value: item.id
+                  value: item.id,
+                  checked: false
                 })
-              }
+              };
+              this.toolList.push({text: '无工具',value: 0, checked: false})
             };
             if (item3) {
               for(let item of item3) {
@@ -369,8 +421,8 @@
 		  dispatchTaskSure () {
         // 获取选中的运送工具信息
         let taskMessage = {
-          setOutPlaceId: this.userInfo.depId,  //出发地ID
-          setOutPlaceName: this.userInfo.depName,  //出发地名称
+          setOutPlaceId: this.startPointId,  //出发地ID
+          setOutPlaceName: this.startPointName,  //出发地名称
           destinationId: '',   //目的地ID
           destinationName: '',  //目的地名称
           parentTypeId:  this.titleText.id, //运送父类型Id
@@ -378,8 +430,8 @@
           taskTypeId: this.typeValue,  //运送类型 ID
           taskTypeName: this.typeText,  //运送类型 名 称
           priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-          toolId: this.toolValue,   //运送工具ID
-          toolName: this.toolName,  //运送工具名称
+          toolId: this.toolValue == 0 ? '' : this.toolValue,   //运送工具ID
+          toolName: this.toolName == '无工具' ? '' : this.toolName,  //运送工具名称
           actualCount: this.actualData,   //实际数量
           patientName: this.patientName,  //病人姓名
           sex: 0,    //病人性别  0-未指定,1-男, 2-女
@@ -392,7 +444,7 @@
           proId: this.proId,   //项目ID
           proName: this.proName,   //项目名称
           isBack: this.isBackValue,  //是否返回出发地  0-不返回，1-返回
-          createType: 1   //创建类型   0-调度员，1-医务人员 固定传 1
+          createType: 2   //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
         };
         // 创建调度任务
         this.postGenerateDispatchTask(taskMessage)
@@ -434,7 +486,7 @@
 				width: 100%;
 				height: 50px;
 				line-height: 50px;
-			    margin-top: 6px;
+			  margin-top: 6px;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
 				> view {
@@ -459,6 +511,39 @@
 					}
 				}
 			};
+      .creat-chooseHospital {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        margin-top: 6px;
+        > view {
+            &:first-child {
+              float: left;
+              width: 20%;
+              padding-left: 4px;
+              box-sizing: border-box
+            }
+            &:last-child {
+              float: right;
+              position: relative;
+              height: 50px;
+              width: 80%
+            }
+          }
+      };
+      .priority-box {
+        > view {
+          &:last-child {
+          	/deep/ .u-radio-group {
+          		position: absolute;
+          		width: 100%;
+          		top: 50%;
+          		transform: translateY(-50%);
+          		left: 0
+          	}
+          }
+        }
+      };
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
@@ -543,7 +628,17 @@
 						box-sizing: border-box;
 					}
 					&:last-child {
+						float: right;
+						position: relative;
+						height: 50px;
 						width: 60%;
+						/deep/ .u-radio-group {
+							position: absolute;
+							width: 100%;
+							top: 50%;
+							transform: translateY(-50%);
+							left: 0
+						}
 					}
 				}
 			};

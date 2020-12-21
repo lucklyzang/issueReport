@@ -225,7 +225,7 @@
 				uni.redirectTo({
 				    url: '/pages/centerTransport/index/index'
 				});
-				this.changeBottomBarIndex(-1);
+				this.changeBottomBarIndex(0);
 				this.changeIsToCallTaskPage(false)
 			},
 			

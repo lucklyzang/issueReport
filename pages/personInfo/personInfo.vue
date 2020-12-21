@@ -28,9 +28,9 @@
 			  </text>
 			</view>
 			<view class="content-top-other">
-			  <text>公司部门</text>
+			  <text>科室名称</text>
 			  <text>
-				{{proName}}
+				{{depName}}
 			  </text>
 			</view>
 			<view class="content-top-other">
@@ -64,7 +64,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '1.0.5',
+				versionNumber: '1.0.13',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
@@ -88,6 +88,9 @@
       workerId () {
         return this.userInfo.userName
       },
+      depName () {
+         return this.userInfo.depName
+      },
       accountName () {
         return this.userInfo.name
       },
@@ -96,6 +99,7 @@
       }
 		},
 		mounted () {
+      console.log(this.userInfo)
 		},
 		methods: {
 			...mapMutations([
@@ -205,7 +209,7 @@
 	  position: relative;
 	  @include bottom-border-1px(#dadada);
 	  &:last-child {
-		@include bottom-border-1px(#fff);
+      @include bottom-border-1px(#fff);
 	  }
 	  > text {
 		position: absolute;

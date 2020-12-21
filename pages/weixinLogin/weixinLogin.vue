@@ -3,7 +3,7 @@
 		<u-toast ref="uToast"/>
 		<!-- 是否有账号选择框 -->
 		<u-modal v-model="showChooseWay" :show-cancel-button="true"
-		content="是否存在账号?" confirm-text="是" cancel-text="否" @confirm="chooseSure" @cancel="chooseCancel">
+      content="是否存在账号?" confirm-text="是" cancel-text="否" @confirm="chooseSure" @cancel="chooseCancel">
 		</u-modal>
 		<!-- 账号密码输入框 -->
 		<u-modal v-model="showAccount" :show-cancel-button="true"
@@ -57,39 +57,39 @@
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache } from '@/common/js/utils'
 	import {weixinLogIn, boundExist, boundNotExist, getHospitalList} from '@/api/login.js'
-	export default {
-		components:{
-			navBar
-		},
-	        data() {
-	            return {
-	                SessionKey: '',
-	                OpenId: '',
-					showChooseWay: false,
-					showAccount: false,
-					showHospitailList: false,
-	                nickName: null,
-	                avatarUrl: null,
-					typeIndex: null,
-					typeText: '',
-					code: '',
-	                isCanUse: false,
-					hospitalOptions: [],
-					username: '',
-					password: ''
-	            };
-	        },
-	        methods: {
-				...mapMutations([
-					'storeUserInfo',
-					'changeOverDueWay',
-					'changeWeixinInfo'
-				]),
+    export default {
+      components:{
+        navBar
+      },
+      data() {
+        return {
+          SessionKey: '',
+          OpenId: '',
+          showChooseWay: false,
+          showAccount: false,
+          showHospitailList: false,
+          nickName: null,
+          avatarUrl: null,
+          typeIndex: null,
+          typeText: '',
+          code: '',
+           isCanUse: false,
+          hospitalOptions: [],
+          username: '',
+          password: ''
+        };
+      },
+      methods: {
+        ...mapMutations([
+          'storeUserInfo',
+          'changeOverDueWay',
+          'changeWeixinInfo'
+        ]),
 				
 				// 返回
 				backTo () {
 					uni.redirectTo({
-					    url: '/pages/myInfo/myInfo'
+            url: '/pages/myInfo/myInfo'
 					})
 				},
 				
@@ -305,13 +305,13 @@
 				},
 				
 				// 用户同意授权
-	            wxGetUserInfo() {
-					this.isCanUse = false;
-					uni.showLoading({
-						title: '登录中...'
-					});
-					this.login()
-	            },
+	      wxGetUserInfo() {
+          this.isCanUse = false;
+          uni.showLoading({
+            title: '登录中...'
+          });
+          this.login()
+	       },
 				
 				// 发送code到后台
 				sendCode (code) {
@@ -319,7 +319,7 @@
 						if (res['headers']['Status'] == '2003') {
 							//当前微信未绑定过账号
 							uni.hideLoading();
-							this.showChooseWay = true
+							this.showAccount = true;
 						} else if (res['headers']['Status'] == '2002') {
 							uni.hideLoading();
 							//当前微信未绑定账号,后台登陆,存储用户相关信息
@@ -373,8 +373,8 @@
 					})
 				},
 	
-	　　　　　　	//登录
-	            login() {
+	　　　//登录
+	     login() {
 					let _this = this;
 				   // 1.wx获取登录用户code
 					uni.login({
@@ -419,12 +419,12 @@
 						}
 					})
 				}
-	        },
+	    },
 			
-	        onLoad() {
-				this.getSettingMes()
-	        }
-	    }
+      onLoad() {
+        this.getSettingMes()
+      }
+	 }
 </script>
 
 <style lang="scss">

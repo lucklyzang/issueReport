@@ -366,7 +366,7 @@
 			
 			// 返回上一页
 			backTo () {
-				this.changeBottomBarIndex(-1);
+				this.changeBottomBarIndex(0);
 				uni.redirectTo({
 				    url: '/pages/centerTransport/index/index'
 				});

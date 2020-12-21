@@ -132,7 +132,7 @@
 					  }
 					};
 					this.showLoadingHint = false
-				   })
+				  })
 				  .catch((err) => {
 					   this.showLoadingHint = false;
 					   this.modalShow = true;

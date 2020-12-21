@@ -1,13 +1,13 @@
 export default {
   state:{
     titleText: '',
-	bottomBarIndex: -1,
-	isToCallTaskPage: false,
+    bottomBarIndex: 0,
+    isToCallTaskPage: false,
   },
   getters:{
     titleText: state => state.titleText,
-	bottomBarIndex: state => state.bottomBarIndex,
-	isToCallTaskPage: state => state.isToCallTaskPage,
+    bottomBarIndex: state => state.bottomBarIndex,
+    isToCallTaskPage: state => state.isToCallTaskPage,
   },
   mutations:{
     changeTitleText (state, playLoad) {

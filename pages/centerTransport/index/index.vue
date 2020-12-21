@@ -14,6 +14,7 @@
           <fa-icon v-show="item.value == '标本'" type="flask" size="100" color="#065da7"></fa-icon>
           <fa-icon v-show="item.value == '药、物、文书'" type="plus-square-o" size="100" color="#065da7"></fa-icon>
           <fa-icon v-show="item.value == '检查'" type="user-circle-o" size="100" color="#065da7"></fa-icon>
+          <fa-icon v-show="item.value == '核酸采集'" type="address-card" size="100" color="#065da7"></fa-icon>
         </view>
         <text>
           {{item.value}}
@@ -76,6 +77,7 @@
 			}
 		},
 		mounted () {
+      this.changeBottomBarIndex(0);
 			this.parallelFunctionTwo()
 		},
 		methods: {
@@ -111,7 +113,7 @@
         Promise.all([this.getTransportsType()])
         .then((res) => {
           this.showLoadingHint = false;
-          if (res && res.length > 0) {
+          if (res && res[0] && res[0].length > 0) {
             this.noDataShow = false;
             let [item1] = res;
             if (item1) {
@@ -141,9 +143,7 @@
 				return new Promise((resolve,reject) => {
 				  queryTransportTypeClass({proId: this.proId, state: 0}).then((res) => {
             if (res && res.data.code == 200) {
-              if (res.data.data.length > 0) {
-                resolve(res.data.data)
-              }
+              resolve(res.data.data)
             }
 				  })
 				  .catch((err) => {
@@ -159,7 +159,7 @@
 						uni.redirectTo({
 						    url: '/pages/centerTransport/index/index'
 						});
-						this.changeBottomBarIndex(-1)
+						this.changeBottomBarIndex(0)
 					} 
 			  } else if (item.text == '任务跟踪') {
 					this.changeBottomBarIndex(1);
@@ -204,18 +204,25 @@
 			flex-direction: column;
 			flex-wrap: wrap;
 			justify-content: space-between;
-			align-content: flex-start;
-      background: #ededed;
+			align-items: center;
+      background: #FFF;
 			.transTypeListStyle {
-				background: #75b0f0
+				background: #ededed
 			};
 			> view {
-				width: 100%;
-				background: #ececec;
+				width: 180px;
+        flex-basis: 180px;
+        border-radius: 50%;
+				background: #FFF;
 				color: black;
+        border: 1px solid #d6d3d3;
+        box-shadow: 0 15px 10px -15px #6d6d6d;
 				font-size: 20px;
-				text-align: center;
-				margin-bottom: 10px;
+				margin-bottom: 20px;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
         &:last-child {
           margin-bottom: 0;
         }
