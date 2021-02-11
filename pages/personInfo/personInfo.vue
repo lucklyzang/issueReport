@@ -106,7 +106,7 @@
 				'changeOverDueWay',
 				'changeWeixinInfo'
 			]),
-			
+      
 			// 返回上一页
 			backTo () {
 				uni.navigateTo({
@@ -134,10 +134,7 @@
 				userSignOut(this.proId,this.workerId).then((res) => {
 				  if (res && res.data.code == 200) {
 					  removeAllLocalStorage();
-					  this.changeWeixinInfo(null);
-            uni.redirectTo({
-                url: '/pages/login/login'
-            })
+					  this.changeWeixinInfo(null)
 				  } else {
             this.$refs.uToast.show({
               title: `${res.data.msg}`,
@@ -202,6 +199,10 @@
 		  }
 	  }
 	};
+  
+  .content-top-otherone {
+    height:100px
+  };
 	.content-top-other {
 	  height: 45px;
 	  line-height: 45px;

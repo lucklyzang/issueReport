@@ -2,7 +2,7 @@ import axios from 'axios-miniprogram'
 import store from '@/store'
 import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
 const instance = axios.create({
-  baseURL: 'https://blinktech.cn/trans',
+  baseURL: 'https://blink.blinktech.cn/project',
   headers: {
     // common: {
     //   'Accept': 'application/json, test/plain,'
@@ -15,6 +15,7 @@ const instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
+  config.baseURL = store.state.transport.isProjectTask ? 'https://blink.blinktech.cn/project' : 'https://blink.blinktech.cn/trans';
 	if (config['url'] == 'project/queryAll') {
 		config.headers['HTTP_REQUEST_TYPE'] = 1
 	};
@@ -31,10 +32,10 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
  if (response['headers']['Status'] != '2003' && response['config']['url'] != 'project/queryAll') {
-	 if (response.headers['token']) {
-		   store.commit('changeToken', response.headers['token']);
-		   setCache('questToken', response.headers['token']);
-		 };
+     if (response.headers['token']) {
+       store.commit('changeToken', response.headers['token']);
+       setCache('questToken', response.headers['token']);
+     };
 		 if (!response.headers.hasOwnProperty('token')) {
 		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆` || response.data.msg == `当前登陆用户[${getCache('userName')}]不存在`) {
 				return response
@@ -43,17 +44,17 @@ instance.interceptors.response.use(function (response) {
 		   if (!store.getters.overDueWay) {
         uni.showToast({
           title: 'token已过期,请重新登录',
-          duration: 2000
+          duration: 1000
         });
-         setTimeout(() => {
-           uni.redirectTo({
-            url: '/pages/myInfo/myInfo',
-           })
-         },2000);
+        setTimeout(() => {
+          uni.redirectTo({
+           url: '/pages/login/login'
+          })
+        },2000);
 		   } else {
-			   uni.redirectTo({
-					url: '/pages/myInfo/myInfo',
-			   })
+			  uni.redirectTo({
+			    url: '/pages/login/login'
+			  })
 		   }
 		}
 	}

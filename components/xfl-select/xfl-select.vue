@@ -315,13 +315,14 @@
 				if( this.itemIsDisabled(index) ){
 					this.switchMgr.open(); // 点在禁用项上，就不隐藏
 					return;
-				}
+				};
 				this.switchMgr.close(100);   // 开始隐藏，因为会延迟隐藏，所以可以写在这里
 				if(this.disabled){ //如果本项被禁用 或 整个列表框被禁用
 					return;
-				}
+				};
+        this.setInput(value);
 				if( !this.itemIsActive(index) ){  //如果点在非选中项上
-				    this.clearItemActive(); // 清空其它的选中的列表项
+				  this.clearItemActive(); // 清空其它的选中的列表项
 					this.setItemActive(index, value); // 将这一项设置为选中项
 					this.$emit('change', {newVal: value, oldVal: this.selectText, 
 											index: index, orignItem: this.list[index]});

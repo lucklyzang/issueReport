@@ -4,13 +4,13 @@
 		  <text>BLINK</text>
 		</view>
 		<view class="title-wrapper">
-			<view class="center-transport" @click="skipPage">
+			<view class="center-transport" @click="skipPageTrans" v-if="isMedicalMan">
         <view>
           <fa-icon type="plus-square" size="100" color="#065da7"></fa-icon>
         </view>
 				<text>中央运送系统</text>
 			</view>
-			<view class="project-manage">
+			<view class="project-manage" @click="skipPageManage">
         <view>
           <fa-icon type="wrench" size="100" color="#065da7"></fa-icon>
         </view>
@@ -46,6 +46,7 @@
 		},
 		computed: {
       ...mapGetters([
+        'isMedicalMan'
       ])
 		},
 		mounted () {
@@ -53,14 +54,23 @@
 		},
 		methods: {
 			...mapMutations([
-				'changeBottomBarIndex'
+				'changeBottomBarIndex',
+        'changeIsProjectTask'
 			]),
-			skipPage () {
+			skipPageTrans () {
 				uni.navigateTo({
 					url: '/pages/centerTransport/index/index'
 				});
+        this.changeIsProjectTask(false);
 				this.changeBottomBarIndex(-1);
 			},
+      skipPageManage () {
+      	uni.navigateTo({
+      		url: '/pages/projectManagement/index/index'
+      	});
+        this.changeIsProjectTask(true);
+      	this.changeBottomBarIndex(-1);
+      },
 			initStoreInfo () {
 				// 页面刷新时重新存入用户信息
 				if (getCache('userInfo')) {
@@ -89,6 +99,7 @@
 			line-height: 190px;
 			text-align: center;
 			color: black;
+      background: #fcfcfc;
 			font-size: 26px;
 			color: #065da7;
 			font-weight: bold;
@@ -107,8 +118,8 @@
       justify-content: center;
       align-items: center;
 			> view {
-				width: 200px;
-				flex-basis: 200px;
+				width: 180px;
+				flex-basis: 180px;
 				border-radius: 50%;
 				color: black;
 				display: flex;
@@ -125,7 +136,7 @@
 			.center-transport {
 			};
       .project-manage {
-        visibility: hidden;
+        // visibility: hidden;
       }
 		}
 	}

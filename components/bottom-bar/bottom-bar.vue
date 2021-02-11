@@ -21,7 +21,7 @@
 		data() {
 			return {
 				barList: [
-					{text: '呼叫', img: '/static/img/medical-call.png',imgCheckd: '/static/img/medical-call-checked.png'},
+					{text: '呼叫下单', img: '/static/img/medical-call.png',imgCheckd: '/static/img/medical-call-checked.png'},
 					{text: '任务跟踪', img: '/static/img/task-tail.png',imgCheckd: '/static/img/task-tail-checked.png'},
 					{text: '历史任务', img: '/static/img/history-task.png',imgCheckd: '/static/img/history-task-checked.png'},
 				],

@@ -1,9 +1,9 @@
 export default {
   state:{
     userInfo: null,
-	token: null, //请求token,
-	overDueWay: false,
-	weixinInfo: null
+    token: null, //请求token,
+    overDueWay: false,
+    weixinInfo: null
   },
   getters:{
     userInfo : state => state.userInfo,

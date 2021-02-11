@@ -83,7 +83,8 @@
         ...mapMutations([
           'storeUserInfo',
           'changeOverDueWay',
-          'changeWeixinInfo'
+          'changeWeixinInfo',
+          'changeIsMedicalMan'
         ]),
 				
 				// 返回
@@ -186,6 +187,11 @@
 							setCache('userInfo', res.data.data);
 							setCache('isLogin', true);
 							this.storeUserInfo(res.data.data);
+              if (res.data.data['extendData']['user_type_id'] == 1) {
+                this.changeIsMedicalMan(true)
+              } else {
+                this.changeIsMedicalMan(false)
+              };
 							uni.hideLoading();
 							uni.switchTab({
 								url: '/pages/index/index'
@@ -225,6 +231,11 @@
 							setCache('userInfo', res.data.data);
 							setCache('isLogin', true);
 							this.storeUserInfo(res.data.data);
+              if (res.data.data['extendData']['user_type_id'] == 1) {
+                this.changeIsMedicalMan(true)
+              } else {
+                this.changeIsMedicalMan(false)
+              };
 							uni.hideLoading();
 							uni.switchTab({
 								url: '/pages/index/index'
@@ -329,6 +340,11 @@
 								setCache('userInfo', res.data.data);
 								setCache('isLogin', true);
 								this.storeUserInfo(res.data.data);
+                if (res.data.data['extendData']['user_type_id'] == 1) {
+                  this.changeIsMedicalMan(true)
+                } else {
+                  this.changeIsMedicalMan(false)
+                };
 								uni.hideLoading();
 								uni.switchTab({
 									url: '/pages/index/index'
@@ -349,6 +365,11 @@
 								setCache('userInfo', res.data.data);
 								setCache('isLogin', true);
 								this.storeUserInfo(res.data.data);
+                if (res.data.data['extendData']['user_type_id'] == 1) {
+                  this.changeIsMedicalMan(true)
+                } else {
+                  this.changeIsMedicalMan(false)
+                };
 								uni.switchTab({
 									url: '/pages/index/index'
 								});

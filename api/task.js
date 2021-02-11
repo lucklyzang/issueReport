@@ -78,3 +78,85 @@ export function taskReminder(proId,taskId) {
     method: 'get'
   })
 };
+
+// 根据科室查询房间信息
+export function departmentRoom(data) {
+  return request({
+    url: 'bxSpace/loadData',
+    method: 'get',
+    params: data
+  })
+};
+
+// 工程维修
+
+// 巡检问题上报
+export function reportProblem(data) {
+  return request({
+    url: 'bxTask/reportProblem',
+    method: 'post',
+    data
+  })
+};
+
+// 查询任务类型
+export function queryTaskType(data) {
+  return request({
+    url: 'bxTaskType/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+
+// 查询协助人员
+export function helpWorkers(data) {
+  return request({
+    url: 'bxWorker/workers',
+    method: 'get',
+    params: data
+  })
+};
+
+// 查询备注信息
+export function getRemarks(data) {
+  return request({
+    url: 'bxRemark/remarks',
+    method: 'get',
+    params: data
+  })
+};
+
+// 查询工程任务列表
+export function getMaintainTask(data) {
+  return request({
+    url: 'bxTask/queryTask',
+    method: 'get',
+    params: data
+  })
+};
+
+// 任务取消
+export function projectTaskCancel(data) {
+  return request({
+    url: 'bxTask/undoTask',
+    method: 'put',
+    data
+  })
+};
+
+// 工程任务催单
+export function projectTaskReminder(proId,taskId) {
+  return request({
+    url: `bxTask/reminder/${proId}/${taskId}`,
+    method: 'get'
+  })
+};
+
+// 任务取消原因
+export function projectTaskCancelReason(data) {
+  return request({
+    url: 'back/dict',
+    method: 'get',
+    data
+  })
+}

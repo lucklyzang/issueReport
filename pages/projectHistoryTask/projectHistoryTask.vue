@@ -26,41 +26,48 @@
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
-						<view class="item-top-left">
+						<view class="item-top-one">
 							<view class="number">
 								<text>编号: {{item.number}}</text>
 							</view>
-							<view class="start-point">
-								<text>出发地: {{item.setOutPlaceName}}</text>
-							</view>
-							<view class="transport-type">
-								<text>运送类型: {{item.taskTypeName}}</text>
-							</view>
-							<view class="bed-number">
-								<text>床号: {{item.bedNumber}}</text>
-							</view>
-							<view class="createTime">
-								<text>创建时间: {{item.createTime}}</text>
+						  <view class="priority">
+						  	<text>状态:</text>
+						  	<text>{{stateTransfer(item.state)}}</text>
+						  </view>
+						</view>
+						<view class="item-top-two">
+						  <view class="start-point">
+						  	<text>优先级: {{priorityTransfer(item.priority)}}</text>
+						  </view>
+							<view class="destination-point">
+								<text>任务类型: {{item.taskTypeName}}</text>
 							</view>
 						</view>
-						<view class="item-top-right">
-							<view class="priority status">
-								<text>状态:</text>&nbsp;
-								<text>{{stateTransfer(item.state)}}</text>
+						<view class="item-top-three">
+							<view class="transport-type">
+								<text>目的地: {{item.destinationName}}</text>
 							</view>
-							<view class="destination-point">
-								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
+						  <view class="transport-people">
+						  	<text>维修人员: {{item.workerName}}</text>
+						  </view>
+						</view>
+						<view class="item-top-four">
+						  <view class="bed-number">
+						  	<text>任务描述: {{item.taskDesc}}</text>
+						  </view>
+              <view class="transport-tool">
+              	<text>耗时: {{consueTime(item.createTime,item.finishTime)}}</text>
+              </view>
+						</view>
+					</view>
+					<view class="item-bottom-complete">
+						<view class="item-bottom-left">
+							<view class="time">
+								<text>开始时间: {{item.createTime}}</text>
 							</view>
-							<view class="transport-people">
-								<text>运送人: {{item.workerName}}</text>
-							</view>
-							<view class="transport-tool">
-								<text>转运工具: {{item.toolName}}</text>
-							</view>
-							<view class="transport-tool">
-								<text>耗时: {{consueTime(item.responseTime,item.finishTime)}}</text>
-							</view>
+						  <view class="time">
+						  	<text>完成时间: {{item.finishTime}}</text>
+						  </view>
 						</view>
 					</view>
 				</view>
@@ -68,37 +75,50 @@
 			<view class="task-tail-content task-tail-content-going" v-show="current == 1">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
-						<view class="item-top-left">
+						<view class="item-top-one">
 							<view class="number">
 								<text>编号: {{item.number}}</text>
 							</view>
-							<view class="start-point">
-								<text>出发地: {{item.setOutPlaceName}}</text>
-							</view>
-							<view class="transport-type">
-								<text>运送类型: {{item.taskTypeName}}</text>
-							</view>
-							<view class="bed-number">
-								<text>床号: {{item.bedNumber}}</text>
+						  <view class="priority">
+						  	<text>状态:</text>
+						  	<text>{{stateTransfer(item.state)}}</text>
+						  </view>
+						</view>
+						<view class="item-top-two">
+						  <view class="start-point">
+						  	<text>优先级: {{priorityTransfer(item.priority)}}</text>
+						  </view>
+							<view class="destination-point">
+								<text>任务类型: {{item.taskTypeName}}</text>
 							</view>
 						</view>
-						<view class="item-top-right">
-							<view class="priority status">
-								<text>状态:</text>&nbsp;
-								<text>{{stateTransfer(item.state)}}</text>
+						<view class="item-top-three">
+							<view class="transport-type">
+								<text>目的地: {{item.destinationName}}</text>
 							</view>
-							<view class="destination-point">
-								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
-							</view>
-							<view class="transport-people">
-								<text>运送人: {{item.workerName}}</text>
-							</view>
-							<view class="transport-tool">
-								<text>转运工具: {{item.toolName}}</text>
-							</view>
+						  <view class="transport-people">
+						  	<text>维修人员: {{item.workerName}}</text>
+						  </view>
+						</view>
+						<view class="item-top-four">
+						  <view class="bed-number">
+						  	<text>任务描述: {{item.taskDesc}}</text>
+						  </view>
+						  <view class="transport-tool">
+						  	<text>耗时: {{consueTime(item.createTime,item.finishTime)}}</text>
+						  </view>
 						</view>
 					</view>
+          <view class="item-bottom-complete">
+          	<view class="item-bottom-left">
+          		<view class="time">
+          			<text>开始时间: {{item.createTime}}</text>
+          		</view>
+              <view class="time">
+              	<text>完成时间: {{item.finishTime}}</text>
+              </view>
+          	</view>
+          </view>
 				</view>
 			</view>
 		</view>
@@ -112,7 +132,7 @@
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache, getDate } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
-	import {getDispatchTaskComplete} from '@/api/task.js'
+	import {getMaintainTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
 		components:{
@@ -140,19 +160,17 @@
 		onPullDownRefresh() {
 			this.isFresh = true;
 			if (this.current === 0) {
-			  this.queryCompleteDispatchTask(
+			  this.queryProjectTask(
           {
-            proId:this.proId, workerId:'',state:7,
-            startDate: this.dateStart, endDate: this.dateEnd,
-            departmentId: this.userInfo.depId
+            proId:this.proId, workerId:'',state:5,
+            startDate: this.dateStart, endDate: this.dateEnd
           }
 			  )
 			} else {
-			  this.queryCompleteDispatchTask(
+			  this.queryProjectTask(
           {
             proId:this.proId, workerId:'',state:6,
-            startDate: this.dateStart, endDate: this.dateEnd,
-            departmentId: this.userInfo.depId
+            startDate: this.dateStart, endDate: this.dateEnd
           }
 			  )
 			}
@@ -182,11 +200,11 @@
 		
 		mounted () {
 			this.initDate();
-			this.queryCompleteDispatchTask(
+			this.queryProjectTask(
 				{
-				  proId:this.proId, workerId:'',state:7,
+				  proId:this.proId, workerId:'',state:5,
 				  startDate: this.dateStart, endDate: this.dateEnd,
-				  departmentId: this.userInfo.depId
+			
 				}
 			)
 		},
@@ -232,29 +250,29 @@
 			stateTransfer (index) {
 				switch(index) {
 				  case 0 :
-					return '未分配'
-					break;
+				  return '未分配'
+				  break;
 				  case 1 :
-					return '未查阅'
-					break;
+				  return '未获取'
+				  break;
 				  case 2 :
-					return '未开始'
-					break;
+				  return '未开始'
+				  break;
 				  case 3 :
-					return '进行中'
-					break;
+				  return '进行中'
+				  break;
 				  case 4 :
-					return '未结束'
-					break;
+				  return '待签字'
+				  break;
 				  case 5 :
-					return '已延迟'
-					break;
+				  return '已完成'
+				  break;
 				  case 6 :
-					return '已取消'
-					break;
+				  return '已取消'
+				  break;
 				  case 7 :
-					return '已完成'
-					break;
+				  return '已延迟'
+				  break;
 				}
 			},
 			
@@ -262,19 +280,17 @@
 			tabChange (index) {
 				this.current = index;
 				if (index === 0) {
-				  this.queryCompleteDispatchTask(
+				  this.queryProjectTask(
             {
-              proId:this.proId, workerId:'',state:7,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
+              proId:this.proId, workerId:'',state:5,
+              startDate: this.dateStart, endDate: this.dateEnd
             }
 				  )
 				} else {
-				  this.queryCompleteDispatchTask(
+				  this.queryProjectTask(
             {
               proId:this.proId, workerId:'',state:6,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
+              startDate: this.dateStart, endDate: this.dateEnd
             }
 				  )
 				}
@@ -283,29 +299,27 @@
       // 搜索完成的任务
       searchCompleteTask () {
         if (this.current === 0) {
-          this.queryCompleteDispatchTask(
+          this.queryProjectTask(
             {
-              proId:this.proId, workerId:'',state:7,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
+              proId:this.proId, workerId:'',state:5,
+              startDate: this.dateStart, endDate: this.dateEnd
             }
           )
         } else {
-          this.queryCompleteDispatchTask(
+          this.queryProjectTask(
             {
               proId:this.proId, workerId:'',state:6,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
+              startDate: this.dateStart, endDate: this.dateEnd
             }
           )
         }
       },
 			  
       // 查询历史调度任务(已完成)
-      queryCompleteDispatchTask (data) {
+      queryProjectTask (data) {
         this.noDataShow = false;
         this.showLoadingHint = true;
-        getDispatchTaskComplete(data).then((res) => {
+        getMaintainTask(data).then((res) => {
           this.showLoadingHint = false;
           this.stateCompleteList = [];
           if (this.isFresh) {
@@ -318,25 +332,18 @@
               for (let item of res.data.data) {
                 this.stateCompleteList.push({
                   createTime: item.createTime,
-                  responseTime: item.responseTime,
+                  startTime: item.startTime,
                   planStartTime: item.planStartTime,
-                  state: item.state,
-                  setOutPlaceName: item.setOutPlaceName,
-                  destinationName: item.destinationName,
-                  taskTypeName: item.taskTypeName,
-                  toolName: item.toolName,
+                  finalFinishTime: item.finalFinishTime,
                   finishTime: item.finishTime,
+                  state: item.state,
+                  destinationName: item.depName,
+                  taskTypeName: item.typeName,
                   priority: item.priority,
-                  id: item.id,
                   number: item.taskNumber,
-                  distName: item.distName,
-                  patientName: item.patientName,
-                  bedNumber: item.bedNumber,
-                  startPhoto: item.startPhoto,
-                  endPhoto: item.endPhoto,
-                  isBack: item.isBack,
-                  isSign: item.isSign,
-                  workerName: item.workerName,
+                  id: item.id,
+                  taskDesc: item.taskDesc,
+                  workerName: item.workerName
                 })
               }
             } else {
@@ -368,7 +375,7 @@
 			backTo () {
 				this.changeBottomBarIndex(0);
 				uni.redirectTo({
-				    url: '/pages/centerTransport/index/index'
+				    url: '/pages/projectManagement/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
 			},
@@ -385,20 +392,20 @@
 						this.backTo()
 					} else {
 						uni.redirectTo ({
-							url: '/pages/callTask/callTask'
+							url: '/pages/projectRepairs/projectRepairs'
 						});
 						this.changeBottomBarIndex(0);
 						this.changeIsToCallTaskPage(true)
 					}
 				} else if (item.text == "任务跟踪") {
 					uni.redirectTo({
-						url: '/pages/task-tail/task-tail'
+						url: '/pages/projectTaskTail/projectTaskTail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/pages/historyTask/historyTask'
+						url: '/pages/projectHistoryTask/projectHistoryTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
@@ -488,74 +495,102 @@
 			flex: 1;
 			overflow: auto;
 			.task-tail-content {
-				height: 94%;
+				height: 93%;
 				overflow: auto;
-				position: relative;
 				background: #f7f7f7;
-				.empty-info {
-					position: absolute;
-					top: 0;
-					left: 0;
-					bottom: 0;
-					right: 0;
-					margin: auto
-				};
 				.task-tail-content-item {
-					background: #FFFFFF;
-					width: 98%;
+					width: 96%;
 					margin: 0 auto;
 					margin-top: 6px;
 					border-radius: 4px;
+					background: #FFFFFF;
 					&:last-child {
 						margin-bottom: 6px
 					};
 					.item-top {
-						width: 100%;
-						display: inline-block;
-						font-size: 16px;
-						color: black;
-						.item-top-left {
-							width: 55%;
-							float: left;
-							height: 100%;
-							> view {
-								line-height: 35px;
-							}
-							.number {
-								text {
-									font-size: 14px;
-									color: #278ee6;
-								}
-							}
-						};
-						.item-top-right {
-							width: 45%;
-							float: right;
-							height: 100%;
-							> view {
-								line-height: 35px;
-							}
-							.priority {
-								text {
-									font-size: 14px
-								}
-							};
-							.destination-point {
-								text {
-									&:not(:first-child) {
-										margin-right: 4px
-									}
-								}
-							};
-							.status {
-								text {
-									&:last-child {
-										color: red
-									}
-								}
-							}
-						}
-					}
+            width: 100%;
+            font-size: 16px;
+            display: inline-block;
+            color: black;
+            > view {
+              padding: 6px 0;
+              display: flex;
+              box-sizing: border-box;
+              flex-flow: row nowrap;
+              > view {
+                width: 50%;
+                box-sizing: border-box;
+                > text {
+                  display: inline-block;
+                  box-sizing: border-box;
+                  &:last-child {
+                    padding-left: 4px;
+                  }
+                }
+              }
+            };
+            .item-top-one {
+              > view {
+                font-size: 14px;
+                word-break: break-all;
+                text {
+                  color: #c2c8cb;
+                };
+                &:first-child {
+                  width: 70%;
+                  > text {
+                  }
+                };
+                &:last-child {
+                  width: 30%;
+                  text-align: center;
+                  > text {
+                    &:first-child {
+                      color: black
+                    };
+                    &:last-child {
+                      color: red
+                    }
+                  }
+                }
+              }
+            };
+            .item-top-three {
+              > view {
+               &:first-child {
+                 > text {
+                   }
+                 }
+               }
+            };
+            .item-top-four {
+              > view {
+                > text {
+                }
+              }
+            }
+					};
+			    .item-bottom-complete {
+			      height: 70px;
+			      position: relative;
+			      .item-bottom-left {
+			        width: 100%;
+			         position: absolute;
+			         top: 50%;
+			         transform: translateY(-50%);
+               padding-left: 4px;
+			         > view {
+			           text {
+                   width: 100%;
+                   display: inline-block;
+			             color: #c2c8cb
+			           };
+			           &:first-child {
+			             margin-bottom: 8px
+			           }
+			         }
+			      }
+			    };
 				}
 			}
 			.task-tail-content-going {

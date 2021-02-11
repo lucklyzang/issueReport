@@ -29,6 +29,33 @@
         "backgroundColorBottom": "#fff"
 			}
 		},
+    {
+    	"path": "pages/projectManagement/index/index",
+    	"style": {
+    		"navigationBarTitleText": "工程管理",
+    		"navigationBarBackgroundColor": "#ffffff",
+        "backgroundColorTop": "#fff,",
+        "backgroundColorBottom": "#fff"
+    	}
+    },
+    {
+    	"path": "pages/medicRepairs/medicRepairs",
+    	"style": {
+    		"navigationBarTitleText": "创建自主任务",
+    		"navigationBarBackgroundColor": "#ffffff",
+        "backgroundColorTop": "#fff,",
+        "backgroundColorBottom": "#fff"
+    	}
+    },
+    {
+    	"path": "pages/projectRepairs/projectRepairs",
+    	"style": {
+    		"navigationBarTitleText": "创建自主任务",
+    		"navigationBarBackgroundColor": "#ffffff",
+        "backgroundColorTop": "#fff,",
+        "backgroundColorBottom": "#fff"
+    	}
+    },
 		{
 			"path": "pages/callTask/callTask",
 			"style": {
@@ -44,6 +71,14 @@
 				"enablePullDownRefresh": true
 			}
 		},
+    {
+    	"path": "pages/projectTaskTail/projectTaskTail",
+    	"style": {
+    		"navigationBarTitleText": "任务跟踪",
+    		"navigationBarBackgroundColor": "#000000",
+    		"enablePullDownRefresh": true
+    	}
+    },
 		{
 			"path": "pages/historyTask/historyTask",
 			"style": {
@@ -52,6 +87,14 @@
 				"enablePullDownRefresh": true
 			}
 		},
+    {
+    	"path": "pages/projectHistoryTask/projectHistoryTask",
+    	"style": {
+    		"navigationBarTitleText": "历史任务",
+    		"navigationBarBackgroundColor": "#000000",
+    		"enablePullDownRefresh": true
+    	}
+    },
 		{
 			"path": "pages/personInfo/personInfo",
 			"style": {
