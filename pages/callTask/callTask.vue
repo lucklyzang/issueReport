@@ -163,7 +163,7 @@
 			<view class="creat-priority creat-is-back trans-total">
 				<view>该任务运送总数</view>
 				<view>
-					<u-input v-model="taskTotal" type="text" border="true" />
+					<u-input disabled v-model="taskTotal" type="text" :border="true" />
 				</view>
 			</view>
 			<view class="creat-chooseHospital">
@@ -185,17 +185,16 @@
 				</view>
 			</view>
 			<view class="patient-box">
-				<view class="patient-box-list" v-for="(item,index) in templateTwoMessage" :key="item">
+				<view class="patient-box-list" v-for="(item,index) in templateTwoMessage" :key="index">
 					<view class="patient-title">
 						<view>病人{{index+1}}</view>
-						<u-icon name="trash-fill"></u-icon>
+						<u-icon name="trash-fill" v-show="index > 0" @click="deletetMessage(index)"></u-icon>
 					</view>
 					<view class="creat-form">
 						<view>
 							<u-field
-								v-model="item.bedNumber"
+								v-model="templateTwoMessage[index].bedNumber"
 								label="床号"
-								:border-bottom="true"
 								:border-top="true"
 								placeholder="请输入床号"
 							>
@@ -203,9 +202,8 @@
 						</view>
 						<view>
 							<u-field
-								v-model="item.patientName"
+								v-model="templateTwoMessage[index].patientName"
 								label="姓名"
-								:border-bottom="true"
 								:border-top="true"
 								placeholder="请输入姓名"
 							>
@@ -213,9 +211,8 @@
 						</view>
 						<view>
 							<u-field
-								v-model="item.patientNumber"
+								v-model="templateTwoMessage[index].patientNumber"
 								label="住院号"
-								:border-bottom="true"
 								:border-top="true"
 								placeholder="请输入住院号"
 							>
@@ -223,12 +220,11 @@
 						</view>
 						<view>
 							<u-field
-								v-model="item.actualData"
+								disabled
+								v-model="templateTwoMessage[index].actualData"
+								type="text"
 								label="运送数量"
-								:border-bottom="true"
 								:border-top="true"
-								placeholder="请输入运送数量"
-								type="number"
 							>
 							</u-field>
 						</view>
@@ -254,46 +250,51 @@
 					<view class="transport-parent-box">
 						<view>
 							<xfl-select
-								:list="item.genderList"
+								:list="item.sampleList"
 								:clearable="false"
 								:showItemNum="5" 
 								:isCanInput="true"
-								:showList="genderControlListShow"
+								:showList="transportParentControlListShow"
 								:style_Container="'height: 50px; font-size: 16px;'"
-								:initValue="item.genderInitName"
-								@change="genderChangeEvent"
-								@input="genderInputEvent"
-								@visible-change="genderVisibleChange"
+								:initValue="item.sampleValue"
+								:outerIndex="index"
+								@change="transportParentChange"
+								@input="transportParentInputEvent"
+								@visible-change="transportParentVisibleChange"
 							>
 							</xfl-select>
 						</view>
 						<view>
 							<text>运送类型:</text>
-							<text>阿萨飒飒</text>
+							<text>{{jointTransportMessage(index)}}</text>
 						</view>
 					</view>
 					<view class="creat-transport-type">
 						<view class="creat-transport-type-content">
-							<view v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">
+							<view v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': templateTwoMessage[index]['transportList'][innerIndex].checked }" @click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerIndex">
 								<view>
-									{{item.text}}
+									{{innerItem.text}}
 								</view>
 								<view>
-									<u-number-box :input-width="40" v-model="stepperValue" @change="stepperValChange"></u-number-box>
+									<u-number-box :input-width="40" v-model="templateTwoMessage[index].transportList[innerIndex].typerNumber" 
+										@change="stepperValChange(index)"
+										@plus="plusNum(index)"
+										@minus="minusNum(index)"
+									>
+									</u-number-box>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="addpatient-message-btn">
+			<view class="addpatient-message-btn" @click="addMessageEvent">
 				点击添加病人信息
 			</view>
 			<view class="task-describe">
 				<u-field
 					v-model="taskDescribe"
 					label="任务描述"
-					:border-bottom="true"
 					:border-top="true"
 					placeholder="请输入任务描述"
 					type="textarea"
@@ -303,10 +304,10 @@
 		</view>
 		<view class="btn-box">
 			<view>
-				<button type="primary" @click="sure">确认</button>
+				<button class="sureBtn" type="primary" @click="sure">确认</button>
 			</view>
 			<view>
-				<button type="primary" @click="cancel">取消</button>
+				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
 	<!-- 	<view class="bottom-bar">
@@ -318,7 +319,7 @@
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	import { setCache, getCache } from '@/common/js/utils'
-	import {queryTransportTools,queryTransportType, queryAllDestination, generateDispatchTask} from '@/api/task.js'
+	import {queryTransportTypeClass,queryTransportTools,queryTransportType, queryAllDestination, generateDispatchTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	import xflSelect from '@/components/xfl-select/xfl-select.vue';
 	export default {
@@ -330,6 +331,7 @@
 			return {
 				showLoadingHint: false,
 				controlListShow: false,
+				transportParentControlListShow: false,
 				taskTypeText: '',
 				typeText: '',
 				typeValue: '',
@@ -355,8 +357,9 @@
 						bedNumber: '',
 						patientName: '',
 						patientNumber: '',
-						actualData: '',
+						actualData: 0,
 						genderInitName: '男',
+						transportList: [],
 						genderList: [
 							{
 								value:'男',
@@ -366,16 +369,34 @@
 								value:'女',
 								id: 1
 							}
-						]
+						],
+						sampleList: [],
+						sampleValue: ''
 					}
 				],
+				transportTypeParent: [],
+				transportTypeChild: [],
 				genderControlListShow: false,
-				stepperValue: 0
 			}
 		},
 		onLoad (options) {
-			this.taskTypeText = this.titleText.value
+			this.taskTypeText = this.titleText.value;
+			this.templateTwoMessage[0].sampleValue = this.titleText.value
 		},
+		
+		// 监听每个病人对应的运送类型数量
+		watch: {
+		    templateTwoMessage: {
+		      handler(newVal,oldVal) {
+		        this.taskTotal  = this.templateTwoMessage.reduce((accumulator, currentValue) => {
+		          return accumulator + Number(currentValue.actualData)
+		        },0);
+		      },
+		      deep: true,
+		      immediate: true
+		    }
+		},
+		  
 		computed: {
 			...mapGetters([
 				'titleText',
@@ -451,6 +472,29 @@
 				this.typeText = item.text;
 				this.typeValue = item.value;
 			},
+			
+			// 模板二运送类型点击事件
+			sampleTypeEvent (index ,innerItem, innerIndex) {
+				this.templateTwoMessage[index]['transportList'][innerIndex].checked = !this.templateTwoMessage[index]['transportList'][innerIndex].checked;
+				if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
+				  this.templateTwoMessage[index]['transportList'][innerIndex].typerNumber = 0;
+				  
+				};
+				this.$forceUpdate();
+				this.reduceTotal(index)
+			},
+			
+			// 拼接运送类型信息函数
+			jointTransportMessage (index) {
+				let finalMsg = '';
+				let targetMsg = this.templateTwoMessage[index].transportList.filter((item) => {
+				  return item.checked == true
+				});
+				for (let item of targetMsg) {
+				  finalMsg += `${item.text}${item.typerNumber}个,`
+				};
+				return finalMsg
+			},
 	
 			// 性别选择列表变化时
 			genderChangeEvent (val) {
@@ -465,10 +509,45 @@
 			// 性别input中的数据变化时触发
 			genderInputEvent (val) {
 			},
+			
+			// 运送类型大类选择列表变化时
+			transportParentChange (val) {
+				this.querytransportChildByTransportParent(val.parentIndex,val.orignItem.id);
+				this.templateTwoMessage[val.parentIndex].actualData = 0;
+			},
+			  
+			// 运送类型大类下拉框隐藏或显示时事件
+			transportParentVisibleChange () {
+			   
+			},
+			  
+			// 运送类型大类input中的数据变化时触发
+			transportParentInputEvent (val) {
+			},
 			  
 			// 运送类型子类步进器值改变事件
-			stepperValChange () {
-				  
+			stepperValChange (index) {
+				this.reduceTotal(index);
+				console.log('数据',this.templateTwoMessage)
+			},
+			
+			// 阻止步进器冒泡
+			plusNum(index) {
+				// event.stopPropagation()
+			},
+			minusNum(index) {
+				// event.stopPropagation()
+			},
+			
+			// 求和函数
+			reduceTotal(index) {
+				// 求该病人信息对应的运送数量
+				let targetMsg = this.templateTwoMessage[index].transportList.filter((item) => {
+				  return item.checked == true
+				});
+				this.templateTwoMessage[index].actualData = targetMsg.reduce((accumulator, currentValue) => {
+				  return accumulator + currentValue.typerNumber
+				},0);
 			},
 			
 			// 底部按钮点击
@@ -545,7 +624,7 @@
 				})
 			},
 			  
-			// 查询运送类型
+			// 查询运送类型小类
 			getTransPorttype (data) {
 			  return new Promise((resolve,reject) => {
 				  queryTransportType(data)
@@ -560,19 +639,66 @@
 			  })
 			},
 			
-			// 并行查询目的地、转运工具、运送类型
+			// 查询运送类型大类
+			getTransportsTypeParent () {
+			  return new Promise((resolve,reject) => {
+				queryTransportTypeClass({proId: this.proId, state: 0}).then((res) => {
+				  if (res && res.data.code == 200) {
+					if (res.data.data.length > 0) {
+					  resolve(res.data.data)
+					}
+				  }
+				})
+				  .catch((err) => {
+					reject(err.message)
+				  })
+			  })
+			},
+			
+			// 根据运送类型大类查询运送类型小类
+			querytransportChildByTransportParent (index,id, flag) {
+				queryTransportType({
+				  proId: this.proId,
+				  state: 0,
+				  parentId: id
+				}).then((res) => {
+				  if (res && res.data.code == 200) {
+					this.templateTwoMessage[index].transportList = [];
+					for(let item of res.data.data) {
+					  this.templateTwoMessage[index].transportList.push({
+						text: item.typeName,
+						value: item.id,
+						checked: false,
+						typerNumber: 0
+					  });
+					}
+				  }
+				})
+				.catch((err) => {
+				  this.$refs.uToast.show({
+					title: `${err.message}`,
+					type: 'warning'
+				  }).then(() => {})
+				})
+			  },
+			
+			// 并行查询目的地、转运工具、运送类型小类、运送类型大类
 			parallelFunction (type) {
 				Promise.all([this.getAllDestination(),this.getTransportTools(), this.getTransPorttype({
 				  proId: this.proId,
 				  state: 0,
 				  parentId: this.titleText.id
-				})])
+				}),this.getTransportsTypeParent()])
 				.then((res) => {
 				  if (res && res.length > 0) {
 					this.toolList = [];
 					this.transportList = [];
 					this.hospitalList = [];
-					let [item1,item2,item3] = res;
+					this.transportTypeParent = [];
+					this.templateTwoMessage[0].sampleList = [];
+					this.templateTwoMessage[0].transportList = [];
+					this.transportTypeChild = [];
+					let [item1,item2,item3,item4] = res;
 					if (item1) {
 					  Object.keys(item1).forEach((item) => {
 						this.hospitalList.push({
@@ -597,8 +723,30 @@
 						this.transportList.push({
 						  text: item.typeName, 
 						  value: item.id
+						});
+						this.templateTwoMessage[0].transportList.push({
+							text: item.typeName,
+							value: item.id,
+							checked: false,
+							typerNumber: 0
+						});
+						this.transportTypeChild.push({
+							text: item.typeName,
+							value: item.id,
+							checked: false,
+							typerNumber: 0
 						})
-					  }
+					  };
+					};
+					if (item4) {
+						for (let item of item4) {
+							this.transportTypeParent.push({
+							  id: item.id,
+							  value: item.typeName
+							})
+						};
+						this.templateTwoMessage[0].sampleList = this.transportTypeParent;
+						this.templateTwoMessage[0].sampleValue = this.titleText.value;
 					}
 				  }
 				})
@@ -608,6 +756,38 @@
 					type: 'warning'
 				  })
 				})
+			},
+			
+			// 添加病人信息事件
+			addMessageEvent () {
+				this.querytransportChildByTransportParent(this.titleText.id, true);
+				this.templateTwoMessage.push(
+				{
+				  	bedNumber: '',
+				  	patientName: '',
+				  	patientNumber: '',
+				  	actualData: 0,
+				  	genderInitName: '男',
+				  	transportList: this.transportTypeChild,
+				  	genderList: [
+				  		{
+				  			value:'男',
+				  			id: 0
+				  		},
+				  		{
+				  			value:'女',
+				  			id: 1
+				  		}
+				  	],
+				  	sampleList: this.transportTypeParent,
+				  	sampleValue: this.titleText.value
+				  }
+				);
+			},
+			
+			// 病人信息删除事件
+			deletetMessage (index) {
+				this.templateTwoMessage.splice(index,1)
 			},
 		  
 			// 生成调度任务
@@ -923,9 +1103,11 @@
 				border-bottom: 1px solid #bcbcbc;
 				margin: 4px 0;
 				padding: 4px;
+				height: 400px;
+				overflow: auto;
 				.patient-box-list {
 					background: #f6f6f6;
-					margin-bottom: 2px;
+					margin-bottom: 4px;
 					&:last-child {
 						margin-bottom: 0
 					};
@@ -1030,6 +1212,7 @@
 									&:last-child {
 										flex: 1;
 										font-size: 12px;
+										overflow: auto
 									}
 								}
 							};
@@ -1116,14 +1299,14 @@
 			view {
 				width: 45%;
 				&:first-child {
-					button {
+					.sureBtn {
 						border-radius: 4px;
 						background: #75acef;
 						color: #fff
 					}
 				};
 				&:last-child {
-					button {
+					.cancelBtn {
 						border-radius: 4px;
 						background: #fff;
 						color: black
