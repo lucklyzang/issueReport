@@ -219,12 +219,13 @@
 					<view class="creat-transport-type">
 						<view class="creat-transport-type-content">
 							<view v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': templateTwoMessage[index]['transportList'][innerIndex].checked }"
-								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerIndex">
+								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem">
 								<view>
 									{{innerItem.text}}
 								</view>
 								<view>
 									<u-number-box :input-width="40" v-model="templateTwoMessage[index].transportList[innerIndex].typerNumber"
+										:key="templateTwoMessage[index].transportList[innerIndex].typerNumber"
 										@change="stepperValChange(index)" @plus="plusNum(index)" @minus="minusNum(index)">
 									</u-number-box>
 								</view>
