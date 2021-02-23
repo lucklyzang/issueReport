@@ -6,10 +6,10 @@
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
 		</view>
-		<!-- <view class="creat-box template-one">
+	<!-- 	<view class="creat-box template-one">
 			<view class="creat-priority priority-box">
-				<view>优先级</view>
-				<view>
+				<view class="creat-priority-title">优先级</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
 						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
 						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
@@ -19,8 +19,8 @@
 				</view>
 			</view>
 			<view class="creat-chooseHospital">
-				<view>科室选择</view>
-				<view>
+				<view class="creat-chooseHospital-title">科室选择</view>
+				<view class="creat-chooseHospital-content">
 				   <xfl-select 
 					  :list="hospitalList"
 					  :clearable="false"
@@ -38,14 +38,14 @@
 			</view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
-					<text>运送类型:</text>
+					<text class="creat-transport-type-title-name">运送类型:</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
+					<view class="creat-transport-type-content-list" v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
 				</view>
 			</view>
 			<view class="creat-form">
-				<view>
+				<view class="creat-form-field">
 					<u-field
 						v-model="bedNumber"
 						label="床号"
@@ -55,7 +55,7 @@
 					>
 					</u-field>
 				</view>
-				<view>
+				<view class="creat-form-field"> 
 					<u-field
 						v-model="patientName"
 						label="姓名"
@@ -65,7 +65,7 @@
 					>
 					</u-field>
 				</view>
-				<view>
+				<view class="creat-form-field">
 					<u-field
 						v-model="patientNumber"
 						label="住院号"
@@ -75,7 +75,7 @@
 					>
 					</u-field>
 				</view>
-				<view>
+				<view class="creat-form-field">
 					<u-field
 						v-model="actualData"
 						label="运送数量"
@@ -88,8 +88,8 @@
 				</view>
 			</view>
 			<view class="creat-priority">
-				<view>转运工具</view>
-				<view>
+				<view class="creat-priority-title">转运工具</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
 						<u-radio
 							@change="toolChange"
@@ -104,8 +104,8 @@
 				</view>
 			</view>
 			<view class="creat-priority creat-is-back">
-				<view>运送员是否返回</view>
-				<view>
+				<view class="creat-priority-title">运送员是否返回</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
 						<u-radio name="0" active-color="#8dc58d">否</u-radio>
 						<u-radio name="1" active-color="#8dc58d">是</u-radio>
@@ -126,8 +126,8 @@
 		</view> -->
 		<view class="creat-box template-two">
 			<view class="creat-priority priority-box">
-				<view>优先级</view>
-				<view>
+				<view class="creat-priority-title">优先级</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
 						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
 						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
@@ -137,8 +137,8 @@
 				</view>
 			</view>
 			<view class="creat-priority">
-				<view>转运工具</view>
-				<view>
+				<view class="creat-priority-title">转运工具</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
 						<u-radio @change="toolChange" active-color="#8dc58d" shape="circle" v-for="(item, index) in toolList" :key="index"
 						 :name="item.value">
@@ -148,8 +148,8 @@
 				</view>
 			</view>
 			<view class="creat-priority creat-is-back">
-				<view>运送员是否返回</view>
-				<view>
+				<view class="creat-priority-title">运送员是否返回</view>
+				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
 						<u-radio name="0" active-color="#8dc58d">否</u-radio>
 						<u-radio name="1" active-color="#8dc58d">是</u-radio>
@@ -157,14 +157,14 @@
 				</view>
 			</view>
 			<view class="creat-priority creat-is-back trans-total">
-				<view>该任务运送总数</view>
-				<view>
+				<view class="trans-total-title">该任务运送总数</view>
+				<view class="trans-total-content">
 					<u-input disabled v-model="taskTotal" type="text" :border="true" />
 				</view>
 			</view>
 			<view class="creat-chooseHospital">
-				<view>科室选择</view>
-				<view>
+				<view class="creat-chooseHospital-title">科室选择</view>
+				<view class="creat-chooseHospital-content">
 					<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
 					 :style_Container="'height: 50px; font-size: 16px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
 					 @visible-change="visibleChange">
@@ -174,30 +174,30 @@
 			<view class="patient-box">
 				<view class="patient-box-list" v-for="(item,index) in templateTwoMessage" :key="index">
 					<view class="patient-title">
-						<view>病人{{index+1}}</view>
+						<view class="patient-name">病人{{index+1}}</view>
 						<u-icon name="trash-fill" v-show="index > 0" @click="deletetMessage(index)"></u-icon>
 					</view>
 					<view class="creat-form">
-						<view>
+						<view class="creat-form-field">
 							<u-field v-model="templateTwoMessage[index].bedNumber" label="床号" :border-top="true" placeholder="请输入床号">
 							</u-field>
 						</view>
-						<view>
+						<view class="creat-form-field">
 							<u-field v-model="templateTwoMessage[index].patientName" label="姓名" :border-top="true" placeholder="请输入姓名">
 							</u-field>
 						</view>
-						<view>
+						<view class="creat-form-field">
 							<u-field v-model="templateTwoMessage[index].patientNumber" label="住院号" :border-top="true" placeholder="请输入住院号">
 							</u-field>
 						</view>
-						<view>
+						<view class="creat-form-field">
 							<u-field disabled v-model="templateTwoMessage[index].actualData" type="text" label="运送数量" :border-top="true">
 							</u-field>
 						</view>
 					</view>
 					<view class="creat-gender">
-						<view>性别</view>
-						<view>
+						<view class="creat-gender-title">性别</view>
+						<view class="creat-gender-content">
 							<xfl-select :list="item.genderList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="genderControlListShow"
 							 :style_Container="'height: 50px; font-size: 16px;'" :initValue="item.genderInitName" @change="genderChangeEvent"
 							 @input="genderInputEvent" @visible-change="genderVisibleChange">
@@ -205,27 +205,27 @@
 						</view>
 					</view>
 					<view class="transport-parent-box">
-						<view>
+						<view class="transport-parent-box-title">
 							<xfl-select :list="item.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
 							 :style_Container="'height: 50px; font-size: 16px;'" :initValue="item.sampleValue" :outerIndex="index" @change="transportParentChange"
 							 @input="transportParentInputEvent" @visible-change="transportParentVisibleChange">
 							</xfl-select>
 						</view>
-						<view>
-							<text>运送类型:</text>
-							<text>{{jointTransportMessage(index)}}</text>
+						<view class="transport-parent-box-content">
+							<text class="content-type-title">运送类型:</text>
+							<text class="content-type-name">{{jointTransportMessage(index)}}</text>
 						</view>
 					</view>
 					<view class="creat-transport-type">
 						<view class="creat-transport-type-content">
-							<view v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': templateTwoMessage[index]['transportList'][innerIndex].checked }"
-								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem">
-								<view>
+							<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in item.transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
+								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem.text">
+								<view class="creat-transport-type-content-list-title">
 									{{innerItem.text}}
 								</view>
-								<view>
-									<u-number-box :input-width="40" v-model="templateTwoMessage[index].transportList[innerIndex].typerNumber"
-										:key="templateTwoMessage[index].transportList[innerIndex].typerNumber"
+								<view class="creat-transport-type-content-list-content">
+									<u-number-box :input-width="40" v-model="innerItem.typerNumber"
+										:key="innerItem.typerNumber"
 										@change="stepperValChange(index)" @plus="plusNum(index)" @minus="minusNum(index)">
 									</u-number-box>
 								</view>
@@ -243,10 +243,10 @@
 			</view>
 		</view>
 		<view class="btn-box">
-			<view>
+			<view class="btn-sure">
 				<button class="sureBtn" type="primary" @click="sure">确认</button>
 			</view>
-			<view>
+			<view class="btn-cancel">
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
@@ -394,7 +394,11 @@
 				'changeBottomBarIndex',
 				'changeIsToCallTaskPage'
 			]),
-
+			
+			textChange () {
+				
+			},
+			
 			// 返回上一页
 			backTo() {
 				this.changeBottomBarIndex(0);
@@ -436,13 +440,12 @@
 				this.templateTwoMessage[index]['transportList'][innerIndex].checked = !this.templateTwoMessage[index][
 					'transportList'
 				][innerIndex].checked;
-				console.log('步进器1', this.templateTwoMessage[index]['transportList'][innerIndex].typerNumber);
-				if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
-					this.$set(this.templateTwoMessage[index]['transportList'][innerIndex], 'typerNumber', 0);
-				};
-				console.log('步进器2', this.templateTwoMessage[index]['transportList'][innerIndex].typerNumber);
-				this.$forceUpdate();
-				this.reduceTotal(index)
+					if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
+						this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = 0;
+						this.$forceUpdate()
+						// this.$set(this.templateTwoMessage[index]['transportList'][innerIndex], 'typerNumber', 0);
+					};
+					this.reduceTotal(index);
 			},
 
 			// 拼接运送类型信息函数
@@ -631,7 +634,7 @@
 					})
 					.then((res) => {
 						if (res && res.data.code == 200) {
-							this.$set(this.templateTwoMessage[index], 'transportList', []);
+							this.templateTwoMessage[index]['transportList'] = [];
 							for (let item of res.data.data) {
 								this.templateTwoMessage[index].transportList.push({
 									text: item.typeName,
@@ -664,8 +667,7 @@
 							this.hospitalList = [];
 							this.transportTypeParent = [];
 							this.templateTwoMessage[0].sampleList = [];
-							this.templateTwoMessage[0].transportList = [];
-							this.$set(this.templateTwoMessage[0], 'transportList', []);
+							this.templateTwoMessage[0]['transportList'] = [];
 							this.transportTypeChild = [];
 							let [item1, item2, item3, item4] = res;
 							if (item1) {
@@ -846,9 +848,7 @@
 
 		.nav {
 			width: 100%;
-		}
-
-		;
+		};
 
 		.creat-box {
 			position: relative;
@@ -868,34 +868,29 @@
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
 
-				>view {
-					&:first-child {
-						height: 48px;
-						line-height: 48px;
-						float: left;
-						width: 20%;
-						padding-left: 4px;
-						box-sizing: border-box
-					}
-
-					&:last-child {
-						height: 48px;
-						float: right;
-						position: relative;
-						width: 80%;
-
-						/deep/ .u-radio-group {
-							position: absolute;
-							width: 100%;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 0
-						}
+				.creat-priority-title {
+					height: 48px;
+					line-height: 48px;
+					float: left;
+					width: 20%;
+					padding-left: 4px;
+					box-sizing: border-box;
+				};
+				.creat-priority-content {
+					height: 48px;
+					float: right;
+					position: relative;
+					width: 80%;
+					
+					/deep/ .u-radio-group {
+						position: absolute;
+						width: 100%;
+						top: 50%;
+						transform: translateY(-50%);
+						left: 0
 					}
 				}
-			}
-
-			;
+			};
 
 			.creat-chooseHospital {
 				width: 100%;
@@ -903,63 +898,53 @@
 				margin-top: 6px;
 				border-top: 1px solid #bcbcbc;
 				border-bottom: 1px solid #bcbcbc;
-
-				>view {
+				.creat-chooseHospital-title {
 					height: 38px;
-
-					&:first-child {
-						float: left;
-						width: 20%;
-						line-height: 38px;
-						padding-left: 4px;
-						box-sizing: border-box
-					}
-
-					&:last-child {
-						float: right;
-						position: relative;
-						width: 80%;
-						z-index: 300;
-
-						.show-box {
-							height: 30px !important;
-							position: absolute;
-							left: 0;
-							top: 50%;
-							transform: translateY(-50%);
-						}
+					float: left;
+					width: 20%;
+					line-height: 38px;
+					padding-left: 4px;
+					box-sizing: border-box
+				};
+				.creat-chooseHospital-content {
+					height: 38px;
+					float: right;
+					position: relative;
+					width: 80%;
+					z-index: 300;
+					
+					.show-box {
+						height: 30px !important;
+						position: absolute;
+						left: 0;
+						top: 50%;
+						transform: translateY(-50%);
 					}
 				}
-			}
-
-			;
+			};
 
 			.priority-box {
-				>view {
-					&:last-child {
-						/deep/ .u-radio-group {
-							position: absolute;
-							width: 100%;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 0;
-							display: flex;
+				.creat-priority-content {
+					/deep/ .u-radio-group {
+						position: absolute;
+						width: 100%;
+						top: 50%;
+						transform: translateY(-50%);
+						left: 0;
+						display: flex;
+						justify-content: space-between;
+					
+						.u-radio {
+							flex: 1 0 auto !important;
 							justify-content: space-between;
-
-							.u-radio {
-								flex: 1 0 auto !important;
-								justify-content: space-between;
-
-								.u-radio__label {
-									margin-right: 9px;
-								}
+					
+							.u-radio__label {
+								margin-right: 9px;
 							}
 						}
 					}
-				}
-			}
-
-			;
+				};
+			};
 
 			.creat-transport-type {
 				width: 100%;
@@ -976,23 +961,12 @@
 					height: 25px;
 					line-height: 25px;
 
-					text {
-						&:nth-child(1) {
-							padding-left: 4px;
-							box-sizing: border-box;
-							margin-right: 8px
-						}
-
-						;
-
-						&:nth-child(2) {
-							font-size: 14px;
-							color: red
-						}
+					.creat-transport-type-title-name {
+						padding-left: 4px;
+						box-sizing: border-box;
+						margin-right: 8px
 					}
-				}
-
-				;
+				};
 
 				.creat-transport-type-content {
 					flex: 1;
@@ -1010,11 +984,9 @@
 						background: #75b0f0;
 						color: #fff;
 						border: none
-					}
+					};
 
-					;
-
-					>view {
+					.creat-transport-type-content-list{
 						width: 45%;
 						margin-bottom: 4px;
 						height: 35px;
@@ -1023,9 +995,7 @@
 						border: 1px solid #dfdfdf
 					}
 				}
-			}
-
-			;
+			};
 
 			.creat-form {
 				width: 100%;
@@ -1040,8 +1010,7 @@
 				flex-wrap: wrap;
 				justify-content: space-between;
 				align-content: flex-start;
-
-				>view {
+				.creat-form-field {
 					width: 50%;
 					margin-bottom: 4px;
 
@@ -1053,40 +1022,32 @@
 						}
 					}
 				}
-			}
-
-			;
+			};
 
 			.creat-is-back {
-				>view {
+				.creat-priority-title {
 					display: inline-block;
-
-					&:first-child {
-						height: 48px;
-						line-height: 48px;
-						width: 30%;
-						padding-left: 4px;
-						box-sizing: border-box;
-					}
-
-					&:last-child {
-						float: right;
-						position: relative;
-						height: 48px;
-						width: 70%;
-
-						/deep/ .u-radio-group {
-							position: absolute;
-							width: 100%;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 0
-						}
+					height: 48px;
+					line-height: 48px;
+					width: 30%;
+					padding-left: 4px;
+					box-sizing: border-box;
+				};
+				.creat-priority-content {
+					display: inline-block;
+					position: relative;
+					height: 48px;
+					width: 70%;
+					
+					/deep/ .u-radio-group {
+						position: absolute;
+						width: 100%;
+						top: 50%;
+						transform: translateY(-50%);
+						left: 0
 					}
 				}
-			}
-
-			;
+			};
 
 			.task-describe {
 				margin: 6px 0;
@@ -1105,26 +1066,25 @@
 
 		.template-two {
 			.trans-total {
-				>view {
-					&:last-child {
-						height: 48px !important;
-
-						/deep/ .u-input {
-							position: absolute;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 10px;
-						}
+				.trans-total-title {
+					float: left;
+					width: 30%;
+					padding-left: 4px;
+					line-height: 48px !important;
+					height: 48px !important;
+				};
+				.trans-total-content {
+					height: 48px !important;
+					float: right;
+					width: 70%;
+					position: relative;
+					/deep/ .u-input {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						left: 10px;
 					}
-
-					;
-
-					&:first-child {
-						line-height: 48px !important;
-						height: 48px !important;
-					}
-
-				}
+				};
 			}
 
 			.patient-box {
@@ -1139,41 +1099,33 @@
 					background: #f6f6f6;
 					margin-bottom: 4px;
 
-					&:last-child {
+					.creat-transport-type{
 						margin-bottom: 0
-					}
-
-					;
+					};
 
 					.patient-title {
-						padding-left: 4px;
 						height: 30px;
 						line-height: 30px;
 						color: black;
 						font-weight: bold;
 						position: relative;
-
-						>view {
+						.patient-name {
 							position: absolute;
 							top: 0;
 							height: 100%;
 							font-size: 20px;
-
-							&:first-child {
-								width: 100px;
-								left: 4px
-							}
-
-							;
-
-							&:last-child {
-								right: 4px;
-								color: red
-							}
+							width: 100px;
+							left: 4px
+						};
+						/deep/ .u-icon {
+							position: absolute;
+							font-size: 20px;
+							top: 50%;
+							transform: translateY(-50%);
+							right: 4px;
+							color: red
 						}
-					}
-
-					;
+					};
 
 					.creat-form {
 						width: 100%;
@@ -1188,7 +1140,7 @@
 						justify-content: space-between;
 						align-content: flex-start;
 
-						>view {
+						.creat-form-field {
 							width: 50%;
 							margin-bottom: 4px;
 
@@ -1200,92 +1152,74 @@
 								}
 							}
 						}
-					}
-
-					;
+					};
 
 					.creat-gender {
 						width: 100%;
 						height: 30px;
 						position: relative;
-
-						>view {
+						.creat-gender-title {
 							position: absolute;
 							top: 50%;
 							transform: translateY(-50%);
-
-							&:first-child {
-								left: 4px;
-								width: 20%;
+							left: 4px;
+							width: 20%;
+						};
+						.creat-gender-content {
+							position: absolute;
+							right: 0;
+							width: 80%;
+							z-index: 200;
+							
+							.show-box {
+								height: 30px !important;
 							}
-
-							&:last-child {
-								right: 0;
-								width: 80%;
-								z-index: 200;
-
-								.show-box {
-									height: 30px !important;
-								}
-							}
-						}
-					}
-
-					;
+						};
+					};
 
 					.transport-parent-box {
 						height: 40px;
 						position: relative;
 						z-index: 100;
-
-						>view {
+						.transport-parent-box-title {
 							position: absolute;
 							z-index: 10;
 							top: 50%;
 							transform: translateY(-50%);
-
-							&:first-child {
-								left: 4px;
-								width: 30%;
-
-								.show-box {
-									height: 30px !important;
-								}
+							left: 4px;
+							width: 30%;
+							.show-box {
+								height: 30px !important;
 							}
-
-							;
-
-							&:last-child {
-								padding-left: 8px;
-								right: 0;
-								width: 70%;
-								height: 30px;
-								display: flex;
-								flow: row nowrap;
-
-								>text {
-									font-weight: bold;
-									color: black;
-									font-size: 14px;
-									line-height: 30px;
-
-									&:first-child {
-										width: 60px;
-									}
-
-									&:last-child {
-										flex: 1;
-										font-size: 12px;
-										overflow: auto
-									}
-								}
-							}
-
-							;
-						}
-					}
-
-					;
+						};
+						.transport-parent-box-content {
+							position: absolute;
+							padding-left: 8px;
+							right: 0;
+							width: 70%;
+							height: 30px;
+							display: flex;
+							flow: row nowrap;
+						};
+						.content-type-title {
+							font-weight: bold;
+							color: black;
+							font-size: 14px;
+							height: 40px;
+							line-height: 40px;
+							width: 60px;
+						};
+						.content-type-name {
+							font-weight: bold;
+							color: black;
+							font-size: 14px;
+							height: 40px;
+							line-height: 40px;
+							flex: 1;
+							font-size: 12px;
+							overflow: auto
+						};
+					};
 
 					.creat-transport-type {
 						width: 100%;
@@ -1315,62 +1249,51 @@
 								background: #75b0f0;
 								color: #fff;
 								border: none
-							}
+							};
 
-							;
-
-							>view {
+							.creat-transport-type-content-list {
 								width: 49%;
 								margin-bottom: 4px;
 								height: 35px;
 								border: 1px solid #dfdfdf;
 								position: relative;
-
-								>view {
+								.creat-transport-type-content-list-title {
 									height: 100%;
 									position: absolute;
 									top: 0;
-
-									&:first-child {
-										width: 45%;
-										text-align: left;
-										left: 2px;
-										overflow-x: auto;
-									}
-
-									;
-
-									&:last-child {
-										width: 55%;
-										right: 0;
-									}
+									width: 45%;
+									text-align: left;
+									left: 2px;
+									overflow-x: auto;
+								};
+								.creat-transport-type-content-list-content {
+									height: 100%;
+									position: absolute;
+									top: 0;;
+									width: 55%;
+									right: 0;
 								}
 							}
 						}
 					}
 				}
-			}
-
-			;
+			};
 
 			.addpatient-message-btn {
 				width: 120px;
 				height: 30px;
 				line-height: 30px;
+				border-radius: 4px;
 				text-align: center;
 				margin: 0 auto;
 				background: #75acef;
 				color: #fff
-			}
-
-			;
+			};
 
 			.task-describe {
 				margin: 4px 0;
 			}
-		}
-
-		;
+		};
 
 		.btn-box {
 			width: 100%;
@@ -1384,28 +1307,22 @@
 			flex-wrap: wrap;
 			justify-content: space-between;
 			align-items: center;
-
-			view {
+			.btn-sure {
 				width: 45%;
-
-				&:first-child {
-					.sureBtn {
-						border-radius: 4px;
-						background: #75acef;
-						color: #fff
-					}
+				.sureBtn {
+					border-radius: 4px;
+					background: #75acef;
+					color: #fff
 				}
-
-				;
-
-				&:last-child {
-					.cancelBtn {
-						border-radius: 4px;
-						background: #fff;
-						color: black
-					}
+			};
+			.btn-cancel {
+				width: 45%;
+				.cancelBtn {
+					border-radius: 4px;
+					background: #fff;
+					color: black
 				}
-			}
+			};
 		}
 
 		.bottom-bar {
