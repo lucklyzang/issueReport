@@ -1,15 +1,31 @@
 <template>
 	<view class="num-box">
-		<view class="icon" @click="minus">-</view>
-		<input type="number" v-model="val" class="ipt" />
-		<view class="icon" @click="plus">+</view>
+		<view class="subtract-box"
+			@click.stop="plusNumEvent">
+			<u-icon name="minus"></u-icon>
+		</view>
+		<input
+			@click.stop="inpuntEvent"
+			type="number"
+			:disabled="disabled"
+			:value="val"
+			@input="stepperValChange"
+		/>
+		<view class="plus-box"
+			@click.stop="minusNumEvent">
+			<u-icon name="plus"></u-icon>
+		</view>
 	</view>
 </template>
 
 <script>
 	export default {
+		model: {
+		  prop: 'inputParentValue',
+		  event: 'inputEvent'
+		},
 		props: {
-			value: {
+			inputParentValue: {
 				type: [ Number, String ],
 				default: 0
 			},
@@ -19,7 +35,7 @@
 			},
 			max: {
 				type: [String, Number],
-				default: ''
+				default: 100
 			},
 			step: {
 				type: Number,
@@ -36,12 +52,10 @@
 			};
 		},
 		watch: {
-			value: {
+			val: {
 				immediate: true,
 				handler (val) {
-					this.val = val
-					this.$emit('value', this.val)
-					this.$emit('change', this.val)
+					this.$emit('inputEvent', val)
 				}
 			},
 			min: {
@@ -49,33 +63,45 @@
 				handler (val) {
 					if (this.val < val ) {
 						this.val = val
-						this.$emit('value', this.val)
-						this.$emit('change', this.val)
 					}
 				}
 			},
-			val () {
-				this.$emit('value', this.val)
-				this.$emit('change', this.val)
+			max: {
+				immediate: true,
+				handler (val) {
+					if (this.val > val ) {
+						this.val = val
+					}
+				}
 			}
 		},
 		methods: {
-			minus () {
-				if (this.disabled) return
+			// 输入框点击事件
+			inpuntEvent ($event) {
+				this.$emit('inpuntClick',$event)
+			},
+			// input框获取焦点输入事件
+			stepperValChange ($event) {
+				this.val = $event.detail.value;
+				this.$emit('inputEvent',$event.detail.value)
+			},
+			// 加号点击事件
+			plusNumEvent ($event) {
+				if (this.disabled) return;
+				if (this.val >= Number(this.max)) {
+					return
+				};
+				this.val += 1;
+				this.$emit('plusNum',$event,this.val)
+			},
+			// 减号点击事件
+			minusNumEvent ($event) {
+				if (this.disabled) return;
 				if (this.val <= Number(this.min)) {
 					return
-				}
-				this.val = (this._calcNum(this.val) - this._calcNum(this.step)) / 10
-			},
-			plus () {
-				if (this.disabled) return
-				if (this.max != '' && Number.isInteger(this.max) && ((this._calcNum(this.val) + this._calcNum(this.step)) / 10) > Number(this.max)) {
-					return
-				}
-				this.val = (this._calcNum(this.val) + this._calcNum(this.step)) / 10
-			},
-			_calcNum (num) {
-				return num * 10
+				};
+				this.val -= 1
+				this.$emit('minusNum',$event,this.val)
 			}
 		}
 	}
@@ -83,33 +109,29 @@
 
 <style lang="less">
 	.num-box {
+		height: 100%;
+		position: absolute;
+		top: 0;;
+		width: 55%;
+		right: 0;
 		display: flex;
-		.icon {
-			width: 44upx;
-			height: 44upx;
-			line-height: 44upx;
-			background: #338B61;
-			border-radius: 50%;
-			text-align: center;
-			color: #FFFFFF;
-		}
-		.minus {
-			
-		}
-		.ipt {
-			margin: 0 20upx;
-			width: 116upx;
-			height: 50upx;
-			font-size: 28upx;
-			background: #FFFFFF;
-			border: 2upx solid #338B61;
-			opacity: 1;
-			border-radius: 12upx;
-			text-align: center;
-			color: #338B61;
-		}
-		.plus {
-			
+		flex-flow: row nowrap;
+		.subtract-box  {
+			width: 30px;
+			height: 33px;
+			background: #d2d2d2;
+			line-height: 33px;
+		};
+		input {
+			flex: 1;
+			height: 100%;
+			background: #a7a7a7;
+		};
+		.plus-box  {
+			width: 30px;
+			height: 33px;
+			background: #d2d2d2;
+			line-height: 33px
 		}
 	}
 </style>
