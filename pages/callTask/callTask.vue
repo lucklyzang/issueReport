@@ -229,9 +229,10 @@
 										<u-icon name="minus"></u-icon>
 									</view>
 									<input
+										@click.stop="inpuntClick"
 										type="number"
 										:value="innerItem.typerNumber"
-										@input="stepperValChange(index)"
+										@input="stepperValChange($event,index,innerIndex)"
 									/>
 									<view class="plus-box"
 										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
@@ -500,9 +501,14 @@
 
 			// 运送类型大类input中的数据变化时触发
 			transportParentInputEvent(val) {},
-
+			
+			inpuntClick () {
+				
+			},
+			
 			// 运送类型子类步进器值改变事件
-			stepperValChange(index) {
+			stepperValChange($event,index,innerIndex) {
+				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = Number($event.detail.value);
 				this.reduceTotal(index);
 				console.log('数据', this.templateTwoMessage)
 			},
