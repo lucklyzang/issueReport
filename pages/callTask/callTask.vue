@@ -218,16 +218,29 @@
 					</view>
 					<view class="creat-transport-type">
 						<view class="creat-transport-type-content">
-							<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in item.transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
+							<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
 								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem.text">
 								<view class="creat-transport-type-content-list-title">
 									{{innerItem.text}}
 								</view>
 								<view class="creat-transport-type-content-list-content">
-									<u-number-box :input-width="40" v-model="innerItem.typerNumber"
+									<view class="subtract-box"
+										@click.stop="plusNum(index,innerItem,innerIndex, $event)">
+										<u-icon name="minus"></u-icon>
+									</view>
+									<input
+										type="number"
+										:value="innerItem.typerNumber"
+										@input="stepperValChange(index)"
+									/>
+									<view class="plus-box"
+										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
+										<u-icon name="plus"></u-icon>
+									</view>
+									<!-- <u-number-box :input-width="40" v-model="innerItem.typerNumber"
 										:key="innerItem.typerNumber"
 										@change="stepperValChange(index)" @plus="plusNum(index)" @minus="minusNum(index)">
-									</u-number-box>
+									</u-number-box> -->
 								</view>
 							</view>
 						</view>
@@ -442,9 +455,10 @@
 				][innerIndex].checked;
 					if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
 						this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = 0;
-						this.$forceUpdate()
-						// this.$set(this.templateTwoMessage[index]['transportList'][innerIndex], 'typerNumber', 0);
+						this.$forceUpdate();
+						this.$set(this.templateTwoMessage[index]['transportList'][innerIndex], 'typerNumber', 0);
 					};
+					console.log('数据',this.templateTwoMessage);
 					this.reduceTotal(index);
 			},
 
@@ -494,11 +508,17 @@
 			},
 
 			// 阻止步进器冒泡
-			plusNum(index) {
-				// event.stopPropagation()
+			plusNum(index,innerItem,innerIndex) {
+				if (this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] == 0) {
+					return
+				};
+				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] -= 1;
+				this.reduceTotal(index);
 			},
-			minusNum(index) {
+			minusNum(index,innerItem,innerIndex) {
 				// event.stopPropagation()
+				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] += 1;
+				this.reduceTotal(index);
 			},
 
 			// 求和函数
@@ -1246,7 +1266,7 @@
 							overflow: auto;
 
 							.transTypeListStyle {
-								background: #75b0f0;
+								background: #75acef;
 								color: #fff;
 								border: none
 							};
@@ -1272,6 +1292,25 @@
 									top: 0;;
 									width: 55%;
 									right: 0;
+									display: flex;
+									flex-flow: row nowrap;
+									.subtract-box  {
+										width: 30px;
+										height: 33px;
+										background: #d2d2d2;
+										line-height: 33px;
+									};
+									input {
+										flex: 1;
+										height: 100%;
+										background: #a7a7a7;
+									};
+									.plus-box  {
+										width: 30px;
+										height: 33px;
+										background: #d2d2d2;
+										line-height: 33px
+									}
 								}
 							}
 						}
