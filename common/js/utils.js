@@ -110,6 +110,7 @@ export const removeAllLocalStorage = () => {
   // removeStore('userName');
   // removeStore('userPassword');
   removeCache('userInfo');
+	removeCache('isTemplateOne');
   removeCache('isLogin');
   removeCache('questToken');
   removeCache('storeOverDueWay');

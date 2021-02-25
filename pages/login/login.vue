@@ -87,7 +87,8 @@
 			...mapMutations([
 				'storeUserInfo',
 				'changeOverDueWay',
-        'changeIsMedicalMan'
+        'changeIsMedicalMan',
+				'changeIsTemplateOne'
 			]),
       
       // 选中某个复选框时，由checkbox时触发
@@ -129,6 +130,14 @@
               } else {
                 this.changeIsMedicalMan(false)
               };
+							// 保存模板类型
+							if (res.data.data.mobile == 'template_one') {
+								this.changeIsTemplateOne(0);
+								setCache('isTemplateOne', 0)
+							} else {
+								this.changeIsTemplateOne(1);
+								setCache('isTemplateOne', 1)
+							};
 							uni.switchTab({
 								url: '/pages/index/index'
 							})

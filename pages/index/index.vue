@@ -103,6 +103,10 @@
 				if (getCache('userInfo')) {
 					this.$store.commit('storeUserInfo', getCache('userInfo'));
 				};
+				// 重新存入模板信息
+				if (getCache('isTemplateOne')) {
+					this.$store.commit('changeIsTemplateOne', parseInt(getCache('isTemplateOne')));
+				};
 				// 页面刷新重新存入请求token
 				if (getCache('questToken')) {
 					this.$store.commit('changeToken', getCache('questToken'));

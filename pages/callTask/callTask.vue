@@ -364,7 +364,8 @@
 			...mapGetters([
 				'titleText',
 				'isToCallTaskPage',
-				'userInfo'
+				'userInfo',
+				'isTemplateOne'
 			]),
 
 			userName() {
