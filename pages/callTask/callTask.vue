@@ -238,6 +238,8 @@
 										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
 										<u-icon name="plus"></u-icon>
 									</view>
+									<!-- <stepNumberBox v-model="innerItem.typerNumber" :key="innerItem.typerNumber"
+									></stepNumberBox> -->
 									<!-- <u-number-box :input-width="40" v-model="innerItem.typerNumber"
 										:key="innerItem.typerNumber"
 										@change="stepperValChange(index)" @plus="plusNum(index)" @minus="minusNum(index)">
@@ -288,10 +290,12 @@
 	} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	import xflSelect from '@/components/xfl-select/xfl-select.vue';
+	import stepNumberBox from '@/components/step-number-box/step-number-box.vue';
 	export default {
 		components: {
 			navBar,
-			xflSelect
+			xflSelect,
+			stepNumberBox
 		},
 		data() {
 			return {
@@ -523,7 +527,6 @@
 				this.reduceTotal(index);
 			},
 			minusNum(index,innerItem,innerIndex) {
-				// event.stopPropagation()
 				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] += 1;
 				this.reduceTotal(index);
 			},

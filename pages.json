@@ -113,12 +113,12 @@
 			}
 		},
 		{
-            "path" : "pages/business/issue-report",
-            "style" : {
+			"path" : "pages/business/issue-report",
+			"style" : {
 				"navigationBarTitleText": "问题上报"
 			}
-        }
-    ],
+    }
+  ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "",
