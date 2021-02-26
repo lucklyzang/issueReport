@@ -224,7 +224,7 @@
 									{{innerItem.text}}
 								</view>
 								<view class="creat-transport-type-content-list-content">
-									<view class="subtract-box"
+								<!-- 	<view class="subtract-box"
 										@click.stop="plusNum(index,innerItem,innerIndex, $event)">
 										<u-icon name="minus"></u-icon>
 									</view>
@@ -237,13 +237,14 @@
 									<view class="plus-box"
 										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
 										<u-icon name="plus"></u-icon>
-									</view>
-									<!-- <stepNumberBox v-model="innerItem.typerNumber" :key="innerItem.typerNumber"
-									></stepNumberBox> -->
-									<!-- <u-number-box :input-width="40" v-model="innerItem.typerNumber"
-										:key="innerItem.typerNumber"
-										@change="stepperValChange(index)" @plus="plusNum(index)" @minus="minusNum(index)">
-									</u-number-box> -->
+									</view> -->
+									<stepNumberBox v-model="innerItem.typerNumber" 
+										@plus="plusNum(arguments)"
+										:index="index"
+										:innerIndex="innerIndex"
+										@minus="minusNum(arguments)"
+										@change="stepperValChange(arguments)"
+									></stepNumberBox>
 								</view>
 							</view>
 						</view>
@@ -289,8 +290,8 @@
 		generateDispatchTask
 	} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
-	import xflSelect from '@/components/xfl-select/xfl-select.vue';
-	import stepNumberBox from '@/components/step-number-box/step-number-box.vue';
+	import xflSelect from '@/components/xfl-select/xfl-select.vue'
+	import stepNumberBox from '@/components/step-number-box/step-number-box.vue'
 	export default {
 		components: {
 			navBar,
@@ -512,23 +513,19 @@
 			},
 			
 			// 运送类型子类步进器值改变事件
-			stepperValChange($event,index,innerIndex) {
-				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = Number($event.detail.value);
-				this.reduceTotal(index);
-				console.log('数据', this.templateTwoMessage)
+			stepperValChange(msg) {
+				// this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = Number($event.detail.value);
+				this.reduceTotal(msg[1]);
 			},
 
-			// 阻止步进器冒泡
-			plusNum(index,innerItem,innerIndex) {
-				if (this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] == 0) {
-					return
-				};
-				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] -= 1;
-				this.reduceTotal(index);
+			// 步进器增加或减少事件
+			plusNum(msg) {
+				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
+				this.reduceTotal(msg[2]);
 			},
-			minusNum(index,innerItem,innerIndex) {
-				this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] += 1;
-				this.reduceTotal(index);
+			minusNum(msg) {
+				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
+				this.reduceTotal(msg[2]);
 			},
 
 			// 求和函数
@@ -1302,8 +1299,8 @@
 									top: 0;;
 									width: 55%;
 									right: 0;
-									display: flex;
-									flex-flow: row nowrap;
+									// display: flex;
+									// flex-flow: row nowrap;
 									.subtract-box  {
 										width: 30px;
 										height: 33px;

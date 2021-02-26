@@ -22,7 +22,7 @@
 	export default {
 		props: {
 			value: {
-				type: [ Number, String ],
+				type: Number,
 				default: 0
 			},
 			min: {
@@ -62,7 +62,13 @@
 					this.$emit('change', this.val, this.index, this.innerIndex);
 					this.$emit('input',this.val)
 				}
-			}
+			},
+			value: {
+				immediate: true,
+				handler (val) {
+					this.val = val
+				}
+			},
 		},
 		methods: {
 			// 输入框点击事件
@@ -71,8 +77,8 @@
 			},
 			// input框获取焦点输入事件
 			stepperValChange ($event) {
-				this.val = $event.detail.value;
-				this.$emit('input', $event.detail.value)
+				this.val = parseInt($event.target.value);
+				this.$emit('input', parseInt($event.target.value))
 			},
 			// 加号点击事件
 			plusNumEvent ($event) {
