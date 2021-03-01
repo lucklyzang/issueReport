@@ -529,9 +529,7 @@
 			},
 			minusNum(msg) {
 				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
-				setTimeout(() => {
-					this.reduceTotal(msg[2]);
-				},10)
+				this.reduceTotal(msg[2])
 			},
 
 			// 求和函数
