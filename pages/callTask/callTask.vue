@@ -240,6 +240,7 @@
 									</view> -->
 									<stepNumberBox v-model="innerItem.typerNumber" 
 										@plus="plusNum(arguments)"
+										@inputBlur="inputBlurEvent(arguments)"
 										:index="index"
 										:innerIndex="innerIndex"
 										@minus="minusNum(arguments)"
@@ -514,8 +515,11 @@
 			
 			// 运送类型子类步进器值改变事件
 			stepperValChange(msg) {
-				// this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = Number($event.detail.value);
 				this.reduceTotal(msg[1]);
+			},
+			
+			// 步进器失去焦点事件
+			inputBlurEvent (msg) {
 			},
 
 			// 步进器增加或减少事件
@@ -525,7 +529,9 @@
 			},
 			minusNum(msg) {
 				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
-				this.reduceTotal(msg[2]);
+				setTimeout(() => {
+					this.reduceTotal(msg[2]);
+				},10)
 			},
 
 			// 求和函数

@@ -9,6 +9,7 @@
 			type="number"
 			:disabled="disabled"
 			:value="val"
+			@blur="inputBlur"
 			@input="stepperValChange"
 		/>
 		<view class="plus-box"
@@ -60,25 +61,41 @@
 				immediate: true,
 				handler (val) {
 					this.$emit('change', this.val, this.index, this.innerIndex);
-					this.$emit('input',this.val)
-				}
+					this.$emit('input',this.val);
+				},
+				deep:true
 			},
 			value: {
 				immediate: true,
 				handler (val) {
-					this.val = val
-				}
-			},
+					this.val = val;
+				},
+				deep:true
+			}
 		},
 		methods: {
 			// 输入框点击事件
 			inpuntEvent ($event) {
 				this.$emit('inpuntClick',$event)
 			},
+			// 输入框失去焦点事件
+			inputBlur ($event) {
+				if ($event.target.value == '' || isNaN($event.target.value)) {
+					this.val = 0
+				} else {
+					this.val = parseInt($event.target.value)
+				};
+				this.$emit('input', parseInt(this.val));
+				this.$emit('inputBlur',$event, this.val,  this.index, this.innerIndex)
+			},
 			// input框获取焦点输入事件
 			stepperValChange ($event) {
-				this.val = parseInt($event.target.value);
-				this.$emit('input', parseInt($event.target.value))
+				if ($event.target.value == '' || isNaN($event.target.value)) {
+					this.val = 0
+				} else {
+					this.val = parseInt($event.target.value)
+				}
+				this.$emit('input', parseInt(this.val))
 			},
 			// 加号点击事件
 			plusNumEvent ($event) {
