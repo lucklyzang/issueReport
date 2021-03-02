@@ -73,7 +73,7 @@
 
 			// 中央运送touchEnd事件
 			transTouchEnd() {
-				this.transClass = 'enlargeTransStyle'
+				this.transClass = 'shrinkTransStyle'
 			},
 			skipPageTrans() {
 				uni.navigateTo({
@@ -89,7 +89,7 @@
 
 			// 工程管理touchEnd事件
 			manageTouchEnd() {
-				this.manageClass = 'enlargeTransStyle'
+				this.manageClass = 'shrinkTransStyle'
 			},
 			skipPageManage() {
 				uni.navigateTo({

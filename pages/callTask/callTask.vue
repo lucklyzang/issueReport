@@ -244,6 +244,10 @@
         this.controlListShow = Math.random();
         let innerList = this.temporaryHospitalList;
         this.hospitalList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
+				if (val.detail.value === '') {
+					this.startPointId = '';
+					this.startPointName = ''
+				}
       },
 			
 			// 运送类型点击事件
@@ -419,6 +423,13 @@
 
       // 运送类型信息确认事件
 		  dispatchTaskSure () {
+				if (this.startPointId === '') {
+					this.$refs.uToast.show({
+					  title: '清选择科室',
+					  type: 'warning'
+					});
+					return
+				};
         // 获取选中的运送工具信息
         let taskMessage = {
           setOutPlaceId: this.startPointId,  //出发地ID

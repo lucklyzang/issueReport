@@ -186,8 +186,13 @@
 		},
 		
 		mounted () {
-      this.startPointId = this.depId;
-      this.startPointName = this.depName;
+			if (this.depName === '') {
+				this.startPointId = '';
+				this.startPointName = ''
+			} else {
+				this.startPointId = this.depId;
+				this.startPointName = this.depName;
+			};
       if (this.depId) {
         this.queryRoomByDepartment({
           proId: this.proId,  //项目ID 必输
@@ -321,6 +326,10 @@
         this.controlListShow = Math.random();
         let innerList = this.temporaryHospitalList;
         this.hospitalList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
+				if (val.detail.value === '') {
+					this.startPointId = '';
+					this.startPointName = ''
+				}
       },
       
       
@@ -493,6 +502,13 @@
 
       // 运送类型信息确认事件  
 		  takaskSure () {
+				if (this.startPointId === '') {
+					this.$refs.uToast.show({
+					  title: '清选择科室',
+					  type: 'warning'
+					});
+					return
+				};
         // 获取选中的运送工具信息
         let taskMessage = {
           priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
