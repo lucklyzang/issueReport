@@ -341,7 +341,8 @@
 						}
 					],
 					sampleList: [],
-					sampleValue: ''
+					sampleValue: '',
+					sampleId: ''
 				}],
 				transportTypeParent: [],
 				transportTypeChild: [],
@@ -350,7 +351,8 @@
 		},
 		onLoad(options) {
 			this.taskTypeText = this.titleText.value;
-			this.templateTwoMessage[0].sampleValue = this.titleText.value
+			this.templateTwoMessage[0].sampleValue = this.titleText.value;
+			this.templateTwoMessage[0].sampleId = this.titleText.id
 		},
 
 		// 监听每个病人对应的运送类型数量
@@ -499,6 +501,8 @@
 			transportParentChange(val) {
 				this.querytransportChildByTransportParent(val.parentIndex, val.orignItem.id);
 				this.templateTwoMessage[val.parentIndex].actualData = 0;
+				this.templateTwoMessage[val.parentIndex].sampleValue = val.orignItem.value;
+				this.templateTwoMessage[val.parentIndex].sampleId = val.orignItem.id;
 			},
 
 			// 运送类型大类下拉框隐藏或显示时事件
@@ -657,7 +661,7 @@
 			},
 
 			// 根据运送类型大类查询运送类型小类
-			querytransportChildByTransportParent(index, id, flag) {
+			querytransportChildByTransportParent(index, id) {
 				queryTransportType({
 						proId: this.proId,
 						state: 0,
@@ -753,6 +757,7 @@
 								};
 								this.templateTwoMessage[0].sampleList = this.transportTypeParent;
 								this.templateTwoMessage[0].sampleValue = this.titleText.value;
+								this.templateTwoMessage[0].sampleId = this.titleText.id;
 							}
 						}
 					})
@@ -766,7 +771,6 @@
 
 			// 添加病人信息事件
 			addMessageEvent() {
-				this.querytransportChildByTransportParent(this.titleText.id, true);
 				this.templateTwoMessage.push({
 					bedNumber: '',
 					patientName: '',
@@ -784,7 +788,8 @@
 						}
 					],
 					sampleList: this.transportTypeParent,
-					sampleValue: this.titleText.value
+					sampleValue: this.titleText.value,
+					sampleId: this.titleText.id
 				});
 			},
 
