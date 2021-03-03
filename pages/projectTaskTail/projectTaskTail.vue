@@ -273,7 +273,7 @@
           if (res && res.data.code == 200) {
             this.cancelReasonLlist = [];
             for (let item of res.data.data) {
-               this.cancelReasonLlist.push({text: item.name, value: item.code})
+               this.cancelReasonLlist.push({text: item.cancelName, value: item.id})
             }
           }
         })
@@ -415,7 +415,7 @@
 				this.sureCancelShow = true;
 				this.cancelIndex = null;
 				this.taskCancelReason = '';
-				this.getProjectTaskCancelReason({proId: this.proId});
+				this.getProjectTaskCancelReason({proId: this.proId, state: 0,reason: '' });
 				this.taskId = item.id
 			},
 			
