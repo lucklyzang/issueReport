@@ -444,7 +444,6 @@
 
 			// input中的数据变化时触发
 			inputEvent(val) {
-				this.controlListShow = Math.random();
 				let innerList = this.temporaryHospitalList;
 				this.hospitalList = innerList.filter((item) => {
 					return item.value.indexOf(val.detail.value) != -1
