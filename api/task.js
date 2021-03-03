@@ -138,7 +138,7 @@ export function getMaintainTask(data) {
 // 任务取消
 export function projectTaskCancel(data) {
   return request({
-    url: 'bxTask/undoTask',
+    url: 'bxTask/cancelTask',
     method: 'put',
     data
   })
@@ -155,8 +155,8 @@ export function projectTaskReminder(proId,taskId) {
 // 任务取消原因
 export function projectTaskCancelReason(data) {
   return request({
-    url: 'back/dict',
+    url: 'cancel/queryAll',
     method: 'get',
-    data
+    params: data
   })
 }

@@ -273,7 +273,7 @@
           if (res && res.data.code == 200) {
             this.cancelReasonLlist = [];
             for (let item of res.data.data) {
-               this.cancelReasonLlist.push({text: item.name, value: item.code})
+               this.cancelReasonLlist.push({text: item.cancelName, value: item.id})
             }
           }
         })
@@ -415,7 +415,7 @@
 				this.sureCancelShow = true;
 				this.cancelIndex = null;
 				this.taskCancelReason = '';
-				this.getProjectTaskCancelReason({proId: this.proId});
+				this.getProjectTaskCancelReason({proId: this.proId,state: 0,reason: ''});
 				this.taskId = item.id
 			},
 			
@@ -431,7 +431,7 @@
 				this.cancelProjectTask({
 					proId: this.proId,	//当前项目ID
 					taskId: this.taskId, //当前任务ID
-					cancelReason: this.taskCancelReason //取消原因
+					reason: this.taskCancelReason //取消原因
 				  })
 			},
 			
