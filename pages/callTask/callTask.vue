@@ -464,9 +464,7 @@
 				][innerIndex].checked;
 					if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
 						if (this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] != 0) {
-							this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = 0;
-							this.$forceUpdate();
-							this.$set(this.templateTwoMessage[index]['transportList'][innerIndex], 'typerNumber', 0);
+							this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = 0
 						}
 					};
 					console.log('数据',this.templateTwoMessage);
