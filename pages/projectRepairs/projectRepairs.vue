@@ -513,7 +513,7 @@
       },
 
       // 运送类型信息确认事件
-		  takaskSure () {
+		  taskSure () {
         // 获取选中的运送工具信息
         let taskMessage = {
           priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
@@ -537,7 +537,7 @@
 			
       // 调度任务生成
       sure () {
-        this.takaskSure()
+        this.taskSure()
       },
 		
       // 调度任务取消
