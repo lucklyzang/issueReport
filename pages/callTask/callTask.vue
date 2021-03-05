@@ -268,7 +268,6 @@
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
-		// 测试 git
 		<!-- 	<view class="bottom-bar">
 			<bottom-bar :itemIndex="0" @itemEvent="clickEvent"></bottom-bar>
 		</view> -->
