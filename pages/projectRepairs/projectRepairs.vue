@@ -522,7 +522,7 @@
       },
 
       // 运送类型信息确认事件
-		  takaskSure () {
+		  taskSure () {
 				if (this.startPointId === '') {
 					this.$refs.uToast.show({
 					  title: '清选择科室',
@@ -553,7 +553,7 @@
 			
       // 调度任务生成
       sure () {
-        this.takaskSure()
+        this.taskSure()
       },
 		
       // 调度任务取消
