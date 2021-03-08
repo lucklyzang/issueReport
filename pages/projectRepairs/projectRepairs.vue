@@ -328,6 +328,10 @@
       
       // 协助人员input中的数据变化时触发
       helpWorkerInputEvent (val) {
+				if (val.target.id === '') {
+					this.helpWorkerId = '';
+					this.helpWorkerName = ''
+				};
         this.helpWorkerListShow = Math.random();
         let innerList = this.temporaryHelpWorkerList;
         this.helpWorkerList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
