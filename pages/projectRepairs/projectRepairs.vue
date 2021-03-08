@@ -545,7 +545,7 @@
           images: []  ,// 问题图片信息 非必输
           spaceId: this.destinationId,    // 选择的空间ID
           flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
-          present: [{id: this.helpWorkerId, name: this.helpWorkerName}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
+          present: this.helpWorkerId === '' ? [] : [{id: this.helpWorkerId, name: this.helpWorkerName}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
         };
         // 创建调度任务
         this.postTask(taskMessage)
