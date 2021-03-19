@@ -33,7 +33,7 @@
          </view>
       </view>
 			<view class="form-btn">
-				<button type="primary" @click="sure">登陆</button>
+				<button type="primary" @click="sure">登 录</button>
 			</view>
       <view class="weixin-login">
         <u-divider border-color="#6d6d6d" color="#333">微信授权登陆</u-divider>
@@ -227,7 +227,7 @@
         margin: 0 auto;
         margin-top: 30px;
 				button {
-          background: #78d035;
+          background-image: linear-gradient(to right, #37d5fc , #429afe);
           border-radius: 20px;
 				}
 			}
