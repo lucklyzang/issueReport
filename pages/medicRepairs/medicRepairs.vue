@@ -15,10 +15,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#333">正常</u-radio>
+						<u-radio name="2" active-color="#333">重要</u-radio>
+						<u-radio name="3" active-color="#333">紧急</u-radio>
+						<u-radio name="4" active-color="#333">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -42,7 +42,7 @@
 			</view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
-					<text>任务类型:</text>
+					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
 					<view v-for="(item,index) in taskTypeList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)"
@@ -51,9 +51,6 @@
 			</view>
 			<view class="view-photoList">
 				<view>
-					<fa-icon type="plus" size="40" color="#00aaff" @click="getImg"></fa-icon>
-				</view>
-				<view>
 					<text>问题拍照</text>
 				</view>
 				<view>
@@ -61,6 +58,9 @@
 						<image :src="item" mode="aspectFill"></image>
 						<fa-icon type="window-close" size="20" color="#000000" @click="photoDelete(item,index)"></fa-icon>
 					</view>
+				</view>
+				<view>
+					<image class="" mode="aspectFill" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
 				</view>
 			</view>
 			<view class="task-describe">
@@ -74,10 +74,10 @@
 		</view>
 		<view class="btn-box">
 			<view>
-				<button type="primary" @click="sure">确认</button>
+				<button type="primary" @click="sure">确 认</button>
 			</view>
 			<view>
-				<button type="primary" @click="cancel">取消</button>
+				<button type="primary" @click="cancel">取 消</button>
 			</view>
 		</view>
 	</view>
@@ -554,24 +554,23 @@
 
 			.creat-priority {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				height: 60px;
+				line-height: 60px;
+				border-bottom: 1px solid #e5e5e5;
 
 				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
 						padding-left: 4px;
-						box-sizing: border-box
+						box-sizing: border-box;
+						color: #7d7d7d;
 					}
 
 					&:last-child {
 						float: right;
 						position: relative;
-						height: 50px;
+						height: 60px;
 						width: 80%;
 
 						/deep/ .u-radio-group {
@@ -589,6 +588,7 @@
 
 								.u-radio__label {
 									margin-right: 9px;
+									color: #333
 								}
 							}
 						}
@@ -600,100 +600,35 @@
 
 			.creat-chooseHospital {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				margin-top: 6px;
-
+				height: 60px;
+				border-bottom: 1px solid #e5e5e5;
 				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
+						height: 60px;
+						line-height: 60px;
 						padding-left: 4px;
-						box-sizing: border-box
+						box-sizing: border-box;
+						color: #7d7d7d;
 					}
 
 					&:last-child {
 						float: right;
 						position: relative;
-						height: 50px;
-						width: 80%
-					}
-				}
-			}
-
-			;
-
-			.view-photoList {
-				position: relative;
-				height: 100px;
-				background: #fff;
-				line-height: 100px;
-				box-sizing: border-box;
-
-				>view {
-					position: absolute;
-					display: inline-block;
-
-					&:first-child {
-						width: 10%;
-						height: 80px;
-						right: 10px;
-						top: 50%;
-						color: black;
-						padding-left: 10px;
-						transform: translateY(-50%)
-					}
-
-					;
-
-					&:nth-child(2) {
-						width: 20%;
-						height: 100px;
-						left: 5px;
-						top: 50%;
-						color: black;
-						transform: translateY(-50%)
-					}
-
-					;
-
-					&:last-child {
-						width: 65%;
-						font-size: 34px;
-						display: flex;
-						height: 100px;
-						flex-flow: row wrap;
-						align-items: center;
-						overflow: auto;
-						left: 20%;
-						top: 0;
-
-						>view {
-							flex: 0 0 31%;
-							height: 100px;
-							display: inline-block;
-							margin-right: 4px;
-							margin-bottom: 4px;
-							margin-top: 4px;
-							position: relative;
-
-							>fa-icon {
-								position: absolute;
-								top: -12px;
-								right: 0
-							}
-
-							;
-
-							&:last-child {
-								margin-right: 0
-							}
-
-							;
-
-							image {
-								width: 100%;
-								height: 100%
+						height: 60px;
+						width: 80%;
+						.show-box {
+							color: #333;
+							position: absolute;
+							left: 0;
+							top: 50%;
+							transform: translateY(-50%);
+							height: 40px !important;
+							background: #f9f9f9;
+							border: none;
+							.right-arrow {
+								color: #333 !important
 							}
 						}
 					}
@@ -702,8 +637,69 @@
 
 			;
 
+			.view-photoList {
+				display: flex;
+				flex-flow: row wrap;
+				height: 112px;
+				background: #fff;
+				box-sizing: border-box;
+				border-bottom: 12px solid #f6f6f6;
+				>view {
+					&:first-child {
+						color: #7d7d7d;
+						width: 80px;
+						height: 100px;
+						padding-left: 4px;
+						line-height: 100px;
+					};
+					&:nth-child(2) {
+						flex: 1;
+						font-size: 34px;
+						display: flex;
+						height: 100px;
+						line-height: 100px;
+						flex-flow: row wrap;
+						align-items: center;
+						overflow: auto;
+						>view {
+							flex: 0 0 48%;
+							height: 100px;
+							display: inline-block;
+							margin-right: 4px;
+							margin-bottom: 4px;
+							margin-top: 4px;
+							position: relative;
+							>fa-icon {
+								position: absolute;
+								top: -12px;
+								right: 0
+							};
+							&:last-child {
+								margin-right: 0
+							};
+							image {
+								width: 100%;
+								height: 100%
+							}
+						}
+					};
+					&:last-child {
+						width: 100px;
+						height: 100px;
+						image {
+							width: 100%;
+							height: 100%
+						};
+						.fa-icon {
+							color: #000000 !important
+						}
+					}
+				}
+			};
+
 			.creat-chooseDestination {
 				margin-top: 0;
+				border: none
 			}
 
 			;
@@ -728,17 +724,18 @@
 				width: 100%;
 				height: 110px;
 				overflow: auto;
-				margin-top: 6px;
 				display: flex;
 				flex: 1;
-				flex-direction: column;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				flex-direction: row;
+				border-top: 12px solid #f6f6f6;
+				border-bottom: 12px solid #f6f6f6;
 
 				.creat-transport-type-title {
-					height: 25px;
-					line-height: 25px;
-
+					margin-top: 8px;
+					width: 20%;
+					height: 35px;
+					line-height: 35px;
+					color: #7d7d7d;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
@@ -765,14 +762,14 @@
 					flex-wrap: wrap;
 					justify-content: space-between;
 					align-content: flex-start;
-					padding: 0 4px;
+					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
 
 					.transTypeListStyle {
-						background: #75b0f0;
-						color: #fff;
-						border: none
+						background: #d6f4ff;
+						color: #01a6ff;
+						border: 1px solid #4cc5f2
 					}
 
 					;
@@ -783,7 +780,9 @@
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
-						border: 1px solid #dfdfdf
+						background:: #f9f9f9;
+						color: #7e7e7e;
+						border-radius: 16px
 					}
 				}
 			}
@@ -797,42 +796,52 @@
 				height: 60px;
 				flex-flow: row wrap;
 				justify-content: center;
-				align-items: top;
+				align-items: center;
 				overflow: auto;
+				border-bottom: 1px solid #e5e5e5;
 
 				>text {
 					display: inline-block;
 					height: 30px;
 					text-align: center;
-					color: black;
-					border: 1px solid #e1d3de;
+					color: #7e7e7e;
+					background: #f9f9f9;
 					line-height: 30px;
 					padding: 0 3px;
 					margin-right: 4px;
-					margin-bottom: 4px
+					margin-bottom: 4px;
+					border-radius: 4px;
 				}
 
 				;
 
 				.preinstallStyle {
-					background: #689dec;
-					color: #fff;
-					border: none
+					background: #d6f4ff;
+					color: #01a6ff;
+					border: 1px solid #4cc5f2;
 				}
 			}
 
 			;
 
 			.task-describe {
-				margin: 6px 0;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				height: 112px;
+				border-bottom: 12px solid #f6f6f6;
 
 				/deep/ .u-field {
-					padding: 11px 2px;
-
+					padding: 16px 2px;
+					color: #7d7d7d;
 					.u-label-text {
 						font-size: 14px
+					};
+					.u-label {
+						margin-top: 8px;
+					};
+					.fild-body {
+						color: #333;
+						height: 68px;
+						overflow: auto;
+						background: #f9f9f9
 					}
 				}
 			}
@@ -841,7 +850,6 @@
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
-			border-top: 1px solid #bcbcbc;
 			padding: 0 20px;
 			margin: 0 auto;
 			height: 80px;
@@ -852,12 +860,12 @@
 			align-items: center;
 
 			view {
-				width: 45%;
+				width: 47%;
 
 				&:first-child {
 					button {
 						border-radius: 4px;
-						background: #75acef;
+						background-image: linear-gradient(to right, #37d5fc , #429bff);
 						color: #fff
 					}
 				}
@@ -867,8 +875,9 @@
 				&:last-child {
 					button {
 						border-radius: 4px;
-						background: #fff;
-						color: black
+						background: #e8e8e8;
+						border: none;
+						color: #666666
 					}
 				}
 
