@@ -11,10 +11,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#333">正常</u-radio>
+						<u-radio name="2" active-color="#333">重要</u-radio>
+						<u-radio name="3" active-color="#333">紧急</u-radio>
+						<u-radio name="4" active-color="#333">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -27,7 +27,7 @@
               :showItemNum="5" 
               :isCanInput="true"
               :showList="controlListShow"
-              :style_Container="'height: 50px; font-size: 16px;'"
+              :style_Container="'height: 50px; font-size: 15px;'"
               :initValue="depName"
               @change="listChangeEvent"
               @input="inputEvent"
@@ -57,7 +57,7 @@
       </view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
-					<text>任务类型:</text>
+					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
 					<view v-for="(item,index) in taskTypeList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
@@ -76,7 +76,7 @@
       		</u-field>
       	</view>
       </view>
-      <view class="creat-chooseHospital">
+      <view class="creat-chooseHospital help-worker">
         <view>协助人员</view>
         <view>
            <xfl-select 
@@ -85,7 +85,7 @@
               :showItemNum="5" 
               :isCanInput="true"
               :showList="helpWorkerListShow"
-              :style_Container="'height: 50px; font-size: 16px;'"
+              :style_Container="'height: 50px; font-size: 15px;'"
               @change="helpWorkerListChangeEvent"
               @input="helpWorkerInputEvent"
               @visible-change="helpWorkerVisibleChange"
@@ -265,7 +265,12 @@
                 this.temporaryDestinationList = this.destinationList;
               }
             }
-          }
+          } else {
+						this.$refs.uToast.show({
+						  title: `${res.data.data.msg}`,
+						  type: 'warning'
+						})
+					}
         })
         .catch((err) => {
           this.$refs.uToast.show({
@@ -367,7 +372,12 @@
           queryAllDestination(this.proId).then((res) => {
             if (res && res.data.code == 200) {
               resolve(res.data.data)
-            }
+            } else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
+						}
           })
           .catch((err) => {
             reject(err.message)
@@ -383,7 +393,12 @@
           .then((res) => {
             if (res && res.data.code == 200) {
               resolve(res.data.data)
-            }
+            } else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
+						}
           })
           .catch((err) => {
             reject(err.message)
@@ -398,7 +413,12 @@
           .then((res) => {
             if (res && res.data.code == 200) {
               resolve(res.data.data)
-            }
+            } else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
+						}
           })
           .catch((err) => {
             reject(err.message)
@@ -413,7 +433,12 @@
           .then((res) => {
             if (res && res.data.code == 200) {
               resolve(res.data.data)
-            }
+            } else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
+						}
           })
           .catch((err) => {
             reject(err.message)
@@ -553,7 +578,7 @@
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
-		padding-bottom: constant(safe-area-inset-bottom);  
+		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
 		.nav {
 			width: 100%;
@@ -569,22 +594,21 @@
 			flex-direction: column;
 			.creat-priority {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
-			  margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-				> view {
+				height: 60px;
+				line-height: 60px;
+				border-bottom: 1px solid #e5e5e5;
+				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
 						padding-left: 4px;
-						box-sizing: border-box
-					}
+						box-sizing: border-box;
+						color: #7d7d7d;
+					};
 					&:last-child {
 						float: right;
 						position: relative;
-						height: 50px;
+						height: 60px;
 						width: 80%;
 						/deep/ .u-radio-group {
 							position: absolute;
@@ -594,169 +618,245 @@
 							left: 0;
 							display: flex;
 							justify-content: space-between;
-							.u-radio{
-							   flex: 1 0 auto !important;
-							   justify-content: space-between;
-							   .u-radio__label {
-							     margin-right: 9px;
-							   }
+							.u-radio {
+								flex: 1 0 auto !important;
+								justify-content: space-between;
+								.u-radio__label {
+									margin-right: 9px;
+									color: #333
+								}
 							}
 						}
 					}
 				}
 			};
-      .creat-chooseHospital {
-        width: 100%;
-        height: 50px;
-        line-height: 50px;
-        margin-top: 6px;
-        > view {
-            &:first-child {
-              float: left;
-              width: 20%;
-              padding-left: 4px;
-              box-sizing: border-box
-            }
-            &:last-child {
-              float: right;
-              position: relative;
-              height: 50px;
-              width: 80%
-            }
-          }
-      };
-      .creat-chooseDestination {
-         margin-top: 0;
-      };
-      .priority-box {
-        > view {
-          &:last-child {
-          	/deep/ .u-radio-group {
-          		position: absolute;
-          		width: 100%;
-          		top: 50%;
-          		transform: translateY(-50%);
-          		left: 0
-          	}
-          }
-        }
-      };
+	
+			.creat-chooseHospital {
+				width: 100%;
+				height: 60px;
+				border-bottom: 1px solid #e5e5e5;
+				>view {
+					&:first-child {
+						float: left;
+						width: 20%;
+						height: 60px;
+						line-height: 60px;
+						padding-left: 4px;
+						box-sizing: border-box;
+						color: #7d7d7d;
+					}
+	
+					&:last-child {
+						float: right;
+						position: relative;
+						z-index: 100;
+						height: 60px;
+						width: 80%;
+						.show-box {
+							color: #333;
+							position: absolute;
+							left: 0;
+							top: 50%;
+							transform: translateY(-50%);
+							height: 40px !important;
+							background: #f9f9f9;
+							border: none;
+							/deep/ .input {
+								font-size: 15px !important
+							};
+							.right-arrow {
+								color: #333 !important
+							}
+						}
+					}
+				}
+			};
+			
+			.help-worker {
+				height: 72px;
+				border-bottom: 12px solid #f6f6f6;
+				>view {
+					&:first-child {
+						float: left;
+						width: 20%;
+						height: 60px;
+						line-height: 60px;
+						padding-left: 4px;
+						box-sizing: border-box;
+						color: #7d7d7d;
+					}
+					
+					&:last-child {
+						float: right;
+						position: relative;
+						z-index: 100;
+						height: 60px;
+						width: 80%;
+					}
+				}
+			};
+	
+			.creat-chooseDestination {
+				margin-top: 0;
+				border: none;
+				> view {
+				    &:last-child {
+							z-index: 10;
+				    }
+				  }
+			};
+	
+			.priority-box {
+				>view {
+					&:last-child {
+						/deep/ .u-radio-group {
+							position: absolute;
+							width: 100%;
+							top: 50%;
+							transform: translateY(-50%);
+							left: 0
+						}
+					}
+				}
+			};
+	
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
 				overflow: auto;
-				margin-top: 6px;
 				display: flex;
 				flex: 1;
-				flex-direction: column;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				flex-direction: row;
+				border-top: 12px solid #f6f6f6;
+				border-bottom: 12px solid #f6f6f6;
+	
 				.creat-transport-type-title {
-					height: 25px;
-					line-height: 25px;
+					margin-top: 8px;
+					width: 20%;
+					height: 35px;
+					line-height: 35px;
+					color: #7d7d7d;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
 							box-sizing: border-box;
 							margin-right: 8px
 						};
+	
 						&:nth-child(2) {
 							font-size: 14px;
 							color: red
 						}
 					}
 				};
+	
 				.creat-transport-type-content {
 					flex: 1;
 					display: flex;
+					font-size: 15px;
+					color: #333;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
 					justify-content: space-between;
 					align-content: flex-start;
-					padding:0 4px;
+					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
 					.transTypeListStyle {
-						background: #75b0f0;
-						color: #fff;
-						border: none
+						background: #d6f4ff;
+						color: #01a6ff;
+						border: 1px solid #4cc5f2
 					};
-					> view {
+	
+					>view {
 						width: 45%;
 						margin-bottom: 4px;
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
-						border: 1px solid #dfdfdf
+						background:: #f9f9f9;
+						border-radius: 16px
 					}
 				}
 			};
-      .creat-form {
-      	width: 100%;
-      	padding: 4px 0;
-      	box-sizing: border-box;
-      	margin-top: 6px;
-      	border-top: 1px solid #bcbcbc;
-      	border-bottom: 1px solid #bcbcbc;
-      	display: flex;
-      	width: 100%;
-      	flex-direction: row;
-      	flex-wrap: wrap;
-      	justify-content: space-between;
-      	align-content: flex-start;
-      	> view {
-      		margin-bottom: 4px;
-      		/deep/ .u-field {
-      			padding: 11px 2px;
-      			.u-label-text {
-      				font-size: 14px
-      			}
-      		}
-      	}
-      };
-      .preinstall-box {
-        width: 90%;
-        margin: 0 auto;
-        display: flex;
-        height: 60px;
-        flex-flow: row wrap;
-        justify-content: center;
-        align-items: top;
-        overflow: auto;
-        > text {
-          display: inline-block;
-          height: 30px;
-          text-align: center;
-          color: black;
-          border: 1px solid #e1d3de;
-          line-height: 30px;
-          padding: 0 3px;
-          margin-right: 4px;
-          margin-bottom: 4px 
-        };
-        .preinstallStyle {
-          background: #689dec;
-          color: #fff;
-          border: none
-        }
-      };
-			.task-describe {
-				margin: 6px 0;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+			
+			.creat-form {
 				/deep/ .u-field {
-					padding: 11px 2px;
+					padding: 10px 4px;
+					.u-label {
+						font-size: 14px;
+						color: #7d7d7d !important
+					};
+					.fild-body {
+						color: #333 !important;
+						.u-flex-1  {
+							font-size: 15px !important
+						}
+					}
+				}
+			};
+	
+			.preinstall-box {
+				width: 90%;
+				margin: 0 auto;
+				display: flex;
+				height: 60px;
+				flex-flow: row wrap;
+				justify-content: center;
+				align-items: center;
+				overflow: auto;
+				border-bottom: 1px solid #e5e5e5;
+	
+				>text {
+					display: inline-block;
+					height: 30px;
+					text-align: center;
+					color: #333;
+					background: #f9f9f9;
+					line-height: 30px;
+					padding: 0 3px;
+					margin-right: 4px;
+					margin-bottom: 4px;
+					border-radius: 4px;
+				};
+	
+				.preinstallStyle {
+					background: #d6f4ff;
+					color: #01a6ff;
+					border: 1px solid #4cc5f2;
+				}
+			};
+	
+			.task-describe {
+				height: 112px;
+				border-bottom: 12px solid #f6f6f6;
+	
+				/deep/ .u-field {
+					padding: 16px 2px;
+					color: #7d7d7d;
 					.u-label-text {
 						font-size: 14px
+					};
+					.u-label {
+						margin-top: 8px;
+					};
+					.fild-body {
+						color: #333;
+						height: 68px;
+						overflow: auto;
+						background: #f9f9f9;
+						.u-flex-1 {
+							font-size: 15px !important
+						}
 					}
 				}
 			}
-		}
+		};
+	
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
-			border-top: 1px solid #bcbcbc;
 			padding: 0 20px;
 			margin: 0 auto;
 			height: 80px;
@@ -766,23 +866,25 @@
 			justify-content: space-between;
 			align-items: center;
 			view {
-				width: 45%;
+				width: 47%;
 				&:first-child {
 					button {
 						border-radius: 4px;
-						background: #75acef;
+						background-image: linear-gradient(to right, #37d5fc , #429bff);
 						color: #fff
 					}
 				};
+	
 				&:last-child {
 					button {
 						border-radius: 4px;
-						background: #fff;
-						color: black
+						background: #e8e8e8;
+						border: none;
+						color: #666666
 					}
-				};
+				}
 			}
-		}
+		};
 		.bottom-bar {
 			height: 50px;
 			width: 100%;

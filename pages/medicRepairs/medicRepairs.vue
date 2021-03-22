@@ -26,7 +26,7 @@
 				<view>科室选择</view>
 				<view>
 					<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
-					 :style_Container="'height: 50px; font-size: 16px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
+					 :style_Container="'height: 50px; font-size: 15px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
 					 @visible-change="visibleChange">
 					</xfl-select>
 				</view>
@@ -35,7 +35,7 @@
 				<view>目的房间</view>
 				<view>
 					<xfl-select ref="destionationParent" :list="destinationList" :clearable="false" :showItemNum="5" :isCanInput="true"
-					 :showList="destinationListShow" :style_Container="'height: 50px; font-size: 16px;'" :initValue="destinationName"
+					 :showList="destinationListShow" :style_Container="'height: 50px; font-size: 15px;'" :initValue="destinationName"
 					 @change="destinationListChangeEvent" @input="destinationInputEvent" @visible-change="destinationvisibleChange">
 					</xfl-select>
 				</view>
@@ -278,6 +278,11 @@
 								};
 								this.temporaryDestinationList = this.destinationList;
 							}
+						} else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
 						}
 					})
 					.catch((err) => {
@@ -367,6 +372,11 @@
 					queryAllDestination(this.proId).then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
 							}
 						})
 						.catch((err) => {
@@ -382,6 +392,11 @@
 						.then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
 							}
 						})
 						.catch((err) => {
@@ -397,6 +412,11 @@
 						.then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
 							}
 						})
 						.catch((err) => {
@@ -529,19 +549,14 @@
 
 <style lang="scss">
 	@import "~@/common/stylus/variable.scss";
-
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
-
 		.nav {
 			width: 100%;
-		}
-
-		;
-
+		};
 		.creat-box {
 			position: relative;
 			width: 100%;
@@ -551,13 +566,11 @@
 			color: black;
 			display: flex;
 			flex-direction: column;
-
 			.creat-priority {
 				width: 100%;
 				height: 60px;
 				line-height: 60px;
 				border-bottom: 1px solid #e5e5e5;
-
 				>view {
 					&:first-child {
 						float: left;
@@ -565,14 +578,12 @@
 						padding-left: 4px;
 						box-sizing: border-box;
 						color: #7d7d7d;
-					}
-
+					};
 					&:last-child {
 						float: right;
 						position: relative;
 						height: 60px;
 						width: 80%;
-
 						/deep/ .u-radio-group {
 							position: absolute;
 							width: 100%;
@@ -581,11 +592,9 @@
 							left: 0;
 							display: flex;
 							justify-content: space-between;
-
 							.u-radio {
 								flex: 1 0 auto !important;
 								justify-content: space-between;
-
 								.u-radio__label {
 									margin-right: 9px;
 									color: #333
@@ -594,10 +603,8 @@
 						}
 					}
 				}
-			}
-
-			;
-
+			};
+	
 			.creat-chooseHospital {
 				width: 100%;
 				height: 60px;
@@ -612,10 +619,11 @@
 						box-sizing: border-box;
 						color: #7d7d7d;
 					}
-
+	
 					&:last-child {
 						float: right;
 						position: relative;
+						z-index: 100;
 						height: 60px;
 						width: 80%;
 						.show-box {
@@ -627,16 +635,16 @@
 							height: 40px !important;
 							background: #f9f9f9;
 							border: none;
+							/deep/ .input {
+								font-size: 15px !important
+							};
 							.right-arrow {
 								color: #333 !important
 							}
 						}
 					}
 				}
-			}
-
-			;
-
+			};
 			.view-photoList {
 				display: flex;
 				flex-flow: row wrap;
@@ -684,8 +692,10 @@
 						}
 					};
 					&:last-child {
-						width: 100px;
-						height: 100px;
+						width: 80px;
+						height: 80px;
+						margin-top: 10px;
+						margin-right: 4px;
 						image {
 							width: 100%;
 							height: 100%
@@ -696,14 +706,17 @@
 					}
 				}
 			};
-
+	
 			.creat-chooseDestination {
 				margin-top: 0;
-				border: none
-			}
-
-			;
-
+				border: none;
+				> view {
+				    &:last-child {
+							z-index: 10;
+				    }
+				  }
+			};
+	
 			.priority-box {
 				>view {
 					&:last-child {
@@ -716,10 +729,8 @@
 						}
 					}
 				}
-			}
-
-			;
-
+			};
+	
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
@@ -729,7 +740,7 @@
 				flex-direction: row;
 				border-top: 12px solid #f6f6f6;
 				border-bottom: 12px solid #f6f6f6;
-
+	
 				.creat-transport-type-title {
 					margin-top: 8px;
 					width: 20%;
@@ -741,22 +752,20 @@
 							padding-left: 4px;
 							box-sizing: border-box;
 							margin-right: 8px
-						}
-
-						;
-
+						};
+	
 						&:nth-child(2) {
 							font-size: 14px;
 							color: red
 						}
 					}
-				}
-
-				;
-
+				};
+	
 				.creat-transport-type-content {
 					flex: 1;
 					display: flex;
+					font-size: 15px;
+					color: #333;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
@@ -765,15 +774,12 @@
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
-
 					.transTypeListStyle {
 						background: #d6f4ff;
 						color: #01a6ff;
 						border: 1px solid #4cc5f2
-					}
-
-					;
-
+					};
+	
 					>view {
 						width: 45%;
 						margin-bottom: 4px;
@@ -781,14 +787,27 @@
 						text-align: center;
 						line-height: 35px;
 						background:: #f9f9f9;
-						color: #7e7e7e;
 						border-radius: 16px
 					}
 				}
-			}
-
-			;
-
+			};
+			
+			.creat-form {
+				/deep/ .u-field {
+					padding: 10px 4px;
+					.u-label {
+						font-size: 14px;
+						color: #7d7d7d !important
+					};
+					.fild-body {
+						color: #333 !important;
+						.u-flex-1  {
+							font-size: 15px !important
+						}
+					}
+				}
+			};
+	
 			.preinstall-box {
 				width: 90%;
 				margin: 0 auto;
@@ -799,35 +818,31 @@
 				align-items: center;
 				overflow: auto;
 				border-bottom: 1px solid #e5e5e5;
-
+	
 				>text {
 					display: inline-block;
 					height: 30px;
 					text-align: center;
-					color: #7e7e7e;
+					color: #333;
 					background: #f9f9f9;
 					line-height: 30px;
 					padding: 0 3px;
 					margin-right: 4px;
 					margin-bottom: 4px;
 					border-radius: 4px;
-				}
-
-				;
-
+				};
+	
 				.preinstallStyle {
 					background: #d6f4ff;
 					color: #01a6ff;
 					border: 1px solid #4cc5f2;
 				}
-			}
-
-			;
-
+			};
+	
 			.task-describe {
 				height: 112px;
 				border-bottom: 12px solid #f6f6f6;
-
+	
 				/deep/ .u-field {
 					padding: 16px 2px;
 					color: #7d7d7d;
@@ -841,12 +856,15 @@
 						color: #333;
 						height: 68px;
 						overflow: auto;
-						background: #f9f9f9
+						background: #f9f9f9;
+						.u-flex-1 {
+							font-size: 15px !important
+						}
 					}
 				}
 			}
-		}
-
+		};
+	
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
@@ -858,20 +876,16 @@
 			flex-wrap: wrap;
 			justify-content: space-between;
 			align-items: center;
-
 			view {
 				width: 47%;
-
 				&:first-child {
 					button {
 						border-radius: 4px;
 						background-image: linear-gradient(to right, #37d5fc , #429bff);
 						color: #fff
 					}
-				}
-
-				;
-
+				};
+	
 				&:last-child {
 					button {
 						border-radius: 4px;
@@ -880,11 +894,8 @@
 						color: #666666
 					}
 				}
-
-				;
 			}
-		}
-
+		};
 		.bottom-bar {
 			height: 50px;
 			width: 100%;
