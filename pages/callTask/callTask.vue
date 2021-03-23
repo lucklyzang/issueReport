@@ -129,10 +129,10 @@
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#333">正常</u-radio>
+						<u-radio name="2" active-color="#333">重要</u-radio>
+						<u-radio name="3" active-color="#333">紧急</u-radio>
+						<u-radio name="4" active-color="#333">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -140,7 +140,7 @@
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
-						<u-radio @change="toolChange" active-color="#8dc58d" shape="circle" v-for="(item, index) in toolList" :key="index"
+						<u-radio @change="toolChange" active-color="#333" shape="circle" v-for="(item, index) in toolList" :key="index"
 						 :name="item.value">
 							{{item.text}}
 						</u-radio>
@@ -151,8 +151,8 @@
 				<view class="creat-priority-title">运送员是否返回</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-						<u-radio name="0" active-color="#8dc58d">否</u-radio>
-						<u-radio name="1" active-color="#8dc58d">是</u-radio>
+						<u-radio name="0" active-color="#333">否</u-radio>
+						<u-radio name="1" active-color="#333">是</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -217,13 +217,13 @@
 						</view>
 					</view>
 					<view class="creat-transport-type">
-						<view class="creat-transport-type-content">
-							<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
+						<!-- <view class="creat-transport-type-content"> -->
+						<!-- 	<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
 								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem.text">
 								<view class="creat-transport-type-content-list-title">
 									{{innerItem.text}}
-								</view>
-								<view class="creat-transport-type-content-list-content">
+								</view> -->
+								<!-- <view class="creat-transport-type-content-list-content"> -->
 								<!-- 	<view class="subtract-box"
 										@click.stop="plusNum(index,innerItem,innerIndex, $event)">
 										<u-icon name="minus"></u-icon>
@@ -238,22 +238,23 @@
 										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
 										<u-icon name="plus"></u-icon>
 									</view> -->
-									<stepNumberBox v-model="innerItem.typerNumber" 
+								<!-- 	<stepNumberBox v-model="innerItem.typerNumber" 
 										@plus="plusNum(arguments)"
 										@inputBlur="inputBlurEvent(arguments)"
 										:index="index"
 										:innerIndex="innerIndex"
 										@minus="minusNum(arguments)"
 										@change="stepperValChange(arguments)"
-									></stepNumberBox>
-								</view>
-							</view>
-						</view>
+									></stepNumberBox> -->
+							<!-- 	</view> -->
+						<!-- 	</view> -->
+						<!-- </view> -->
 					</view>
 				</view>
-			</view>
-			<view class="addpatient-message-btn" @click="addMessageEvent">
-				点击添加病人信息
+				<view class="addpatient-message-btn" @click="addMessageEvent">
+						<text><fa-icon type="plus" color="#44c3f3"></fa-icon></text>
+						<text>添加病人信息</text>
+				</view>
 			</view>
 			<view class="task-describe">
 				<u-field v-model="taskDescribe" label="任务描述" :border-top="true" placeholder="请输入任务描述" type="textarea">
@@ -271,6 +272,68 @@
 		<!-- 	<view class="bottom-bar">
 			<bottom-bar :itemIndex="0" @itemEvent="clickEvent"></bottom-bar>
 		</view> -->
+		<u-modal v-model="patienModalShow" title="病人" :show-cancel-button="true" width="90%" :title-style="{color: '#000000',textAlign: 'left',fontSize: '18px'}">
+			<view class="slot-content">
+				<view class="bedNumberBox">
+					<view>床号</view>
+					<view>
+						<u-input v-model="patienModalMessage.bedNumber"/>
+					</view>
+				</view>
+				<view class="bedNumberBox">
+					<view>住院号</view>
+					<view>
+						<u-input v-model="patienModalMessage.patientNumber"/>
+					</view>
+				</view>
+				<view class="bedNumberBox">
+					<view>姓名</view>
+					<view>
+						<u-input v-model="patienModalMessage.patientName"/>
+					</view>
+				</view>
+				<view class="genderBox">
+					<view>性别</view>
+					<view>
+						<u-radio-group v-model="patienModalMessage.genderValue">
+							<u-radio name="1" active-color="#333">男</u-radio>
+							<u-radio name="2" active-color="#333">女</u-radio>
+						</u-radio-group>
+					</view>
+				</view>
+				<view class="bedNumberBox">
+					<view>运送数量</view>
+					<view>
+						<u-input v-model="patienModalMessage.actualData"/>
+					</view>
+				</view>
+				<view class="transportBox">
+					<view>运送类型</view>
+					<view>
+						<xfl-select :list="patienModalMessage.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
+						 :style_Container="'height: 50px; font-size: 16px;'">
+						</xfl-select>
+					</view>
+				</view>
+				<view class="transport-type-child-box">
+					<view class="transport-type-child-content" v-for="(innerItem,innerIndex) in patienModalMessage.transportList"
+								:key="innerIndex">
+						<view>
+							{{innerItem.text}}
+						</view>
+						<view>
+							<stepNumberBox v-model="innerItem.typerNumber"
+								@plus="plusNum(arguments)"
+								@inputBlur="inputBlurEvent(arguments)"
+								:innerIndex="innerIndex"
+								@minus="minusNum(arguments)"
+								@change="stepperValChange(arguments)"
+							></stepNumberBox>
+						</view>
+					</view>
+				</view>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -293,11 +356,13 @@
 	import navBar from "@/components/zhouWei-navBar"
 	import xflSelect from '@/components/xfl-select/xfl-select.vue'
 	import stepNumberBox from '@/components/step-number-box/step-number-box.vue'
+	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	export default {
 		components: {
 			navBar,
 			xflSelect,
-			stepNumberBox
+			stepNumberBox,
+			faIcon
 		},
 		data() {
 			return {
@@ -344,9 +409,46 @@
 					sampleValue: '',
 					sampleId: ''
 				}],
+				patienModalMessage: {
+					bedNumber: '',
+					patientName: '',
+					patientNumber: '',
+					actualData: 0,
+					genderValue: '',
+					transportList: [
+						{
+							text: '病理切片',
+							value: 12,
+							checked: false,
+							typerNumber: 0
+						},
+						{
+							text: '标本',
+							value: 13,
+							checked: false,
+							typerNumber: 0
+						},
+						{
+							text: '病理切片千万',
+							value: 14,
+							checked: false,
+							typerNumber: 0
+						},
+						{
+							text: '标本撒',
+							value: 15,
+							checked: false,
+							typerNumber: 0
+						}
+					],
+					sampleList: [],
+					sampleValue: '',
+					sampleId: ''
+				},
 				transportTypeParent: [],
 				transportTypeChild: [],
 				genderControlListShow: false,
+				patienModalShow: true
 			}
 		},
 		onLoad(options) {
@@ -880,6 +982,178 @@
 		padding-bottom: 0;
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
+		
+		// 病人信息模态框样式
+		/deep/ .u-mode-center-box {
+			.u-model {
+				padding: 16px;
+				.u-model__title {
+					padding-top: 0
+				};
+				.u-model__content {
+					max-height: 500px;
+					overflow: scroll;
+					.slot-content {
+						height: 400px;
+						padding: 16px;
+						.bedNumberBox {
+							height: 60px;
+							> view {
+								height: 60px;
+								line-height: 60px;
+								&:first-child {
+									width: 30%;
+									color: #7d7d7d;
+									float: left
+								};
+								&:last-child {
+									width: 70%;
+									float: right;
+									position: relative;
+									.u-input {
+										position: absolute;
+										width: 100%;
+										top: 50%;
+										left: 0;
+										transform: translateY(-50%);
+										min-height: 59px !important;
+										border-bottom: 1px solid #f9f9f9;
+										.u-input__input {
+											min-height: 59px !important;
+										}
+									}
+								}
+							}
+						};
+						.genderBox {
+							height: 60px;
+							> view {
+								height: 60px;
+								line-height: 60px;
+								&:first-child {
+									width: 30%;
+									color: #7d7d7d;
+									float: left
+								};
+								&:last-child {
+									width: 70%;
+									float: right;
+									border-bottom: 1px solid #ececec;
+									position: relative;
+									.u-radio-group {
+										position: absolute;
+										top: 50%;
+										left: 0;
+										transform: translateY(-50%);
+									}
+								}
+							}
+						};
+						.transportBox {
+							height: 60px;
+							line-height: 60px;
+							> view {
+								&:first-child {
+									float: left;
+									width: 30%;
+									color: #7d7d7d;
+									box-sizing: border-box
+								};
+								&:last-child {
+									height: 60px;
+									float: right;
+									position: relative;
+									width: 70%;
+									z-index: 300;
+									border-bottom: 1px solid #ececec;
+									.show-box {
+										color: #333;
+										position: absolute;
+										left: 0;
+										top: 50%;
+										transform: translateY(-50%);
+										height: 40px !important;
+										background: #f9f9f9;
+										border: none;
+										.input {
+											font-size: 15px !important
+										};
+										.right-arrow {
+											color: #333 !important
+										}
+									}
+								}
+							}
+						};
+						.transport-type-child-box {
+							max-height: 100px;
+							.transport-type-child-content {
+								height: 60px;
+								line-height: 60px;
+								> view {
+									&:first-child {
+										float: left;
+										width: 50%;
+										height: 60px;
+										color: #7d7d7d;
+										box-sizing: border-box;
+										overflow-x: auto;
+									};
+									&:last-child {
+										height: 60px;
+										float: right;
+										position: relative;
+										width: 50%;
+										z-index: 300;
+										border-bottom: 1px solid #f9f9f9;
+										.num-box {
+											align-items: center;
+											.subtract-box {
+												width: 26px;
+												height: 26px;
+												background: #d3d3d3;
+												border-radius: 50%;
+												color: #fff;
+												text-align: center;
+												line-height: 26px
+											};
+											.plus-box {
+												width: 26px;
+												height: 26px;
+												background: #3d4864;
+												border-radius: 50%;
+												color: #fff;
+												text-align: center;
+												line-height: 26px
+											}
+											input {
+												text-align: center;
+												background: #fff
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				};
+				.u-model__footer {
+					justify-content: space-between;
+					.u-model__footer__button {
+						border-radius: 30px;
+						flex: 0 0 45%;
+						margin-top: 8px;
+						background: #e8e8e8;
+						color: #666666
+					};
+					.hairline-left {
+						background: #fff;
+						color: #43c3f4 !important;
+						border: 1px solid #43c3f4
+					}
+				}
+			}
+		};
 
 		.nav {
 			width: 100%;
@@ -897,72 +1171,92 @@
 
 			.creat-priority {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				height: 60px;
+				line-height: 60px;
+				border-bottom: 1px solid #e5e5e5;
 
 				.creat-priority-title {
-					height: 48px;
-					line-height: 48px;
+					height: 59px;
+					line-height: 59px;
 					float: left;
-					width: 20%;
+					width: 30%;
+					color: #7d7d7d;
 					padding-left: 4px;
 					box-sizing: border-box;
 				};
 				.creat-priority-content {
-					height: 48px;
+					height: 59px;
 					float: right;
 					position: relative;
-					width: 80%;
+					width: 70%;
 					
 					/deep/ .u-radio-group {
 						position: absolute;
 						width: 100%;
 						top: 50%;
 						transform: translateY(-50%);
-						left: 0
+						left: 0;
+						.u-radio__label {
+							color: #333
+						}
 					}
 				}
 			};
 
 			.creat-chooseHospital {
 				width: 100%;
-				height: 40px;
+				height: 60px;
 				margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
 				.creat-chooseHospital-title {
-					height: 38px;
+					height: 59px;
 					float: left;
-					width: 20%;
-					line-height: 38px;
+					width: 30%;
+					line-height: 59px;
 					padding-left: 4px;
+					color: #7d7d7d;
 					box-sizing: border-box
 				};
 				.creat-chooseHospital-content {
-					height: 38px;
+					height: 59px;
 					float: right;
 					position: relative;
-					width: 80%;
+					width: 70%;
 					z-index: 300;
 					
 					.show-box {
-						height: 30px !important;
+						color: #333;
 						position: absolute;
 						left: 0;
 						top: 50%;
 						transform: translateY(-50%);
+						height: 40px !important;
+						background: #f9f9f9;
+						border: none;
+						/deep/ .input {
+							font-size: 15px !important
+						};
+						.right-arrow {
+							color: #333 !important
+						}
 					}
 				}
 			};
 
 			.priority-box {
+				.creat-priority-title {
+					height: 59px;
+					line-height: 59px;
+					float: left;
+					width: 20%;
+					color: #7d7d7d;
+					padding-left: 4px;
+					box-sizing: border-box;
+				};
 				.creat-priority-content {
+					width: 80% !important;
 					/deep/ .u-radio-group {
 						position: absolute;
-						width: 100%;
+						width: 100% !important;
 						top: 50%;
 						transform: translateY(-50%);
 						left: 0;
@@ -1062,8 +1356,8 @@
 			.creat-is-back {
 				.creat-priority-title {
 					display: inline-block;
-					height: 48px;
-					line-height: 48px;
+					height: 59px;
+					line-height: 59px;
 					width: 30%;
 					padding-left: 4px;
 					box-sizing: border-box;
@@ -1071,7 +1365,7 @@
 				.creat-priority-content {
 					display: inline-block;
 					position: relative;
-					height: 48px;
+					height: 59px;
 					width: 70%;
 					
 					/deep/ .u-radio-group {
@@ -1085,15 +1379,26 @@
 			};
 
 			.task-describe {
-				margin: 6px 0;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-
+				height: 112px;
+				border-bottom: 12px solid #f6f6f6;
+					
 				/deep/ .u-field {
-					padding: 11px 2px;
-
+					padding: 16px 2px;
+					color: #7d7d7d;
 					.u-label-text {
 						font-size: 14px
+					};
+					.u-label {
+						margin-top: 8px;
+					};
+					.fild-body {
+						color: #333;
+						height: 68px;
+						overflow: auto;
+						background: #f9f9f9;
+						.u-flex-1 {
+							font-size: 15px !important
+						}
 					}
 				}
 			}
@@ -1104,34 +1409,54 @@
 				.trans-total-title {
 					float: left;
 					width: 30%;
+					color: #7d7d7d;
 					padding-left: 4px;
-					line-height: 48px !important;
-					height: 48px !important;
+					line-height: 59px !important;
+					height: 59px !important;
 				};
 				.trans-total-content {
-					height: 48px !important;
+					height: 59px !important;
 					float: right;
 					width: 70%;
 					position: relative;
 					/deep/ .u-input {
 						position: absolute;
 						top: 50%;
+						width: 100%;
+						min-height: 40px;
+						color: #333;
 						transform: translateY(-50%);
-						left: 10px;
+						left: 0;
+						border: none;
+						background: #f9f9f9
 					}
 				};
 			}
 
 			.patient-box {
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				border-top: 12px solid #f6f6f6;;
+				border-bottom: 12px solid #f6f6f6;
 				margin: 4px 0;
 				padding: 4px;
 				height: 400px;
 				overflow: auto;
-
+				.addpatient-message-btn {
+					width: 96%;
+					height: 40px;
+					margin: 0 auto;
+					line-height: 40px;
+					text-align: center;
+					color: #43c3f3;				
+					border: 1px solid #44c3f3;
+					border-radius: 20px;
+					font-size: 16px;
+					text {
+						&:first-child {
+							margin-right: 6px
+						}
+					}
+				};
 				.patient-box-list {
-					background: #f6f6f6;
 					margin-bottom: 4px;
 
 					.creat-transport-type{
@@ -1333,17 +1658,6 @@
 				}
 			};
 
-			.addpatient-message-btn {
-				width: 120px;
-				height: 30px;
-				line-height: 30px;
-				border-radius: 4px;
-				text-align: center;
-				margin: 0 auto;
-				background: #75acef;
-				color: #fff
-			};
-
 			.task-describe {
 				margin: 4px 0;
 			}
@@ -1352,7 +1666,6 @@
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
-			border-top: 1px solid #bcbcbc;
 			padding: 0 20px;
 			margin: 0 auto;
 			height: 80px;
@@ -1361,22 +1674,25 @@
 			flex-wrap: wrap;
 			justify-content: space-between;
 			align-items: center;
-			.btn-sure {
-				width: 45%;
-				.sureBtn {
-					border-radius: 4px;
-					background: #75acef;
-					color: #fff
+			view {
+				width: 47%;
+				&:first-child {
+					button {
+						border-radius: 4px;
+						background-image: linear-gradient(to right, #37d5fc , #429bff);
+						color: #fff
+					}
+				};
+				
+				&:last-child {
+					button {
+						border-radius: 4px;
+						background: #e8e8e8;
+						border: none;
+						color: #666666
+					}
 				}
-			};
-			.btn-cancel {
-				width: 45%;
-				.cancelBtn {
-					border-radius: 4px;
-					background: #fff;
-					color: black
-				}
-			};
+			}
 		}
 
 		.bottom-bar {
