@@ -4,24 +4,34 @@
 		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="创建中···" color="#fff" textColor="#fff"
 		 background-color="rgb(143 143 143)" />
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
+			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
 		</view>
-	<!-- 	<view class="creat-box template-one">
-			<view class="creat-priority priority-box">
+		<view class="creat-box template-one" v-if="templateType === 'template_one'">
+			<view class="creat-priority priority-box-one">
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#333">正常</u-radio>
+						<u-radio name="2" active-color="#333">重要</u-radio>
+						<u-radio name="3" active-color="#333">紧急</u-radio>
+						<u-radio name="4" active-color="#333">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
-			<view class="creat-chooseHospital">
+			<view class="creat-chooseHospital creat-chooseHospital-one">
 				<view class="creat-chooseHospital-title">科室选择</view>
-				<view class="creat-chooseHospital-content">
-				   <xfl-select 
+				<view class="creat-chooseHospital-content creat-chooseHospital-content-two">
+					<ld-select :list="hospitalList"
+						label-key="value" value-key="id"
+						clearable
+						placeholder="请选择"
+						color="#333"
+						selectColor="#43c3f3"
+						bgColor="#f9f9f9"
+						v-model="hospitalListValue"
+						@change="listChangeEvent">
+					</ld-select>
+				  <!-- <xfl-select 
 					  :list="hospitalList"
 					  :clearable="false"
 					  :showItemNum="5" 
@@ -33,12 +43,12 @@
 					  @input="inputEvent"
 					  @visible-change="visibleChange"
 				  >
-				  </xfl-select>
+				  </xfl-select> -->
 				</view>
 			</view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
-					<text class="creat-transport-type-title-name">运送类型:</text>
+					<text class="creat-transport-type-title-name">运送类型</text>
 				</view>
 				<view class="creat-transport-type-content">
 					<view class="creat-transport-type-content-list" v-for="(item,index) in transportList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
@@ -49,8 +59,6 @@
 					<u-field
 						v-model="bedNumber"
 						label="床号"
-						:border-bottom="true"
-						:border-top="true"
 						placeholder="请输入床号"
 					>
 					</u-field>
@@ -59,8 +67,6 @@
 					<u-field
 						v-model="patientName"
 						label="姓名"
-						:border-bottom="true"
-						:border-top="true"
 						placeholder="请输入姓名"
 					>
 					</u-field>
@@ -69,8 +75,6 @@
 					<u-field
 						v-model="patientNumber"
 						label="住院号"
-						:border-bottom="true"
-						:border-top="true"
 						placeholder="请输入住院号"
 					>
 					</u-field>
@@ -79,21 +83,19 @@
 					<u-field
 						v-model="actualData"
 						label="运送数量"
-						:border-bottom="true"
-						:border-top="true"
 						placeholder="请输入运送数量"
 						type="number"
 					>
 					</u-field>
 				</view>
 			</view>
-			<view class="creat-priority">
+			<view class="creat-priority priority-box-one">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
 						<u-radio
 							@change="toolChange"
-							active-color="#8dc58d"
+							active-color="#333"
 							shape="circle"
 							v-for="(item, index) in toolList" :key="index"
 							:name="item.value"
@@ -107,12 +109,12 @@
 				<view class="creat-priority-title">运送员是否返回</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-						<u-radio name="0" active-color="#8dc58d">否</u-radio>
-						<u-radio name="1" active-color="#8dc58d">是</u-radio>
+						<u-radio name="0" active-color="#333">否</u-radio>
+						<u-radio name="1" active-color="#333">是</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
-			<view class="task-describe">
+			<view class="task-describe task-describe-one">
 				<u-field
 					v-model="taskDescribe"
 					label="任务描述"
@@ -123,8 +125,8 @@
 				>
 				</u-field>
 			</view>
-		</view> -->
-		<view class="creat-box template-two">
+		</view>
+		<view class="creat-box template-two" v-else-if="templateType === 'template_two'">
 			<view class="creat-priority priority-box">
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
@@ -164,91 +166,58 @@
 			</view>
 			<view class="creat-chooseHospital">
 				<view class="creat-chooseHospital-title">科室选择</view>
-				<view class="creat-chooseHospital-content">
-					<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
-					 :style_Container="'height: 50px; font-size: 16px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
-					 @visible-change="visibleChange">
-					</xfl-select>
+				<view class="creat-chooseHospital-content-two">
+					 <ld-select :multiple="true" :list="hospitalList"
+						label-key="value" value-key="id"
+						clearable
+						placeholder="请选择"
+						color="#333"
+						selectColor="#43c3f3"
+						bgColor="#f9f9f9"
+						v-model="hospitalListTwovalue"
+						@change="hospitalListTwoSelectChange">
+					</ld-select>
 				</view>
 			</view>
 			<view class="patient-box">
 				<view class="patient-box-list" v-for="(item,index) in templateTwoMessage" :key="index">
 					<view class="patient-title">
 						<view class="patient-name">病人{{index+1}}</view>
-						<u-icon name="trash-fill" v-show="index > 0" @click="deletetMessage(index)"></u-icon>
+						<fa-icon type="edit" @click="editMessage(index)"></fa-icon>
+						<fa-icon type="trash-o" v-show="index > 0" @click="deletetMessage(index)"></fa-icon>
 					</view>
 					<view class="creat-form">
-						<view class="creat-form-field">
-							<u-field v-model="templateTwoMessage[index].bedNumber" label="床号" :border-top="true" placeholder="请输入床号">
-							</u-field>
+						<view class="creat-form-top">
+							<view class="creat-form-field">
+								<u-field v-model="templateTwoMessage[index].bedNumber" label="床号" disabled :clearable="false">
+								</u-field>
+							</view>
+							<view class="creat-form-field">
+								<u-field v-model="templateTwoMessage[index].patientName" label="姓名" disabled :clearable="false">
+								</u-field>
+							</view>
 						</view>
-						<view class="creat-form-field">
-							<u-field v-model="templateTwoMessage[index].patientName" label="姓名" :border-top="true" placeholder="请输入姓名">
-							</u-field>
-						</view>
-						<view class="creat-form-field">
-							<u-field v-model="templateTwoMessage[index].patientNumber" label="住院号" :border-top="true" placeholder="请输入住院号">
-							</u-field>
-						</view>
-						<view class="creat-form-field">
-							<u-field disabled v-model="templateTwoMessage[index].actualData" type="text" label="运送数量" :border-top="true">
-							</u-field>
-						</view>
-					</view>
-					<view class="creat-gender">
-						<view class="creat-gender-title">性别</view>
-						<view class="creat-gender-content">
-							<xfl-select :list="item.genderList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="genderControlListShow"
-							 :style_Container="'height: 50px; font-size: 16px;'" :initValue="item.genderInitName" @change="genderChangeEvent"
-							 @input="genderInputEvent" @visible-change="genderVisibleChange">
-							</xfl-select>
+						<view class="creat-form-bottom">
+							<view class="creat-form-field">
+								<u-field v-model="templateTwoMessage[index].patientNumber" label="住院号" disabled :clearable="false">
+								</u-field>
+							</view>
+							<view class="creat-form-field">
+								<u-field v-model="templateTwoMessage[index].genderValue" label="性别" disabled :clearable="false">
+								</u-field>
+							</view>
+							<view class="creat-form-field">
+								<u-field disabled v-model="templateTwoMessage[index].actualData" type="text" label="运送数量" disabled :clearable="false">
+								</u-field>
+							</view>
 						</view>
 					</view>
 					<view class="transport-parent-box">
+						<view class="content-type-title">运送类型</view>
 						<view class="transport-parent-box-title">
-							<xfl-select :list="item.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
-							 :style_Container="'height: 50px; font-size: 16px;'" :initValue="item.sampleValue" :outerIndex="index" @change="transportParentChange"
-							 @input="transportParentInputEvent" @visible-change="transportParentVisibleChange">
-							</xfl-select>
+							{{item.sampleValue}}
 						</view>
-						<view class="transport-parent-box-content">
-							<text class="content-type-title">运送类型:</text>
-							<text class="content-type-name">{{jointTransportMessage(index)}}</text>
-						</view>
-					</view>
-					<view class="creat-transport-type">
-						<!-- <view class="creat-transport-type-content"> -->
-						<!-- 	<view class="creat-transport-type-content-list" v-for="(innerItem,innerIndex) in templateTwoMessage[index].transportList" :class="{'transTypeListStyle': item.transportList[innerIndex].checked }"
-								@click="sampleTypeEvent(index,innerItem,innerIndex)" :key="innerItem.text">
-								<view class="creat-transport-type-content-list-title">
-									{{innerItem.text}}
-								</view> -->
-								<!-- <view class="creat-transport-type-content-list-content"> -->
-								<!-- 	<view class="subtract-box"
-										@click.stop="plusNum(index,innerItem,innerIndex, $event)">
-										<u-icon name="minus"></u-icon>
-									</view>
-									<input
-										@click.stop="inpuntClick"
-										type="number"
-										:value="innerItem.typerNumber"
-										@input="stepperValChange($event,index,innerIndex)"
-									/>
-									<view class="plus-box"
-										@click.stop="minusNum(index,innerItem,innerIndex, $event)">
-										<u-icon name="plus"></u-icon>
-									</view> -->
-								<!-- 	<stepNumberBox v-model="innerItem.typerNumber" 
-										@plus="plusNum(arguments)"
-										@inputBlur="inputBlurEvent(arguments)"
-										:index="index"
-										:innerIndex="innerIndex"
-										@minus="minusNum(arguments)"
-										@change="stepperValChange(arguments)"
-									></stepNumberBox> -->
-							<!-- 	</view> -->
-						<!-- 	</view> -->
-						<!-- </view> -->
+						<view class="content-type-name">{{jointTransportMessage(index)}}</view>
 					</view>
 				</view>
 				<view class="addpatient-message-btn" @click="addMessageEvent">
@@ -269,10 +238,12 @@
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
-		<!-- 	<view class="bottom-bar">
-			<bottom-bar :itemIndex="0" @itemEvent="clickEvent"></bottom-bar>
-		</view> -->
-		<u-modal v-model="patienModalShow" title="病人" :show-cancel-button="true" width="90%" :title-style="{color: '#000000',textAlign: 'left',fontSize: '18px'}">
+		<u-modal v-model="patienModalShow" :title="isPressEdit ? `病人${updateIndex+1}`: `病人${templateTwoMessage.length+1}`" 
+			:show-cancel-button="true" width="90%" 
+			:title-style="{color: '#000000',textAlign: 'left',fontSize: '18px'}"
+			@confirm="patienModalSure"
+			@cancel="patienModalCancel"
+			>
 			<view class="slot-content">
 				<view class="bedNumberBox">
 					<view>床号</view>
@@ -281,44 +252,45 @@
 					</view>
 				</view>
 				<view class="bedNumberBox">
-					<view>住院号</view>
-					<view>
-						<u-input v-model="patienModalMessage.patientNumber"/>
-					</view>
-				</view>
-				<view class="bedNumberBox">
 					<view>姓名</view>
 					<view>
 						<u-input v-model="patienModalMessage.patientName"/>
+					</view>
+				</view>
+				<view class="bedNumberBox">
+					<view>住院号</view>
+					<view>
+						<u-input v-model="patienModalMessage.patientNumber"/>
 					</view>
 				</view>
 				<view class="genderBox">
 					<view>性别</view>
 					<view>
 						<u-radio-group v-model="patienModalMessage.genderValue">
-							<u-radio name="1" active-color="#333">男</u-radio>
-							<u-radio name="2" active-color="#333">女</u-radio>
+							<u-radio name="0" active-color="#333">男</u-radio>
+							<u-radio name="1" active-color="#333">女</u-radio>
 						</u-radio-group>
 					</view>
 				</view>
 				<view class="bedNumberBox">
 					<view>运送数量</view>
 					<view>
-						<u-input v-model="patienModalMessage.actualData"/>
+						<u-input v-model="patienModalMessage.actualData" disabled/>
 					</view>
 				</view>
 				<view class="transportBox">
 					<view>运送类型</view>
-					<view>
-						<xfl-select :list="patienModalMessage.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
-						 :style_Container="'height: 50px; font-size: 16px;'">
+					<view v-if="xflSelectShow">
+						<xfl-select :list="patienModalMessage.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
+						 :style_Container="'height: 50px; font-size: 16px;'" :initValue="patienModalMessage.sampleValue" @change="transportParentChange"
+						 @input="transportParentInputEvent" @visible-change="transportParentVisibleChange">
 						</xfl-select>
 					</view>
 				</view>
 				<view class="transport-type-child-box">
 					<view class="transport-type-child-content" v-for="(innerItem,innerIndex) in patienModalMessage.transportList"
-								:key="innerIndex">
-						<view>
+								@click="sampleTypeEvent(innerItem,innerIndex)" :key="innerItem.text">
+						<view :class="{'transTypeListStyle': innerItem.checked }">
 							{{innerItem.text}}
 						</view>
 						<view>
@@ -341,7 +313,9 @@
 	import {
 		mapGetters,
 		mapMutations
-	} from 'vuex'
+	} from 'vuex' 
+	import _ from 
+		'lodash'
 	import {
 		setCache,
 		getCache
@@ -351,16 +325,19 @@
 		queryTransportTools,
 		queryTransportType,
 		queryAllDestination,
-		generateDispatchTask
+		generateDispatchTask,
+		generateDispatchTaskMany
 	} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	import xflSelect from '@/components/xfl-select/xfl-select.vue'
+	import ldSelect from '@/components/ld-select/ld-select.vue'
 	import stepNumberBox from '@/components/step-number-box/step-number-box.vue'
 	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	export default {
 		components: {
 			navBar,
 			xflSelect,
+			ldSelect,
 			stepNumberBox,
 			faIcon
 		},
@@ -377,6 +354,8 @@
 				priorityValue: 1,
 				transportList: [],
 				hospitalList: [],
+				hospitalListTwovalue: [],
+				hospitalListValue: [],
 				temporaryHospitalList: [],
 				bedNumber: '',
 				patientName: '',
@@ -389,22 +368,15 @@
 				taskDescribe: '',
 				startPointId: '',
 				startPointName: '',
+				updateIndex: 0,
+				xflSelectShow: false,
 				templateTwoMessage: [{
 					bedNumber: '',
 					patientName: '',
 					patientNumber: '',
 					actualData: 0,
-					genderInitName: '男',
 					transportList: [],
-					genderList: [{
-							value: '男',
-							id: 0
-						},
-						{
-							value: '女',
-							id: 1
-						}
-					],
+					genderValue: '男',
 					sampleList: [],
 					sampleValue: '',
 					sampleId: ''
@@ -415,40 +387,15 @@
 					patientNumber: '',
 					actualData: 0,
 					genderValue: '',
-					transportList: [
-						{
-							text: '病理切片',
-							value: 12,
-							checked: false,
-							typerNumber: 0
-						},
-						{
-							text: '标本',
-							value: 13,
-							checked: false,
-							typerNumber: 0
-						},
-						{
-							text: '病理切片千万',
-							value: 14,
-							checked: false,
-							typerNumber: 0
-						},
-						{
-							text: '标本撒',
-							value: 15,
-							checked: false,
-							typerNumber: 0
-						}
-					],
+					transportList: [],
 					sampleList: [],
 					sampleValue: '',
 					sampleId: ''
 				},
 				transportTypeParent: [],
 				transportTypeChild: [],
-				genderControlListShow: false,
-				patienModalShow: true
+				patienModalShow: false,
+				isPressEdit: false
 			}
 		},
 		onLoad(options) {
@@ -475,7 +422,7 @@
 				'titleText',
 				'isToCallTaskPage',
 				'userInfo',
-				'isTemplateOne'
+				'templateType'
 			]),
 
 			userName() {
@@ -508,6 +455,7 @@
 		},
 
 		mounted() {
+			console.log('1',this.templateType);
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
 			this.parallelFunction()
@@ -535,8 +483,17 @@
 
 			// 科室选择列表变化时
 			listChangeEvent(val) {
-				this.startPointId = val.orignItem.id;
-				this.startPointName = val.orignItem.value;
+				this.hospitalListValue = val;
+			},
+			
+			// 模板二科室选择列表变化时
+			hospitalListTwoSelectChange(val) {
+				this.hospitalListTwovalue = val;
+			},
+			
+			// 根据科室id获取科室名称
+			getDepartmentNameById(id) {
+				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
 			},
 
 			// 下拉框隐藏或显示时事件
@@ -560,17 +517,14 @@
 			},
 
 			// 模板二运送类型点击事件
-			sampleTypeEvent(index, innerItem, innerIndex) {
-				this.templateTwoMessage[index]['transportList'][innerIndex].checked = !this.templateTwoMessage[index][
-					'transportList'
-				][innerIndex].checked;
-					if (!this.templateTwoMessage[index]['transportList'][innerIndex].checked) {
-						if (this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] != 0) {
-							this.templateTwoMessage[index]['transportList'][innerIndex]['typerNumber'] = 0
-						}
-					};
-					console.log('数据',this.templateTwoMessage);
-					this.reduceTotal(index);
+			sampleTypeEvent(innerItem, innerIndex) {
+				this.patienModalMessage.transportList[innerIndex].checked = !this.patienModalMessage.transportList[innerIndex].checked;
+				if (!this.patienModalMessage.transportList[innerIndex].checked) {
+					if (this.patienModalMessage.transportList[innerIndex]['typerNumber'] != 0) {
+						this.patienModalMessage.transportList[innerIndex]['typerNumber'] = 0
+					}
+				};
+				this.reduceTotal(0)
 			},
 
 			// 拼接运送类型信息函数
@@ -582,28 +536,18 @@
 				for (let item of targetMsg) {
 					finalMsg += `${item.text}${item.typerNumber}个,`
 				};
-				return finalMsg
+				if (targetMsg.length == 0) {
+					return finalMsg 
+				};
+				return `(${finalMsg})`
 			},
-
-			// 性别选择列表变化时
-			genderChangeEvent(val) {
-
-			},
-
-			// 性别下拉框隐藏或显示时事件
-			genderVisibleChange() {
-
-			},
-
-			// 性别input中的数据变化时触发
-			genderInputEvent(val) {},
 
 			// 运送类型大类选择列表变化时
 			transportParentChange(val) {
 				this.querytransportChildByTransportParent(val.parentIndex, val.orignItem.id);
-				this.templateTwoMessage[val.parentIndex].actualData = 0;
-				this.templateTwoMessage[val.parentIndex].sampleValue = val.orignItem.value;
-				this.templateTwoMessage[val.parentIndex].sampleId = val.orignItem.id;
+				this.patienModalMessage.actualData = 0;
+				this.patienModalMessage.sampleValue = val.orignItem.value;
+				this.patienModalMessage.sampleId = val.orignItem.id;
 			},
 
 			// 运送类型大类下拉框隐藏或显示时事件
@@ -629,21 +573,21 @@
 
 			// 步进器增加或减少事件
 			plusNum(msg) {
-				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
+				this.patienModalMessage.transportList[msg[2]]['typerNumber'] = msg[1];
 				this.reduceTotal(msg[2]);
 			},
 			minusNum(msg) {
-				this.templateTwoMessage[msg[2]]['transportList'][msg[3]]['typerNumber'] = msg[1];
+				this.patienModalMessage.transportList[msg[2]]['typerNumber'] = msg[1];
 				this.reduceTotal(msg[2])
 			},
 
 			// 求和函数
 			reduceTotal(index) {
 				// 求该病人信息对应的运送数量
-				let targetMsg = this.templateTwoMessage[index].transportList.filter((item) => {
+				let targetMsg = this.patienModalMessage.transportList.filter((item) => {
 					return item.checked == true
 				});
-				this.templateTwoMessage[index].actualData = targetMsg.reduce((accumulator, currentValue) => {
+				this.patienModalMessage.actualData = targetMsg.reduce((accumulator, currentValue) => {
 					return accumulator + currentValue.typerNumber
 				}, 0);
 			},
@@ -770,9 +714,9 @@
 					})
 					.then((res) => {
 						if (res && res.data.code == 200) {
-							this.templateTwoMessage[index]['transportList'] = [];
+							this.patienModalMessage['transportList'] = [];
 							for (let item of res.data.data) {
-								this.templateTwoMessage[index].transportList.push({
+								this.patienModalMessage['transportList'].push({
 									text: item.typeName,
 									value: item.id,
 									checked: false,
@@ -802,8 +746,10 @@
 							this.transportList = [];
 							this.hospitalList = [];
 							this.transportTypeParent = [];
-							this.templateTwoMessage[0].sampleList = [];
+							this.templateTwoMessage[0]['sampleList'] = [];
 							this.templateTwoMessage[0]['transportList'] = [];
+							this.patienModalMessage['sampleList'] = [];
+							this.patienModalMessage['transportList'] = [];
 							this.transportTypeChild = [];
 							let [item1, item2, item3, item4] = res;
 							if (item1) {
@@ -835,7 +781,13 @@
 										text: item.typeName,
 										value: item.id
 									});
-									this.templateTwoMessage[0].transportList.push({
+									this.patienModalMessage['transportList'].push({
+										text: item.typeName,
+										value: item.id,
+										checked: false,
+										typerNumber: 0
+									});
+									this.templateTwoMessage[0]['transportList'].push({
 										text: item.typeName,
 										value: item.id,
 										checked: false,
@@ -856,6 +808,9 @@
 										value: item.typeName
 									})
 								};
+								this.patienModalMessage.sampleList = this.transportTypeParent;
+								this.patienModalMessage.sampleValue = this.titleText.value;
+								this.patienModalMessage.sampleId = this.titleText.id;
 								this.templateTwoMessage[0].sampleList = this.transportTypeParent;
 								this.templateTwoMessage[0].sampleValue = this.titleText.value;
 								this.templateTwoMessage[0].sampleId = this.titleText.id;
@@ -869,25 +824,59 @@
 						})
 					})
 			},
-
+			// 转换性别
+			transferGenderOne (index) {
+				if (this.templateTwoMessage[index].genderValue === '0') {
+					this.templateTwoMessage[index].genderValue = '男'
+				} else if (this.templateTwoMessage[index].genderValue === '1') {
+					this.templateTwoMessage[index].genderValue = '女'
+				} else {
+					this.templateTwoMessage[index].genderValue = ''
+				}
+			},
+			transferGenderTwo () {
+				if (this.patienModalMessage.genderValue == '男') {
+					this.patienModalMessage.genderValue = '0'
+				} else if (this.patienModalMessage.genderValue == '女') {
+					this.patienModalMessage.genderValue = '1'
+				} else {
+					this.patienModalMessage.genderValue = ''
+				}
+			},
+			// 病人模态框信息确认事件
+			patienModalSure () {
+				if (this.isPressEdit) {
+					this.templateTwoMessage.splice(this.updateIndex, 1,_.cloneDeep(this.patienModalMessage));
+					this.transferGenderOne(this.updateIndex);
+					console.log('病人信息',this.templateTwoMessage);
+				} else {
+					this.templateTwoMessage.push(_.cloneDeep(this.patienModalMessage));
+					if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '0') {
+						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '男'
+					} else if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '1') {
+						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '女'
+					} else {
+						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = ''
+					}
+				};
+				this.xflSelectShow = false
+			},
+			// 病人模态框信息取消事件
+			patienModalCancel() {
+				this.xflSelectShow = false;
+			},
 			// 添加病人信息事件
 			addMessageEvent() {
-				this.templateTwoMessage.push({
+				this.isPressEdit = false;
+				this.patienModalShow = true;
+				this.xflSelectShow = true;
+				this.patienModalMessage = {};
+				this.patienModalMessage = _.cloneDeep({
 					bedNumber: '',
 					patientName: '',
 					patientNumber: '',
 					actualData: 0,
-					genderInitName: '男',
 					transportList: this.transportTypeChild,
-					genderList: [{
-							value: '男',
-							id: 0
-						},
-						{
-							value: '女',
-							id: 1
-						}
-					],
 					sampleList: this.transportTypeParent,
 					sampleValue: this.titleText.value,
 					sampleId: this.titleText.id
@@ -898,8 +887,27 @@
 			deletetMessage(index) {
 				this.templateTwoMessage.splice(index, 1)
 			},
+			
+			// 返回病人序号
+			patientIndexFun() {
+				if(this.isPressEdit) {
+					return `病人${this.updateIndex+1}`
+				};
+				return `病人${this.this.templateTwoMessage.length+1}`
+			},
+			
+			// 病人信息编辑事件
+			editMessage(index) {
+				this.updateIndex = index;
+				this.isPressEdit = true;
+				this.xflSelectShow = true;
+				this.patienModalMessage = {};
+				this.patienModalMessage = _.cloneDeep(this.templateTwoMessage[index]);
+				this.transferGenderTwo();
+				this.patienModalShow = true
+			},
 
-			// 生成调度任务
+			// 生成调度任务(一个病人)
 			postGenerateDispatchTask(data) {
 				this.showLoadingHint = true;
 				generateDispatchTask(data).then((res) => {
@@ -927,38 +935,136 @@
 						this.showLoadingHint = false;
 					})
 			},
+			
+			//生成调度任务(多个病人)
+			postGenerateDispatchTaskMany(data) {
+				this.showLoadingHint = true;
+				generateDispatchTaskMany(data).then((res) => {
+						if (res && res.data.code == 200) {
+							this.$refs.uToast.show({
+								title: `${res.data.msg}`,
+								type: 'success'
+							});
+							setTimeout(() => {
+								this.backTo()
+							}, 1000)
+						} else {
+							this.$refs.uToast.show({
+								title: `${res.data.msg}`,
+								type: 'warning'
+							})
+						};
+						this.showLoadingHint = false
+					})
+					.catch((err) => {
+						this.$refs.uToast.show({
+							title: `${err.message}`,
+							type: 'error'
+						})
+						this.showLoadingHint = false;
+					})
+			},
 
 			// 运送类型信息确认事件
 			dispatchTaskSure() {
-				// 获取选中的运送工具信息
-				let taskMessage = {
-					setOutPlaceId: this.startPointId, //出发地ID
-					setOutPlaceName: this.startPointName, //出发地名称
-					destinationId: '', //目的地ID
-					destinationName: '', //目的地名称
-					parentTypeId: this.titleText.id, //运送父类型Id
-					parentTypeName: this.titleText.value, //运送父类型名称
-					taskTypeId: this.typeValue, //运送类型 ID
-					taskTypeName: this.typeText, //运送类型 名 称
-					priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-					toolId: this.toolValue == 0 ? '' : this.toolValue, //运送工具ID
-					toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
-					actualCount: this.actualData, //实际数量
-					patientName: this.patientName, //病人姓名
-					sex: 0, //病人性别  0-未指定,1-男, 2-女
-					age: "", //年龄
-					number: this.patientNumber, //住院号
-					bedNumber: this.bedNumber, //床号
-					taskRemark: this.taskDescribe, //备注
-					createId: this.workerId, //创建者ID  当前登录者
-					createName: this.userName, //创建者名称  当前登陆者
-					proId: this.proId, //项目ID
-					proName: this.proName, //项目名称
-					isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
-					createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
-				};
-				// 创建调度任务
-				this.postGenerateDispatchTask(taskMessage)
+				if (this.templateType === 'template_one') {
+					if (this.hospitalListValue.length == 0) {
+						this.$refs.uToast.show({
+							title: '科室不能为空',
+							type: 'warning'
+						});
+						return 
+					};
+					// 获取选中的运送工具信息
+					let taskMessage = {
+						setOutPlaceId: this.startPointId, //出发地ID
+						setOutPlaceName: this.startPointName, //出发地名称
+						destinationId: this.hospitalListValue[0], //目的地ID
+						destinationName: this.getDepartmentNameById(this.hospitalListValue[0]), //目的地名称
+						parentTypeId: this.titleText.id, //运送父类型Id
+						parentTypeName: this.titleText.value, //运送父类型名称
+						taskTypeId: this.typeValue, //运送类型 ID
+						taskTypeName: this.typeText, //运送类型 名 称
+						priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
+						toolId: this.toolValue == 0 ? '' : this.toolValue, //运送工具ID
+						toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
+						actualCount: this.actualData, //实际数量
+						patientName: this.patientName, //病人姓名
+						sex: 0, //病人性别  0-未指定,1-男, 2-女
+						age: "", //年龄
+						number: this.patientNumber, //住院号
+						bedNumber: this.bedNumber, //床号
+						taskRemark: this.taskDescribe, //备注
+						createId: this.workerId, //创建者ID  当前登录者
+						createName: this.userName, //创建者名称  当前登陆者
+						proId: this.proId, //项目ID
+						proName: this.proName, //项目名称
+						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
+						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+					};
+					// 创建调度任务
+					this.postGenerateDispatchTask(taskMessage)
+				} else if (this.templateType === 'template_two') {
+					if (this.hospitalListTwovalue.length == 0) {
+						this.$refs.uToast.show({
+							title: '科室不能为空',
+							type: 'warning'
+						});
+						return 
+					};
+					let taskMessageTwo = {
+						setOutPlaceId: this.startPointId, //出发地ID
+						setOutPlaceName: this.startPointName, //出发地名称
+						destinations: [],//多个目的地列表
+						patientInfoList: [], //多个病人信息列表
+						priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
+						toolId: this.toolValue == 0 ? '' : this.toolValue, //运送工具ID
+						toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
+						actualCount: this.taskTotal, //实际数量
+						taskRemark: this.taskDescribe, //备注
+						workerId: this.workerId, //创建者ID  当前登录者
+						workerName: this.userName, //创建者名称  当前登陆者
+						proId: this.proId, //项目ID
+						proName: this.proName, //项目名称
+						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
+						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+					};
+					// 获取目的地列表数据
+					for (let item of this.hospitalListTwovalue) {
+						taskMessageTwo.destinations.push({
+							destinationId: item,
+							destinationName: this.getDepartmentNameById(item)
+						})
+					};
+					// 获取多个病人信息列表数据
+					for (let patientItem of this.templateTwoMessage) {
+						taskMessageTwo.patientInfoList.push({
+							bedNumber: patientItem['bedNumber'],
+							patientName: patientItem['patientName'],
+							number: patientItem['patientNumber'],
+							sex:  patientItem['genderValue'] == '男' ? 0 : 1,
+							quantity: patientItem['actualData'],
+							typeList: []
+						})
+					};
+					// 获取每个病人的运送类型数据
+					for (let i = 0, len = this.templateTwoMessage.length; i < len; i++) {
+						if (this.templateTwoMessage[i]['transportList'].length > 0) {
+							// 获取选中的运送类型小类
+							let checkChildTypeList = this.templateTwoMessage[i]['transportList'].filter((item) => {return item.checked});
+							for (let innerItem of checkChildTypeList) {
+								taskMessageTwo.patientInfoList[i]['typeList'].push({
+									quantity: innerItem['typerNumber'],
+									parentTypeId: this.templateTwoMessage[i]['sampleId'],
+									parentTypeName: this.templateTwoMessage[i]['sampleValue'],
+									taskTypeId: innerItem['value'],
+									taskTypeName: innerItem['text']
+								})
+							}
+						}
+					};
+					console.log('最终数据',taskMessageTwo);
+				}
 			},
 
 			// 调度任务生成
@@ -1087,6 +1193,11 @@
 						};
 						.transport-type-child-box {
 							max-height: 100px;
+							.transTypeListStyle {
+									background: #44c4f3;
+									color: #fff !important;
+									border-radius: 4px;
+								}
 							.transport-type-child-content {
 								height: 60px;
 								line-height: 60px;
@@ -1104,7 +1215,7 @@
 										float: right;
 										position: relative;
 										width: 50%;
-										z-index: 300;
+										z-index: 100;
 										border-bottom: 1px solid #f9f9f9;
 										.num-box {
 											align-items: center;
@@ -1132,7 +1243,7 @@
 											}
 										}
 									}
-								}
+								};
 							}
 						}
 					}
@@ -1157,6 +1268,7 @@
 
 		.nav {
 			width: 100%;
+			z-index: 500
 		};
 
 		.creat-box {
@@ -1202,11 +1314,19 @@
 					}
 				}
 			};
+			
+			.priority-box-one {
+				.creat-priority-title {
+					width: 20% !important
+				};
+				.creat-priority-content {
+					width: 80% !important
+				}
+			}
 
 			.creat-chooseHospital {
 				width: 100%;
 				height: 60px;
-				margin-top: 6px;
 				.creat-chooseHospital-title {
 					height: 59px;
 					float: left;
@@ -1239,6 +1359,45 @@
 							color: #333 !important
 						}
 					}
+				};
+				.creat-chooseHospital-content-two {
+					height: 60px;
+					float: right;
+					position: relative;
+					width: 70%;
+					z-index: 300;
+					.main {
+						color: #333;
+						position: absolute;
+						left: 0;
+						top: 10px;
+						width: 100%;
+						height: 40px !important;
+						background: #f9f9f9;
+						border: none;
+						/deep/ .input {
+							height: 100%;
+							border: none;
+							.uni-input-wrapper {
+								font-size: 15px !important
+							}
+						};
+						/deep/.text-blue {
+							color: #969696 !important
+						};
+						/deep/ .text-green {
+							color: #43c3f3 !important
+						}
+					}
+				}
+			};
+			
+			.creat-chooseHospital-one {
+				.creat-chooseHospital-title {
+					width: 20%;
+				};
+				.creat-chooseHospital-content {
+					width: 80%
 				}
 			};
 
@@ -1279,49 +1438,59 @@
 				width: 100%;
 				height: 110px;
 				overflow: auto;
-				margin-top: 6px;
 				display: flex;
 				flex: 1;
-				flex-direction: column;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-
+				flex-direction: row;
+				border-top: 12px solid #f6f6f6;
+				border-bottom: 12px solid #f6f6f6;
+	
 				.creat-transport-type-title {
-					height: 25px;
-					line-height: 25px;
-
-					.creat-transport-type-title-name {
-						padding-left: 4px;
-						box-sizing: border-box;
-						margin-right: 8px
+					margin-top: 8px;
+					width: 20%;
+					height: 35px;
+					line-height: 35px;
+					color: #7d7d7d;
+					text {
+						&:nth-child(1) {
+							padding-left: 4px;
+							box-sizing: border-box;
+							margin-right: 8px
+						};
+	
+						&:nth-child(2) {
+							font-size: 14px;
+							color: red
+						}
 					}
 				};
-
+	
 				.creat-transport-type-content {
 					flex: 1;
 					display: flex;
+					font-size: 15px;
+					color: #333;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
 					justify-content: space-between;
 					align-content: flex-start;
-					padding: 0 4px;
+					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
-
 					.transTypeListStyle {
-						background: #75b0f0;
-						color: #fff;
-						border: none
+						background: #d6f4ff;
+						color: #01a6ff;
+						border: 1px solid #4cc5f2
 					};
-
-					.creat-transport-type-content-list{
+	
+					>view {
 						width: 45%;
 						margin-bottom: 4px;
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
-						border: 1px solid #dfdfdf
+						background:: #f9f9f9;
+						border-radius: 16px
 					}
 				}
 			};
@@ -1330,9 +1499,7 @@
 				width: 100%;
 				padding: 4px 0;
 				box-sizing: border-box;
-				margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
+				border-bottom: 12px solid #f6f6f6;
 				display: flex;
 				width: 100%;
 				flex-direction: row;
@@ -1341,13 +1508,16 @@
 				align-content: flex-start;
 				.creat-form-field {
 					width: 50%;
-					margin-bottom: 4px;
-
 					/deep/ .u-field {
-						padding: 11px 2px;
-
+						padding: 8px 4px;
 						.u-label-text {
-							font-size: 14px
+							font-size: 14px;
+							color: #7d7d7d
+						};
+						.fild-body {
+							.uni-input-input {
+								color: #333 !important
+							}
 						}
 					}
 				}
@@ -1401,6 +1571,9 @@
 						}
 					}
 				}
+			};
+			.task-describe-one {
+				border-top: 12px solid #f6f6f6;
 			}
 		}
 
@@ -1436,14 +1609,14 @@
 			.patient-box {
 				border-top: 12px solid #f6f6f6;;
 				border-bottom: 12px solid #f6f6f6;
-				margin: 4px 0;
-				padding: 4px;
+				padding: 0 0 8px 4px;
 				height: 400px;
 				overflow: auto;
 				.addpatient-message-btn {
 					width: 96%;
 					height: 40px;
 					margin: 0 auto;
+					margin-top: 8px;
 					line-height: 40px;
 					text-align: center;
 					color: #43c3f3;				
@@ -1464,8 +1637,8 @@
 					};
 
 					.patient-title {
-						height: 30px;
-						line-height: 30px;
+						height: 50px;
+						line-height: 50px;
 						color: black;
 						font-weight: bold;
 						position: relative;
@@ -1473,42 +1646,79 @@
 							position: absolute;
 							top: 0;
 							height: 100%;
-							font-size: 20px;
+							font-size: 16px;
 							width: 100px;
-							left: 4px
+							left: 4px;
+							color: #000000
 						};
-						/deep/ .u-icon {
+						/deep/ .fa-trash-o {
 							position: absolute;
-							font-size: 20px;
 							top: 50%;
 							transform: translateY(-50%);
 							right: 4px;
-							color: red
+							color: #000000 !important;
+							font-size: 20px !important
+						};
+						.fa-edit  {
+							position: absolute;
+							top: 50%;
+							transform: translateY(-50%);
+							right: 50px;
+							color: #000000 !important;
+							font-size: 20px !important
 						}
 					};
 
 					.creat-form {
 						width: 100%;
-						padding: 4px 0;
+						padding: 4px 0 0 4px;
 						box-sizing: border-box;
-						margin-top: 6px;
 						border: none !important;
-						display: flex;
+						background: #f9f9f9;
 						width: 100%;
-						flex-direction: row;
-						flex-wrap: wrap;
-						justify-content: space-between;
-						align-content: flex-start;
-
-						.creat-form-field {
-							width: 50%;
-							margin-bottom: 4px;
-
-							/deep/ .u-field {
-								padding: 11px 2px;
-
-								.u-label-text {
-									font-size: 14px
+						.creat-form-top {
+							display: flex;
+							width: 100%;
+							flex-direction: row;
+							flex-wrap: wrap;
+							justify-content: space-between;
+							align-content: flex-start;
+							.creat-form-field {
+								width: 50%;
+								/deep/ .u-field {
+									padding: 4px 2px;
+									.u-label-text {
+										font-size: 14px;
+										color: #7d7d7d
+									};
+									.fild-body {
+										.uni-input-input {
+											color: #333 !important
+										}
+									}
+								}
+							}
+						};
+						.creat-form-bottom {
+							display: flex;
+							width: 100%;
+							flex-direction: row;
+							flex-wrap: wrap;
+							justify-content: space-between;
+							align-content: flex-start;
+							.creat-form-field {
+								width: 33%;
+								/deep/ .u-field {
+									padding: 4px 2px;
+									.u-label-text {
+										font-size: 14px;
+										color: #7d7d7d
+									};
+									.fild-body {
+										.uni-input-input {
+											color: #333 !important
+										}
+									}
 								}
 							}
 						}
@@ -1538,41 +1748,31 @@
 					};
 
 					.transport-parent-box {
+						padding-left: 6px;
 						height: 40px;
-						position: relative;
+						display: flex;
+						flex-flow: row nowrap;
+						background: #f9f9f9;
+						justify-content: space-between;
 						z-index: 100;
-						.transport-parent-box-title {
-							position: absolute;
-							z-index: 10;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 4px;
-							width: 30%;
-							.show-box {
-								height: 30px !important;
-							}
-						};
-						.transport-parent-box-content {
-							position: absolute;
-							padding-left: 8px;
-							right: 0;
-							width: 70%;
-							height: 30px;
-							display: flex;
-							flow: row nowrap;
-						};
 						.content-type-title {
-							font-weight: bold;
-							color: black;
+							color: #7d7d7d;
 							font-size: 14px;
 							height: 40px;
 							line-height: 40px;
 							width: 60px;
 						};
+						.transport-parent-box-title {
+							color: #333;
+							font-size: 14px !important;
+							height: 40px;
+							line-height: 40px;
+							margin-right: 4px
+						};
 						.content-type-name {
 							font-weight: bold;
-							color: black;
-							font-size: 14px;
+							color: #333;
+							font-size: 15px;
 							height: 40px;
 							line-height: 40px;
 							flex: 1;

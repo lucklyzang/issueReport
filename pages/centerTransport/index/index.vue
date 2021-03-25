@@ -7,7 +7,7 @@
 		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="加载中···" color="#fff" textColor="#fff"
 		 background-color="rgb(143 143 143)" />
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
+			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="trans-type-list">
 			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item.value"

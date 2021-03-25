@@ -104,8 +104,8 @@
 					this.$store.commit('storeUserInfo', getCache('userInfo'));
 				};
 				// 重新存入模板信息
-				if (getCache('isTemplateOne')) {
-					this.$store.commit('changeIsTemplateOne', parseInt(getCache('isTemplateOne')));
+				if (getCache('templateType')) {
+					this.$store.commit('changeTemplateType', getCache('templateType'));
 				};
 				// 页面刷新重新存入请求token
 				if (getCache('questToken')) {
@@ -134,7 +134,7 @@
 			color: black;
 			background: #fcfcfc;
 			font-size: 26px;
-			color: #065da7;
+			color: #2c9af1;
 			font-weight: bold;
 			font-size: 50px;
 
@@ -211,12 +211,18 @@
 
 			;
 
-			.center-transport {}
+			.center-transport {
+				.fa-icon {
+					color: #0e89ec !important
+				}
+			}
 
 			;
 
 			.project-manage {
-				// visibility: hidden;
+				.fa-icon {
+					color: #0e89ec !important
+				}
 			}
 		}
 	}

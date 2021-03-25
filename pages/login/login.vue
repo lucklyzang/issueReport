@@ -88,7 +88,7 @@
 				'storeUserInfo',
 				'changeOverDueWay',
         'changeIsMedicalMan',
-				'changeIsTemplateOne'
+				'changeTemplateType'
 			]),
       
       // 选中某个复选框时，由checkbox时触发
@@ -131,13 +131,10 @@
                 this.changeIsMedicalMan(false)
               };
 							// 保存模板类型
-							if (res.data.data.mobile == 'template_one') {
-								this.changeIsTemplateOne(0);
-								setCache('isTemplateOne', 0)
-							} else {
-								this.changeIsTemplateOne(1);
-								setCache('isTemplateOne', 1)
-							};
+							if (res.data.data.mobile) {
+								this.changeTemplateType(res.data.data.mobile);
+								setCache('templateType', res.data.data.mobile)
+							}
 							uni.switchTab({
 								url: '/pages/index/index'
 							})
@@ -187,7 +184,7 @@
 				text-align: center;
 				color: black;
 				font-size: 26px;
-        color: #065da7;
+        color: #2c9af1;
         font-weight: bold;
         font-size: 50px;
           span {

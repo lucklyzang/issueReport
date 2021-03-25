@@ -7,7 +7,7 @@
 		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="签退中,请稍候···" color="#fff" textColor="#fff"
 		 background-color="rgb(143 143 143)" />
 		<view class="nav">
-			<nav-bar backState="2000" :home="false" bgColor="#000" fontColor="#FFF" title="个人资料" @backClick="backTo"></nav-bar>
+			<nav-bar backState="2000" :home="false" bgColor="#2c9af1" fontColor="#FFF" title="个人资料" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="content-top">
 			<view class="content-top-name">

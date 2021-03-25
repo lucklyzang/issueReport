@@ -35,10 +35,19 @@ export function queryTransportTools(data) {
   })
 };
 
-// 生成调度任务
+// 生成调度任务(一个病人)
 export function generateDispatchTask(data) {
   return request({
     url: 'task/add',
+    method: 'post',
+    data
+  })
+};
+
+// 生成调度任务(多个病人)
+export function generateDispatchTaskMany(data) {
+  return request({
+    url: 'dispatch/saveTransDispatchTask',
     method: 'post',
     data
   })

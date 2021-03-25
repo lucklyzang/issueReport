@@ -3,13 +3,13 @@ export default {
 		userInfo: null,
 		token: null, //请求token,
 		// 判断模板类型
-		isTemplateOne: 0,
+		templateType: '',
 		overDueWay: false,
 		weixinInfo: null
 	},
 	getters: {
 		userInfo: state => state.userInfo,
-		isTemplateOne: state => state.isTemplateOne,
+		templateType: state => state.templateType,
 		token: state => state.token,
 		overDueWay: state => state.overDueWay,
 		weixinInfo: state => state.weixinInfo
@@ -25,8 +25,8 @@ export default {
 			}
 		},
 		// 修改模板状态
-		changeIsTemplateOne(state, playLoad) {
-			state.isTemplateOne = playLoad
+		changeTemplateType(state, playLoad) {
+			state.templateType = playLoad
 		},
 		// 修改过期方式
 		changeOverDueWay(state, playLoad) {

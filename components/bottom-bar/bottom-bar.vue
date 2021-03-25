@@ -68,7 +68,7 @@
 			text-align: center;
 			line-height: 65px;
 			color: #fff;
-			background: #3a4863;
+			background: #000000;
 			font-size: 14px;
 			position: relative;
 			text {
@@ -88,7 +88,7 @@
 			}
 		};
 		.operate-list-inner-style {
-            background: #15c4f9 !important;
+            background: #2f99f1 !important;
          }
 	}
 </style>
