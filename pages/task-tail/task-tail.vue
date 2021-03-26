@@ -18,7 +18,7 @@
 		</view>
 		<view class="task-tail-content-box">
 			<view class="task-tail-title">
-				<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
+				<u-tabs :list="list" :is-scroll="false" active-color="#2c9af1" inactive-color="#7d7d7d" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
 			</view>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">

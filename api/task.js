@@ -1,5 +1,5 @@
 import request from '@/api/request';
-
+import store from '@/store';
 // 查询运送类型
 export function queryTransportType(data) {
   return request({
@@ -47,7 +47,7 @@ export function generateDispatchTask(data) {
 // 生成调度任务(多个病人)
 export function generateDispatchTaskMany(data) {
   return request({
-    url: 'dispatch/saveTransDispatchTask',
+    url: 'dispatch/app/save',
     method: 'post',
     data
   })
@@ -56,7 +56,7 @@ export function generateDispatchTaskMany(data) {
 // 查询调度任务(分配给本人的已完成)
 export function getDispatchTaskComplete(data) {
   return request({
-    url: 'task/queryTask',
+    url: store.getters.templateType == 'template_one' ? 'task/queryTask':'dispatch/queryTask',
     method: 'get',
     params: data
   })
@@ -74,7 +74,7 @@ export function queryDispatchTaskCancelReason(data) {
 // 调度任务的操作(取消)
 export function updateDispatchTask(data) {
   return request({
-    url: 'task/update',
+    url: store.getters.templateType == 'template_one' ? 'task/update':'dispatch/update',
     method: 'put',
     data
   })
@@ -83,7 +83,7 @@ export function updateDispatchTask(data) {
 // 调度任务催单
 export function taskReminder(proId,taskId) {
   return request({
-    url: `task/reminder/${proId}/${taskId}`,
+    url: store.getters.templateType == 'template_one' ? `task/reminder/${proId}/${taskId}` : `dispatch/reminder/${proId}/${taskId}`,
     method: 'get'
   })
 };

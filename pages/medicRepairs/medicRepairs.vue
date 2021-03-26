@@ -570,14 +570,14 @@
 				width: 100%;
 				height: 60px;
 				line-height: 60px;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
 						padding-left: 4px;
 						box-sizing: border-box;
-						color: #7d7d7d;
+						color: $color-text-left;
 					};
 					&:last-child {
 						float: right;
@@ -608,7 +608,7 @@
 			.creat-chooseHospital {
 				width: 100%;
 				height: 60px;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 				>view {
 					&:first-child {
 						float: left;
@@ -617,7 +617,7 @@
 						line-height: 60px;
 						padding-left: 4px;
 						box-sizing: border-box;
-						color: #7d7d7d;
+						color: $color-text-left;
 					}
 	
 					&:last-child {
@@ -654,7 +654,7 @@
 				border-bottom: 12px solid #f6f6f6;
 				>view {
 					&:first-child {
-						color: #7d7d7d;
+						color: $color-text-left;
 						width: 80px;
 						height: 100px;
 						padding-left: 4px;
@@ -746,7 +746,7 @@
 					width: 20%;
 					height: 35px;
 					line-height: 35px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
@@ -797,7 +797,7 @@
 					padding: 10px 4px;
 					.u-label {
 						font-size: 14px;
-						color: #7d7d7d !important
+						color: $color-text-left !important
 					};
 					.fild-body {
 						color: #333 !important;
@@ -817,7 +817,7 @@
 				justify-content: center;
 				align-items: center;
 				overflow: auto;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 	
 				>text {
 					display: inline-block;
@@ -845,7 +845,7 @@
 	
 				/deep/ .u-field {
 					padding: 16px 2px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					.u-label-text {
 						font-size: 14px
 					};

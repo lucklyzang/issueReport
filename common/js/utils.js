@@ -114,5 +114,6 @@ export const removeAllLocalStorage = () => {
   removeCache('isLogin');
   removeCache('questToken');
   removeCache('storeOverDueWay');
-  removeCache('weixinInfo')
+  removeCache('weixinInfo');
+	removeCache('isProjectTask')
 }

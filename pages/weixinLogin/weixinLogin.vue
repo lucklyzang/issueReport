@@ -73,7 +73,7 @@
           typeIndex: null,
           typeText: '',
           code: '',
-           isCanUse: false,
+          isCanUse: false,
           hospitalOptions: [],
           username: '',
           password: ''
@@ -84,7 +84,8 @@
           'storeUserInfo',
           'changeOverDueWay',
           'changeWeixinInfo',
-          'changeIsMedicalMan'
+          'changeIsMedicalMan',
+					'changeTemplateType'
         ]),
 				
 				// 返回
@@ -192,6 +193,11 @@
               } else {
                 this.changeIsMedicalMan(false)
               };
+							// 保存模板类型
+							if (res.data.data.mobile) {
+								this.changeTemplateType(res.data.data.mobile);
+								setCache('templateType', res.data.data.mobile)
+							};
 							uni.hideLoading();
 							uni.switchTab({
 								url: '/pages/index/index'
@@ -236,6 +242,11 @@
               } else {
                 this.changeIsMedicalMan(false)
               };
+							// 保存模板类型
+							if (res.data.data.mobile) {
+								this.changeTemplateType(res.data.data.mobile);
+								setCache('templateType', res.data.data.mobile)
+							};
 							uni.hideLoading();
 							uni.switchTab({
 								url: '/pages/index/index'
@@ -345,6 +356,11 @@
                 } else {
                   this.changeIsMedicalMan(false)
                 };
+								// 保存模板类型
+								if (res.data.data.mobile) {
+									this.changeTemplateType(res.data.data.mobile);
+									setCache('templateType', res.data.data.mobile)
+								};
 								uni.hideLoading();
 								uni.switchTab({
 									url: '/pages/index/index'
@@ -370,6 +386,11 @@
                 } else {
                   this.changeIsMedicalMan(false)
                 };
+								// 保存模板类型
+								if (res.data.data.mobile) {
+									this.changeTemplateType(res.data.data.mobile);
+									setCache('templateType', res.data.data.mobile)
+								};
 								uni.switchTab({
 									url: '/pages/index/index'
 								});

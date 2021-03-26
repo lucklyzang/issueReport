@@ -86,7 +86,7 @@
 				'weixinInfo'
 			]),
 			userName() {
-				return this.userInfo.userName
+				return this.userInfo.name
 			},
 			proId() {
 				return this.userInfo.extendData.proId
@@ -187,14 +187,14 @@
 				padding: 10px;
 				box-sizing: border-box;
 				position: relative;
-				@include bottom-border-1px(#dadada);
+				@include bottom-border-1px($color-underline);
 
 				>text {
 					position: absolute;
 					display: inline-block;
 					left: 0;
 					top: 38px;
-					color: #bbbaba;
+					color: $color-text-left;
 					padding-left: 10px
 				}
 
@@ -230,7 +230,7 @@
 				line-height: 45px;
 				box-sizing: border-box;
 				position: relative;
-				@include bottom-border-1px(#dadada);
+				@include bottom-border-1px($color-underline);
 
 				&:last-child {
 					@include bottom-border-1px(#fff);
@@ -243,14 +243,14 @@
 					&:first-child {
 						left: 0;
 						top: 0;
-						color: #bbbaba;
+						color: $color-text-left;
 						padding-left: 10px;
 					}
 
 					;
 
 					&:last-child {
-						color: #271010;
+						color: $color-text-right;
 						font-weight: bold;
 						right: 10px;
 						top: 0
@@ -266,7 +266,7 @@
 			margin: 0 auto;
 			width: 100%;
 			font-size: 13px;
-			background: #f7f7f7;
+			background: #f6f6f6;
 			position: relative;
 
 			.app-version {
@@ -285,14 +285,14 @@
 					&:first-child {
 						left: 0;
 						top: 0;
-						color: #bbbaba;
+						color: $color-text-left;
 						padding-left: 10px;
 					}
 
 					;
 
 					&:last-child {
-						color: #271010;
+						color: $color-text-right;
 						font-weight: bold;
 						right: 10px;
 						top: 0

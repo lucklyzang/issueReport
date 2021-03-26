@@ -596,14 +596,14 @@
 				width: 100%;
 				height: 60px;
 				line-height: 60px;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
 						padding-left: 4px;
 						box-sizing: border-box;
-						color: #7d7d7d;
+						color: $color-text-left;
 					};
 					&:last-child {
 						float: right;
@@ -623,7 +623,7 @@
 								justify-content: space-between;
 								.u-radio__label {
 									margin-right: 9px;
-									color: #333
+									color: $color-text-right
 								}
 							}
 						}
@@ -634,7 +634,7 @@
 			.creat-chooseHospital {
 				width: 100%;
 				height: 60px;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 				>view {
 					&:first-child {
 						float: left;
@@ -643,7 +643,7 @@
 						line-height: 60px;
 						padding-left: 4px;
 						box-sizing: border-box;
-						color: #7d7d7d;
+						color: $color-text-left;
 					}
 	
 					&:last-child {
@@ -653,7 +653,7 @@
 						height: 60px;
 						width: 80%;
 						.show-box {
-							color: #333;
+							color: $color-text-right;
 							position: absolute;
 							left: 0;
 							top: 50%;
@@ -665,7 +665,7 @@
 								font-size: 15px !important
 							};
 							.right-arrow {
-								color: #333 !important
+								color: $color-text-right !important
 							}
 						}
 					}
@@ -683,7 +683,7 @@
 						line-height: 60px;
 						padding-left: 4px;
 						box-sizing: border-box;
-						color: #7d7d7d;
+						color: $color-text-left;
 					}
 					
 					&:last-child {
@@ -735,7 +735,7 @@
 					width: 20%;
 					height: 35px;
 					line-height: 35px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
@@ -754,7 +754,7 @@
 					flex: 1;
 					display: flex;
 					font-size: 15px;
-					color: #333;
+					color: $color-text-right;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
@@ -786,10 +786,10 @@
 					padding: 10px 4px;
 					.u-label {
 						font-size: 14px;
-						color: #7d7d7d !important
+						color: $color-text-left !important
 					};
 					.fild-body {
-						color: #333 !important;
+						color: $color-text-right !important;
 						.u-flex-1  {
 							font-size: 15px !important
 						}
@@ -806,13 +806,13 @@
 				justify-content: center;
 				align-items: center;
 				overflow: auto;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 	
 				>text {
 					display: inline-block;
 					height: 30px;
 					text-align: center;
-					color: #333;
+					color: $color-text-right;
 					background: #f9f9f9;
 					line-height: 30px;
 					padding: 0 3px;
@@ -834,7 +834,7 @@
 	
 				/deep/ .u-field {
 					padding: 16px 2px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					.u-label-text {
 						font-size: 14px
 					};
@@ -842,7 +842,7 @@
 						margin-top: 8px;
 					};
 					.fild-body {
-						color: #333;
+						color: $color-text-right;
 						height: 68px;
 						overflow: auto;
 						background: #f9f9f9;

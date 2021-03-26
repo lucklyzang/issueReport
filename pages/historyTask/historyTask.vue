@@ -1,6 +1,11 @@
 <template>
 	<view class="container">
-		<u-calendar v-model="show" :mode="mode" @change="dateChange"></u-calendar>
+		<view>
+			<u-picker mode="time" v-model="startShow" :params="params" @confirm="startDateSure"></u-picker>
+		</view>
+		<view>
+			<u-picker mode="time" v-model="endShow" :params="params" @confirm="endDateSure"></u-picker>
+		</view>
 		<u-toast ref="uToast" />
 		<view class="empty-info" v-show="noDataShow">
 			<u-empty text="数据为空" mode="list"></u-empty>
@@ -12,17 +17,17 @@
 		<view class="time-change-box">
 			<view class="time-change-text">至</view>
 			<view class="time-change-left">
-				<u-field @click="showAction"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
+				<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
 			</view>
 			<view class="time-change-right">
-				<u-field @click="showAction" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
+				<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
 			</view>
 		</view>
-		<view class="search">
+		<!-- <view class="search">
 			<button @click="searchCompleteTask">搜索</button>
-		</view>
+		</view> -->
 		<view class="task-tail-content-box">
-			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
+			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
@@ -120,11 +125,19 @@
 		},
 		data() {
 			return {
+				params: {
+					year: true,
+					month: true,
+					day: true,
+					hour: false,
+					minute: false,
+					second: false
+				},
+				startShow: false,
+				endShow: false,
 				dateStart: '',
 				dateEnd: '',
-				show: false,
 				isFresh: false,
-				mode: 'range',
 				content: '',
 				showLoadingHint: false,
 				noDataShow: false,
@@ -198,9 +211,14 @@
 				'changeIsToCallTaskPage'
 			]),
 			
-			// 触发日历显示事件
-			showAction () {
-				this.show = true
+			// 触发日历显示事件开始日期
+			showActionStart () {
+				this.startShow = true
+			},
+			
+			// 触发日历显示事件结束日期
+			showActionEnd () {
+				this.endShow = true
 			},
 			
 			// 任务优先级转换
@@ -373,10 +391,23 @@
 				this.changeIsToCallTaskPage(false)
 			},
 			
-			// 日期变化事件
-			dateChange(e) {
-				this.dateStart = e.startDate;
-				this.dateEnd = e.endDate
+			
+			// 开始时间确定
+			startDateSure(e) {
+				this.dateStart = `${e.year}-${e.month}-${e.day}`;
+			},
+			
+			// 结束日期确定
+			endDateSure(e) {
+				this.dateEnd = `${e.year}-${e.month}-${e.day}`;
+				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
+					this.$refs.uToast.show({
+					  title: `结束日期不能小于开始日期`,
+					  type: 'warning'
+					});
+					return
+				};
+				this.searchCompleteTask()
 			},
 			
 			clickEvent (item) {

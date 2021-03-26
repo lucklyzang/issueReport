@@ -134,7 +134,7 @@
 							if (res.data.data.mobile) {
 								this.changeTemplateType(res.data.data.mobile);
 								setCache('templateType', res.data.data.mobile)
-							}
+							};
 							uni.switchTab({
 								url: '/pages/index/index'
 							})

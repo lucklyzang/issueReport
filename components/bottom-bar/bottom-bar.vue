@@ -88,7 +88,7 @@
 			}
 		};
 		.operate-list-inner-style {
-            background: #2f99f1 !important;
+            background: $color-bottom-nav !important;
          }
 	}
 </style>

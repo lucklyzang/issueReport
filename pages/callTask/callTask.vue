@@ -267,8 +267,8 @@
 					<view>性别</view>
 					<view>
 						<u-radio-group v-model="patienModalMessage.genderValue">
-							<u-radio name="0" active-color="#333">男</u-radio>
-							<u-radio name="1" active-color="#333">女</u-radio>
+							<u-radio name="1" active-color="#333">男</u-radio>
+							<u-radio name="2" active-color="#333">女</u-radio>
 						</u-radio-group>
 					</view>
 				</view>
@@ -355,7 +355,7 @@
 				transportList: [],
 				hospitalList: [],
 				hospitalListTwovalue: [],
-				hospitalListValue: [],
+				hospitalListValue: '',
 				temporaryHospitalList: [],
 				bedNumber: '',
 				patientName: '',
@@ -826,9 +826,9 @@
 			},
 			// 转换性别
 			transferGenderOne (index) {
-				if (this.templateTwoMessage[index].genderValue === '0') {
+				if (this.templateTwoMessage[index].genderValue === '1') {
 					this.templateTwoMessage[index].genderValue = '男'
-				} else if (this.templateTwoMessage[index].genderValue === '1') {
+				} else if (this.templateTwoMessage[index].genderValue === '2') {
 					this.templateTwoMessage[index].genderValue = '女'
 				} else {
 					this.templateTwoMessage[index].genderValue = ''
@@ -836,9 +836,9 @@
 			},
 			transferGenderTwo () {
 				if (this.patienModalMessage.genderValue == '男') {
-					this.patienModalMessage.genderValue = '0'
-				} else if (this.patienModalMessage.genderValue == '女') {
 					this.patienModalMessage.genderValue = '1'
+				} else if (this.patienModalMessage.genderValue == '女') {
+					this.patienModalMessage.genderValue = '2'
 				} else {
 					this.patienModalMessage.genderValue = ''
 				}
@@ -851,9 +851,9 @@
 					console.log('病人信息',this.templateTwoMessage);
 				} else {
 					this.templateTwoMessage.push(_.cloneDeep(this.patienModalMessage));
-					if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '0') {
+					if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '1') {
 						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '男'
-					} else if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '1') {
+					} else if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '2') {
 						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '女'
 					} else {
 						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = ''
@@ -968,7 +968,7 @@
 			// 运送类型信息确认事件
 			dispatchTaskSure() {
 				if (this.templateType === 'template_one') {
-					if (this.hospitalListValue.length == 0) {
+					if (!this.hospitalListValue) {
 						this.$refs.uToast.show({
 							title: '科室不能为空',
 							type: 'warning'
@@ -979,8 +979,8 @@
 					let taskMessage = {
 						setOutPlaceId: this.startPointId, //出发地ID
 						setOutPlaceName: this.startPointName, //出发地名称
-						destinationId: this.hospitalListValue[0], //目的地ID
-						destinationName: this.getDepartmentNameById(this.hospitalListValue[0]), //目的地名称
+						destinationId: this.hospitalListValue, //目的地ID
+						destinationName: this.getDepartmentNameById(this.hospitalListValue), //目的地名称
 						parentTypeId: this.titleText.id, //运送父类型Id
 						parentTypeName: this.titleText.value, //运送父类型名称
 						taskTypeId: this.typeValue, //运送类型 ID
@@ -1042,7 +1042,7 @@
 							bedNumber: patientItem['bedNumber'],
 							patientName: patientItem['patientName'],
 							number: patientItem['patientNumber'],
-							sex:  patientItem['genderValue'] == '男' ? 0 : 1,
+							sex:  patientItem['genderValue'] == '男' ? 1 : 2,
 							quantity: patientItem['actualData'],
 							typeList: []
 						})
@@ -1063,6 +1063,7 @@
 							}
 						}
 					};
+					this.postGenerateDispatchTaskMany(taskMessageTwo);
 					console.log('最终数据',taskMessageTwo);
 				}
 			},
@@ -1109,7 +1110,7 @@
 								line-height: 60px;
 								&:first-child {
 									width: 30%;
-									color: #7d7d7d;
+									color: $color-text-left;
 									float: left
 								};
 								&:last-child {
@@ -1138,7 +1139,7 @@
 								line-height: 60px;
 								&:first-child {
 									width: 30%;
-									color: #7d7d7d;
+									color: $color-text-left;
 									float: left
 								};
 								&:last-child {
@@ -1162,7 +1163,7 @@
 								&:first-child {
 									float: left;
 									width: 30%;
-									color: #7d7d7d;
+									color: $color-text-left;
 									box-sizing: border-box
 								};
 								&:last-child {
@@ -1173,7 +1174,7 @@
 									z-index: 300;
 									border-bottom: 1px solid #ececec;
 									.show-box {
-										color: #333;
+										color: $color-text-right;
 										position: absolute;
 										left: 0;
 										top: 50%;
@@ -1185,7 +1186,7 @@
 											font-size: 15px !important
 										};
 										.right-arrow {
-											color: #333 !important
+											color: $color-text-right !important
 										}
 									}
 								}
@@ -1206,7 +1207,7 @@
 										float: left;
 										width: 50%;
 										height: 60px;
-										color: #7d7d7d;
+										color: $color-text-left;
 										box-sizing: border-box;
 										overflow-x: auto;
 									};
@@ -1285,14 +1286,14 @@
 				width: 100%;
 				height: 60px;
 				line-height: 60px;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid $color-underline;
 
 				.creat-priority-title {
 					height: 59px;
 					line-height: 59px;
 					float: left;
 					width: 30%;
-					color: #7d7d7d;
+					color: $color-text-left;
 					padding-left: 4px;
 					box-sizing: border-box;
 				};
@@ -1309,7 +1310,7 @@
 						transform: translateY(-50%);
 						left: 0;
 						.u-radio__label {
-							color: #333
+							color: $color-text-right
 						}
 					}
 				}
@@ -1333,7 +1334,7 @@
 					width: 30%;
 					line-height: 59px;
 					padding-left: 4px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					box-sizing: border-box
 				};
 				.creat-chooseHospital-content {
@@ -1344,7 +1345,7 @@
 					z-index: 300;
 					
 					.show-box {
-						color: #333;
+						color: $color-text-right;
 						position: absolute;
 						left: 0;
 						top: 50%;
@@ -1356,7 +1357,7 @@
 							font-size: 15px !important
 						};
 						.right-arrow {
-							color: #333 !important
+							color: $color-text-right !important
 						}
 					}
 				};
@@ -1367,7 +1368,7 @@
 					width: 70%;
 					z-index: 300;
 					.main {
-						color: #333;
+						color: $color-text-right;
 						position: absolute;
 						left: 0;
 						top: 10px;
@@ -1407,7 +1408,7 @@
 					line-height: 59px;
 					float: left;
 					width: 20%;
-					color: #7d7d7d;
+					color: $color-text-left;
 					padding-left: 4px;
 					box-sizing: border-box;
 				};
@@ -1449,7 +1450,7 @@
 					width: 20%;
 					height: 35px;
 					line-height: 35px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
@@ -1468,7 +1469,7 @@
 					flex: 1;
 					display: flex;
 					font-size: 15px;
-					color: #333;
+					color: $color-text-right;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
@@ -1512,11 +1513,11 @@
 						padding: 8px 4px;
 						.u-label-text {
 							font-size: 14px;
-							color: #7d7d7d
+							color: $color-text-left
 						};
 						.fild-body {
 							.uni-input-input {
-								color: #333 !important
+								color: $color-text-right !important
 							}
 						}
 					}
@@ -1554,7 +1555,7 @@
 					
 				/deep/ .u-field {
 					padding: 16px 2px;
-					color: #7d7d7d;
+					color: $color-text-left;
 					.u-label-text {
 						font-size: 14px
 					};
@@ -1562,7 +1563,7 @@
 						margin-top: 8px;
 					};
 					.fild-body {
-						color: #333;
+						color: $color-text-right;
 						height: 68px;
 						overflow: auto;
 						background: #f9f9f9;
@@ -1582,7 +1583,7 @@
 				.trans-total-title {
 					float: left;
 					width: 30%;
-					color: #7d7d7d;
+					color: $color-text-left;
 					padding-left: 4px;
 					line-height: 59px !important;
 					height: 59px !important;
@@ -1597,7 +1598,7 @@
 						top: 50%;
 						width: 100%;
 						min-height: 40px;
-						color: #333;
+						color: $color-text-right;
 						transform: translateY(-50%);
 						left: 0;
 						border: none;
@@ -1689,11 +1690,11 @@
 									padding: 4px 2px;
 									.u-label-text {
 										font-size: 14px;
-										color: #7d7d7d
+										color: $color-text-left
 									};
 									.fild-body {
 										.uni-input-input {
-											color: #333 !important
+											color: $color-text-right !important
 										}
 									}
 								}
@@ -1712,11 +1713,11 @@
 									padding: 4px 2px;
 									.u-label-text {
 										font-size: 14px;
-										color: #7d7d7d
+										color: $color-text-left
 									};
 									.fild-body {
 										.uni-input-input {
-											color: #333 !important
+											color: $color-text-right !important
 										}
 									}
 								}
@@ -1756,14 +1757,14 @@
 						justify-content: space-between;
 						z-index: 100;
 						.content-type-title {
-							color: #7d7d7d;
+							color: $color-text-left;
 							font-size: 14px;
 							height: 40px;
 							line-height: 40px;
 							width: 60px;
 						};
 						.transport-parent-box-title {
-							color: #333;
+							color: $color-text-right;
 							font-size: 14px !important;
 							height: 40px;
 							line-height: 40px;
@@ -1771,7 +1772,7 @@
 						};
 						.content-type-name {
 							font-weight: bold;
-							color: #333;
+							color: $color-text-right;
 							font-size: 15px;
 							height: 40px;
 							line-height: 40px;

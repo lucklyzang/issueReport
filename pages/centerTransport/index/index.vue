@@ -223,6 +223,9 @@
 			justify-content: space-between;
 			align-items: center;
 			background: #FFF;
+			.fa-icon {
+				color: $color-big-icon !important
+			}
 
 			.transTypeListStyle {
 				background: #ededed

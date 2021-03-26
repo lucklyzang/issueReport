@@ -168,6 +168,9 @@
 			justify-content: center;
 			align-items: center;
       background: #FFF;
+			.fa-icon {
+				color: #0e89ec !important
+			};
 			.transTypeListStyle {
 				background: #ededed
 			};
