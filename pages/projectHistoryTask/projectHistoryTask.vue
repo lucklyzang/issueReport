@@ -41,33 +41,31 @@
 						</view>
 						<view class="item-top-two">
 						  <view class="start-point">
-								<text>优先级 : </text>
+								<text>优先级 :</text>
 						  	<text>{{priorityTransfer(item.priority)}}</text>
 						  </view>
 							<view class="destination-point">
-								<text>任务类型 : </text>
+								<text>任务类型 :</text>
 								<text>{{item.taskTypeName}}</text>
 							</view>
 						</view>
 						<view class="item-top-three">
 							<view class="transport-type">
-								<text>目的地 : </text>
+								<text>目的地 :</text>
 								<text>{{item.destinationName}}</text>
 							</view>
 						  <view class="transport-people">
-								<text>
-									维修人员 : 
-								</text>
+								<text>维修人员 :</text>
 						  	<text>{{item.workerName}}</text>
 						  </view>
 						</view>
 						<view class="item-top-four">
 						  <view class="bed-number">
-								<text>任务描述 : </text>
+								<text>任务描述 :</text>
 						  	<text>{{item.taskDesc}}</text>
 						  </view>
               <view class="transport-tool">
-								<text>耗时 : </text>
+								<text>耗时 :</text>
               	<text>{{consueTime(item.createTime,item.finishTime)}}</text>
               </view>
 						</view>
@@ -75,7 +73,7 @@
 					<view class="item-bottom-complete">
 						<view class="item-bottom-left">
 							<view class="time">
-								<text>开始-完成时间 : </text>
+								<text>开始-完成时间 :</text>
 								<text>{{item.createTime}}-{{item.finishTime}}</text>
 							</view>
 						</view>
@@ -95,42 +93,40 @@
 						</view>
 						<view class="item-top-two">
 						  <view class="start-point">
-								<text>优先级 : </text>
+								<text>优先级 :</text>
 						  	<text>{{priorityTransfer(item.priority)}}</text>
 						  </view>
 							<view class="destination-point">
-								<text>任务类型 : </text>
+								<text>任务类型 :</text>
 								<text>{{item.taskTypeName}}</text>
 							</view>
 						</view>
 						<view class="item-top-three">
 							<view class="transport-type">
-								<text>目的地 : </text>
+								<text>目的地 :</text>
 								<text>{{item.destinationName}}</text>
 							</view>
 						  <view class="transport-people">
-								<text>
-									维修人员 : 
-								</text>
+								<text>维修人员 :</text>
 						  	<text>{{item.workerName}}</text>
 						  </view>
 						</view>
 						<view class="item-top-four">
 						  <view class="bed-number">
-								<text>任务描述 : </text>
+								<text>任务描述 :</text>
 						  	<text>{{item.taskDesc}}</text>
 						  </view>
 					    <view class="transport-tool">
-								<text>耗时 : </text>
-					    	<text>{{consueTime(item.createTime,item.finishTime)}}</text>
+								<text>耗时 :</text>
+					    	<text>{{consueTime(item.createTime,item.finalFinishTime)}}</text>
 					    </view>
 						</view>
 					</view>
           <view class="item-bottom-complete">
           	<view class="item-bottom-left">
           		<view class="time">
-          			<text>开始-完成时间 : </text>
-          			<text>{{item.createTime}}-{{item.finishTime}}</text>
+          			<text>开始-取消时间 :</text>
+          			<text>{{item.createTime}}-{{item.finalFinishTime}}</text>
           		</view>
           	</view>
           </view>
@@ -411,6 +407,14 @@
 			// 开始时间确定
 			startDateSure(e) {
 				this.dateStart = `${e.year}-${e.month}-${e.day}`;
+				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
+					this.$refs.uToast.show({
+					  title: `结束日期不能小于开始日期`,
+					  type: 'warning'
+					});
+					return
+				};
+				this.searchCompleteTask()
 			},
 			
 			// 结束日期确定
@@ -613,10 +617,12 @@
 									overflow: auto;
 									text {
 										&:first-child {
-											color: $color-text-left
+											color: $color-text-left;
+											margin-right: 4px;
 										};
 										&:last-child {
-											color: $color-text-right
+											color: $color-text-right;
+											font-weight: bold
 										}
 									}
 							  };
@@ -625,10 +631,12 @@
 									overflow: auto;
 									text {
 										&:first-child {
-											color: $color-text-left
+											color: $color-text-left;
+											margin-right: 4px
 										};
 										&:last-child {
-											color: $color-text-right
+											color: $color-text-right;
+											font-weight: bold
 										}
 									}
 								}
@@ -645,10 +653,12 @@
 		          		overflow: auto;
 		          		text {
 		          			&:first-child {
-		          				color: $color-text-left
+		          				color: $color-text-left;
+											margin-right: 4px
 		          			};
 		          			&:last-child {
-		          				color: $color-text-right
+		          				color: $color-text-right;
+											font-weight: bold
 		          			}
 		          		}
 		            };
@@ -657,10 +667,12 @@
 									overflow: auto;
 		          		text {
 		          			&:first-child {
-		          				color: $color-text-left
+		          				color: $color-text-left;
+											margin-right: 4px
 		          			};
 		          			&:last-child {
-		          				color: $color-text-right
+		          				color: $color-text-right;
+											font-weight: bold
 		          			}
 		          		}
 		          	}
@@ -681,11 +693,14 @@
 									text {
 										display: inline-block;
 										&:first-child {
-											color: $color-text-left
+											color: $color-text-left;
+											vertical-align: top;
+											margin-right: 4px
 										};
 										&:last-child {
 											width:60%;
-											color: $color-text-right
+											color: $color-text-right;
+											font-weight: bold
 										}
 									}
 								};

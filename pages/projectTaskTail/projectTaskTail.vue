@@ -53,7 +53,7 @@
             </view>
             <view class="item-top-four">
               <view class="bed-number">
-								<text>任务描述 : </text>
+								<text>任务描述 :</text>
               	<text>{{item.taskDesc}}</text>
               </view>
 						</view>
@@ -88,15 +88,11 @@
 						</view>
 						<view class="item-top-two">
 						  <view class="start-point">
-								<text>
-									优先级 :
-								</text>
+								<text>优先级 :</text>
 						  	<text> {{priorityTransfer(item.priority)}}</text>
 						  </view>
 							<view class="destination-point">
-								<text>
-									任务类型 :
-								</text>
+								<text>任务类型 :</text>
 								<text> {{item.taskTypeName}}</text>
 							</view>
 						</view>
@@ -106,7 +102,7 @@
 								<text>{{item.destinationName}}</text>
 							</view>
 						  <view class="transport-people">
-								<text>维修人员 : </text>
+								<text>维修人员 :</text>
 						  	<text>{{item.workerName}}</text>
 						  </view>
 						</view>
@@ -497,7 +493,7 @@
 		};
 		/deep/ .u-mode-center-box {
 			.slot-content {
-				padding: 20px 4px 0;
+				padding: 10px;
 				box-sizing: border-box;
 				overflow: auto;
 				display: flex;
@@ -511,14 +507,39 @@
 					background: #ececec;
 					font-size: 14px;
 					color: black;
+					border-radius: 4px;
 					text-align: center;
 					line-height: 40px;
 					margin-bottom: 4%
 				};
 				 .spanStyle {
-					color: #fff;
-					background: #278ee6
-				  }
+					background: #d6f4ff;
+					color: #01a6ff;
+					border: 1px solid #4cc5f2;
+				}
+			};
+			.u-model__footer {
+				justify-content: space-between;
+				padding: 6px;
+				.u-model__footer__button {
+					border-radius: 30px;
+					flex: 0 0 45%;
+					margin-top: 4px;
+					height: 40px;
+					line-height: 40px;
+					background: #e8e8e8;
+					color: #666666
+				}
+			;
+
+				.hairline-left {
+					border-radius: 30px;
+					flex: 0 0 45%;
+					margin-top: 4px;
+					background: #fff;
+					color: #43c3f4 !important;
+					border: 1px solid #43c3f4
+				}
 			}
 		}
 		.task-tail-content-box {
@@ -604,10 +625,12 @@
 									overflow: auto;
 									text {
 										&:first-child {
-											color: $color-text-left
+											color: $color-text-left;
+											margin-right: 4px
 										};
 										&:last-child {
-											color: $color-text-right
+											color: $color-text-right;
+											font-weight: bold
 										}
 									}
 							  };
@@ -616,10 +639,12 @@
 									overflow: auto;
 									text {
 										&:first-child {
-											color: $color-text-left
+											color: $color-text-left;
+											margin-right: 4px
 										};
 										&:last-child {
-											color: $color-text-right
+											color: $color-text-right;
+											font-weight: bold
 										}
 									}
 								}
@@ -636,10 +661,12 @@
               		overflow: auto;
               		text {
               			&:first-child {
-              				color: $color-text-left
+              				color: $color-text-left;
+											margin-right: 4px
               			};
               			&:last-child {
-              				color: $color-text-right
+              				color: $color-text-right;
+											font-weight: bold
               			}
               		}
                 };
@@ -648,10 +675,12 @@
 									overflow: auto;
               		text {
               			&:first-child {
-              				color: $color-text-left
+              				color: $color-text-left;
+											margin-right: 4px
               			};
               			&:last-child {
-              				color: $color-text-right
+              				color: $color-text-right;
+											font-weight: bold
               			}
               		}
               	}
@@ -659,21 +688,24 @@
             };
             .item-top-four {
 							 height:80px;
-							 padding: 0 12px;
+							 padding: 4px 12px;
 							 font-size: 15px;
 							 background: #f7f7f7;
+							 box-sizing: border-box;
 							 > view {
-								height: 40px;
+								height: 80px;
 								width: 100%;
-								line-height: 40px;
+								overflow: auto;
 								text {
 									display: inline-block;
 									&:first-child {
-										color: $color-text-left
+										color: $color-text-left;
+										margin-right: 4px
 									};
 									&:last-child {
 										width:70%;
-										color: $color-text-right
+										color: $color-text-right;
+										font-weight: bold
 									}
 								}
 							}

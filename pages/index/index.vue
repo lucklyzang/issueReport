@@ -111,7 +111,6 @@
 				};
 				// 重新存入模板信息
 				if (getCache('templateType')) {
-					debugger;
 					this.$store.commit('changeTemplateType', getCache('templateType'));
 				};
 				// 页面刷新重新存入请求token
