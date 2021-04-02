@@ -202,14 +202,9 @@
 		},
 		
 		mounted () {
-			if (this.depName === '') {
-				this.startPointId = '';
-				this.startPointName = ''
-			} else {
-				this.startPointId = this.depId;
-				this.startPointName = this.depName;
-			};
       this.serviceMan = this.accountName;
+      this.startPointId = this.depId;
+      this.startPointName = this.depName;
       if (this.depId) {
         this.queryRoomByDepartment({
           proId: this.proId,  //项目ID 必输
@@ -317,10 +312,6 @@
         this.controlListShow = Math.random();
         let innerList = this.temporaryHospitalList;
         this.hospitalList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
-				if (val.detail.value === '') {
-					this.startPointId = '';
-					this.startPointName = ''
-				}
       },
       
       // 目的地input中的数据变化时触发
@@ -333,10 +324,6 @@
       
       // 协助人员input中的数据变化时触发
       helpWorkerInputEvent (val) {
-				if (val.target.id === '') {
-					this.helpWorkerId = '';
-					this.helpWorkerName = ''
-				};
         this.helpWorkerListShow = Math.random();
         let innerList = this.temporaryHelpWorkerList;
         this.helpWorkerList = innerList.filter((item) => {return item.value.indexOf(val.detail.value) != -1});
@@ -549,16 +536,8 @@
           this.showLoadingHint = false;
         })
       },
-
       // 运送类型信息确认事件
 		  taskSure () {
-				if (this.startPointId === '') {
-					this.$refs.uToast.show({
-					  title: '清选择科室',
-					  type: 'warning'
-					});
-					return
-				};
         // 获取选中的运送工具信息
         let taskMessage = {
           priority: this.priorityValue,   //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
@@ -574,7 +553,7 @@
           images: []  ,// 问题图片信息 非必输
           spaceId: this.destinationId,    // 选择的空间ID
           flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
-          present: this.helpWorkerId === '' ? [] : [{id: this.helpWorkerId, name: this.helpWorkerName}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
+          present: [{id: this.helpWorkerId, name: this.helpWorkerName}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
         };
         // 创建调度任务
         this.postTask(taskMessage)

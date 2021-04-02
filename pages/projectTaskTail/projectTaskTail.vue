@@ -421,7 +421,7 @@
 				this.sureCancelShow = true;
 				this.cancelIndex = null;
 				this.taskCancelReason = '';
-				this.getProjectTaskCancelReason({proId: this.proId, state: 0,reason: ''});
+				this.getProjectTaskCancelReason({proId: this.proId,state: 0,reason: ''});
 				this.taskId = item.id
 			},
 			
@@ -531,7 +531,6 @@
 					color: #666666
 				}
 			;
-
 				.hairline-left {
 					border-radius: 30px;
 					flex: 0 0 45%;

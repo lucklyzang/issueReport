@@ -92,7 +92,8 @@
 						</view>
 						<view class="item-bottom-right">
 							<view class="transport-tool">
-								<text>耗时: {{consueTime(item.responseTime,item.finishTime)}}</text>
+								<text>耗时: </text>
+								<text>{{consueTime(item.responseTime,item.finishTime)}}</text>
 							</view>
 						</view>
 					</view>
@@ -792,10 +793,15 @@
 						position: absolute;
 						top: 50%;
 						transform: translateY(-50%);
-						> button {
-							color: #fff;
-							height: 100%;
-							font-size: 16px;
+						text {
+							&:first-child {
+								color: $color-text-left;
+								margin-right: 4px
+							};
+							&:last-child {
+								color: $color-text-right;
+								font-weight: bold
+							}
 						}
 					}
 					.left  {

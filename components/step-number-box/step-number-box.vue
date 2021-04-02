@@ -60,7 +60,7 @@
 			val: {
 				immediate: true,
 				handler (val) {
-					this.$emit('change', this.val, this.index, this.innerIndex);
+					this.$emit('change', this.val, this.innerIndex);
 					this.$emit('input',this.val);
 				},
 				deep:true
@@ -86,7 +86,7 @@
 					this.val = parseInt($event.target.value)
 				};
 				this.$emit('input', parseInt(this.val));
-				this.$emit('inputBlur',$event, this.val,  this.index, this.innerIndex)
+				this.$emit('inputBlur',$event, this.val, this.innerIndex)
 			},
 			// input框获取焦点输入事件
 			stepperValChange ($event) {
@@ -104,7 +104,7 @@
 					return
 				};
 				this.val += this.step;
-				this.$emit('plus', $event, this.val,  this.index, this.innerIndex)
+				this.$emit('plus', $event, this.val, this.innerIndex)
 			},
 			// 减号点击事件
 			minusNumEvent ($event) {
@@ -113,7 +113,7 @@
 					return
 				};
 				this.val -= this.step;
-				this.$emit('minus', $event, this.val, this.index, this.innerIndex)
+				this.$emit('minus', $event, this.val, this.innerIndex)
 			}
 		}
 	}

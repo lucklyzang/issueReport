@@ -173,15 +173,9 @@
 				return this.userInfo.name
 			}
 		},
-
 		mounted() {
-			if (this.depName === '') {
-				this.startPointId = '';
-				this.startPointName = ''
-			} else {
-				this.startPointId = this.depId;
-				this.startPointName = this.depName;
-			};
+			this.startPointId = this.depId;
+			this.startPointName = this.depName;
 			if (this.depId) {
 				this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
@@ -191,14 +185,12 @@
 			};
 			this.parallelFunction()
 		},
-
 		methods: {
 			...mapMutations([
 				'changeTitleText',
 				'changeBottomBarIndex',
 				'changeIsToCallTaskPage'
 			]),
-
 			// 返回上一页
 			backTo() {
 				this.changeBottomBarIndex(0);
@@ -207,29 +199,23 @@
 				});
 				this.changeIsToCallTaskPage(false)
 			},
-
 			// 预设内容点击事件
 			preinstallEvent(item, index) {
 				this.preinstallIndex = index;
 				this.taskDescribe = item
 			},
-
 			// 弹框确定按钮
 			sureCancel() {
 				this.imgArr.splice(this.imgIndex, 1)
 			},
-
 			// 弹框取消按钮
 			cancelSure() {
-
 			},
-
 			// 图片删除事件
 			photoDelete(item, index) {
 				this.sureCancelShow = true;
 				this.imgIndex = index
 			},
-
 			// 选择图片方法
 			getImg() {
 				var that = this
@@ -255,7 +241,6 @@
 					}
 				});
 			},
-
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.startPointId = val.orignItem.id;
@@ -267,7 +252,6 @@
 					depId: val.orignItem.id //科室ID
 				})
 			},
-
 			// 根据科室查询房间号
 			queryRoomByDepartment(data) {
 				this.temporaryDestinationList = [];
@@ -297,24 +281,19 @@
 						})
 					})
 			},
-
-
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
 				this.destinationId = val.orignItem.id;
 				this.destinationName = val.orignItem.value;
 			},
-
 			// 科室下拉框隐藏或显示时事件
 			visibleChange() {
 				this.hospitalList = this.temporaryHospitalList
 			},
-
 			// 目的地下拉框隐藏或显示时事件
 			destinationvisibleChange() {
 				this.destinationList = this.temporaryDestinationList
 			},
-
 			// 科室input中的数据变化时触发
 			inputEvent(val) {
 				this.controlListShow = Math.random();
@@ -322,13 +301,7 @@
 				this.hospitalList = innerList.filter((item) => {
 					return item.value.indexOf(val.detail.value) != -1
 				});
-				if (val.detail.value === '') {
-					this.startPointId = '';
-					this.startPointName = ''
-				}
 			},
-
-
 			// 目的地input中的数据变化时触发
 			destinationInputEvent(val) {
 				this.destinationListShow = Math.random();
@@ -337,14 +310,12 @@
 					return item.value.indexOf(val.detail.value) != -1
 				});
 			},
-
 			// 运送类型点击事件
 			typeEvent(item, index) {
 				this.typeIndex = index;
 				this.typeText = item.text;
 				this.typeValue = item.value;
 			},
-
 			// 底部按钮点击
 			clickEvent(item) {
 				if (item.text == "呼叫下单") {
@@ -374,7 +345,6 @@
 			radioGroupChange(e) {
 				console.log(e);
 			},
-
 			// 查询目的地
 			getAllDestination() {
 				return new Promise((resolve, reject) => {
@@ -393,7 +363,6 @@
 						})
 				})
 			},
-
 			// 查询运送类型
 			getTaskType(data) {
 				return new Promise((resolve, reject) => {
@@ -413,72 +382,6 @@
 						})
 				})
 			},
-
-			// 查询备注信息
-			queryRemarks(data) {
-				return new Promise((resolve, reject) => {
-					getRemarks(data)
-						.then((res) => {
-							if (res && res.data.code == 200) {
-								resolve(res.data.data)
-							}
-						})
-						.catch((err) => {
-							reject(err.message)
-						})
-				})
-			},
-
-			// 并行查询目的地、运送类型、备注信息
-			parallelFunction(type) {
-				Promise.all([this.getAllDestination(), this.getTaskType({
-						proId: this.proId,
-						state: 0,
-						parentId: this.titleText.id
-					}), this.queryRemarks({
-						proId: this.proId,
-						workerId: this.workerId,
-						flag: this.isMedicalMan ? 1 : 0, //查询类型 0-维修人员，1-医务人员
-					})])
-					.then((res) => {
-						if (res && res.length > 0) {
-							this.taskTypeList = [];
-							this.hospitalList = [];
-							this.helpWorkerList = [];
-							this.preinstallList = [];
-							let [item1, item2, item3] = res;
-							if (item1) {
-								Object.keys(item1).forEach((item) => {
-									this.hospitalList.push({
-										value: item1[item],
-										id: item
-									})
-								});
-								this.temporaryHospitalList = this.hospitalList
-							};
-							if (item2) {
-								for (let item of item2) {
-									this.taskTypeList.push({
-										text: item.typeName,
-										value: item.id
-									})
-								}
-							};
-							if (item3) {
-								for (let item of item3) {
-									this.preinstallList.push(item)
-								}
-							};
-						}
-					})
-					.catch((err) => {
-						this.$refs.uToast.show({
-							title: `${err}`,
-							type: 'warning'
-						})
-					})
-			},
-
 			// 查询备注信息
 			queryRemarks(data) {
 				return new Promise((resolve, reject) => {
@@ -498,7 +401,6 @@
 						})
 				})
 			},
-
 			// 并行查询目的地、运送类型、备注信息
 			parallelFunction(type) {
 				Promise.all([this.getAllDestination(), this.getTaskType({
@@ -576,16 +478,8 @@
 						this.showLoadingHint = false;
 					})
 			},
-
 			// 运送类型信息确认事件  
-			taskSure() {
-				if (this.startPointId === '') {
-					this.$refs.uToast.show({
-						title: '清选择科室',
-						type: 'warning'
-					});
-					return
-				};
+			takaskSure() {
 				// 获取选中的运送工具信息
 				let taskMessage = {
 					priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
@@ -606,7 +500,6 @@
 				// 创建工程维修任务
 				this.postTask(taskMessage)
 			},
-
 			// 工程维修任务生成
 			sure() {
 				if (this.taskDescribe == '' && this.imgArr.length == 0) {
@@ -615,10 +508,9 @@
 						type: 'warning'
 					})
 				} else {
-					this.taskSure()
+					this.takaskSure()
 				}
 			},
-
 			// 调度任务取消
 			cancel() {
 				this.backTo()
@@ -629,19 +521,14 @@
 
 <style lang="scss">
 	@import "~@/common/stylus/variable.scss";
-
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
-
 		.nav {
 			width: 100%;
-		}
-
-		;
-
+		};
 		.creat-box {
 			position: relative;
 			width: 100%;
@@ -651,7 +538,6 @@
 			color: black;
 			display: flex;
 			flex-direction: column;
-
 			.creat-priority {
 				width: 100%;
 				height: 60px;
@@ -670,7 +556,6 @@
 						position: relative;
 						height: 60px;
 						width: 80%;
-
 						/deep/ .u-radio-group {
 							position: absolute;
 							width: 100%;
@@ -679,94 +564,6 @@
 							left: 0;
 							display: flex;
 							justify-content: space-between;
-
-							.u-radio {
-								flex: 1 0 auto !important;
-								justify-content: space-between;
-
-								.u-radio__label {
-									margin-right: 9px;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			;
-
-			.creat-chooseHospital {
-				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				margin-top: 6px;
-
-				>view {
-					&:first-child {
-						float: left;
-						width: 20%;
-						padding-left: 4px;
-						box-sizing: border-box
-					}
-
-					&:last-child {
-						float: right;
-						position: relative;
-						height: 50px;
-						width: 80%
-					}
-				}
-			}
-
-			;
-
-			.view-photoList {
-				position: relative;
-				height: 100px;
-				background: #fff;
-				line-height: 100px;
-				box-sizing: border-box;
-
-				>view {
-					position: absolute;
-					display: inline-block;
-
-					&:first-child {
-						width: 10%;
-						height: 80px;
-						right: 10px;
-						top: 50%;
-						color: black;
-						padding-left: 10px;
-						transform: translateY(-50%)
-					}
-
-					;
-
-					&:nth-child(2) {
-						width: 20%;
-						height: 100px;
-						left: 5px;
-						top: 50%;
-						color: black;
-						transform: translateY(-50%)
-					}
-
-					;
-
-					&:last-child {
-						width: 65%;
-						font-size: 34px;
-						display: flex;
-						height: 100px;
-						flex-flow: row wrap;
-						align-items: center;
-						overflow: auto;
-						left: 20%;
-						top: 0;
-
-						>view {
-							flex: 0 0 31%;
 							.u-radio {
 								flex: 1 0 auto !important;
 								justify-content: space-between;
@@ -891,6 +688,7 @@
 				    }
 				  }
 			};
+	
 			.priority-box {
 				>view {
 					&:last-child {
@@ -904,6 +702,7 @@
 					}
 				}
 			};
+	
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
@@ -926,12 +725,14 @@
 							box-sizing: border-box;
 							margin-right: 8px
 						};
+	
 						&:nth-child(2) {
 							font-size: 14px;
 							color: red
 						}
 					}
 				};
+	
 				.creat-transport-type-content {
 					flex: 1;
 					display: flex;
@@ -945,7 +746,6 @@
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
-
 					.transTypeListStyle {
 						background: #d6f4ff;
 						color: #01a6ff;
@@ -979,6 +779,7 @@
 					}
 				}
 			};
+	
 			.preinstall-box {
 				width: 90%;
 				margin: 0 auto;
@@ -989,6 +790,7 @@
 				align-items: center;
 				overflow: auto;
 				border-bottom: 1px solid $color-underline;
+	
 				>text {
 					display: inline-block;
 					height: 30px;
@@ -1034,6 +836,7 @@
 				}
 			}
 		};
+	
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
@@ -1045,7 +848,6 @@
 			flex-wrap: wrap;
 			justify-content: space-between;
 			align-items: center;
-
 			view {
 				width: 47%;
 				&:first-child {
@@ -1055,6 +857,7 @@
 						color: #fff
 					}
 				};
+	
 				&:last-child {
 					button {
 						border-radius: 4px;

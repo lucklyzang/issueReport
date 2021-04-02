@@ -707,6 +707,19 @@
 								&:last-child  {
 									width: 40%;
 									overflow: auto;
+									text {
+										display: inline-block;
+										&:first-child {
+											color: $color-text-left;
+											vertical-align: top;
+											margin-right: 4px
+										};
+										&:last-child {
+											width:60%;
+											color: $color-text-right;
+											font-weight: bold
+										}
+									}
 								}
 							}
 		        }

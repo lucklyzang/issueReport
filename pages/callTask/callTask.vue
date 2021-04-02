@@ -403,7 +403,6 @@
 			this.templateTwoMessage[0].sampleValue = this.titleText.value;
 			this.templateTwoMessage[0].sampleId = this.titleText.id
 		},
-
 		// 监听每个病人对应的运送类型数量
 		watch: {
 			templateTwoMessage: {
@@ -416,7 +415,6 @@
 				immediate: true
 			}
 		},
-
 		computed: {
 			...mapGetters([
 				'titleText',
@@ -424,43 +422,34 @@
 				'userInfo',
 				'templateType'
 			]),
-
 			userName() {
 				return this.userInfo.userName
 			},
-
 			depName() {
 				return this.userInfo.depName
 			},
-
 			depId() {
 				return this.userInfo.depId
 			},
-
 			proId() {
 				return this.userInfo.extendData.proId
 			},
-
 			proName() {
 				return this.userInfo.extendData.proName
 			},
-
 			workerId() {
 				return this.userInfo.extendData.userId
 			},
-
 			accountName() {
 				return this.userInfo.name
 			}
 		},
-
 		mounted() {
 			console.log('1',this.templateType);
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
 			this.parallelFunction()
 		},
-
 		methods: {
 			...mapMutations([
 				'changeTitleText',
@@ -480,7 +469,6 @@
 				});
 				this.changeIsToCallTaskPage(false)
 			},
-
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.hospitalListValue = val;
@@ -495,12 +483,10 @@
 			getDepartmentNameById(id) {
 				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
 			},
-
 			// 下拉框隐藏或显示时事件
 			visibleChange() {
 				this.hospitalList = this.temporaryHospitalList
 			},
-
 			// input中的数据变化时触发
 			inputEvent(val) {
 				let innerList = this.temporaryHospitalList;
@@ -508,14 +494,12 @@
 					return item.value.indexOf(val.detail.value) != -1
 				});
 			},
-
 			// 运送类型点击事件
 			typeEvent(item, index) {
 				this.typeIndex = index;
 				this.typeText = item.text;
 				this.typeValue = item.value;
 			},
-
 			// 模板二运送类型点击事件
 			sampleTypeEvent(innerItem, innerIndex) {
 				this.patienModalMessage.transportList[innerIndex].checked = !this.patienModalMessage.transportList[innerIndex].checked;
@@ -526,7 +510,6 @@
 				};
 				this.reduceTotal(0)
 			},
-
 			// 拼接运送类型信息函数
 			jointTransportMessage(index) {
 				let finalMsg = '';
@@ -541,7 +524,6 @@
 				};
 				return `(${finalMsg})`
 			},
-
 			// 运送类型大类选择列表变化时
 			transportParentChange(val) {
 				this.querytransportChildByTransportParent(val.parentIndex, val.orignItem.id);
@@ -549,12 +531,9 @@
 				this.patienModalMessage.sampleValue = val.orignItem.value;
 				this.patienModalMessage.sampleId = val.orignItem.id;
 			},
-
 			// 运送类型大类下拉框隐藏或显示时事件
 			transportParentVisibleChange() {
-
 			},
-
 			// 运送类型大类input中的数据变化时触发
 			transportParentInputEvent(val) {},
 			
@@ -570,7 +549,6 @@
 			// 步进器失去焦点事件
 			inputBlurEvent (msg) {
 			},
-
 			// 步进器增加或减少事件
 			plusNum(msg) {
 				this.patienModalMessage.transportList[msg[2]]['typerNumber'] = msg[1];
@@ -580,7 +558,6 @@
 				this.patienModalMessage.transportList[msg[2]]['typerNumber'] = msg[1];
 				this.reduceTotal(msg[2])
 			},
-
 			// 求和函数
 			reduceTotal(index) {
 				// 求该病人信息对应的运送数量
@@ -591,7 +568,6 @@
 					return accumulator + currentValue.typerNumber
 				}, 0);
 			},
-
 			// 底部按钮点击
 			clickEvent(item) {
 				if (item.text == "呼叫") {
@@ -618,15 +594,12 @@
 					this.changeIsToCallTaskPage(true)
 				}
 			},
-
 			radioGroupChange(e) {
 				console.log(e);
 			},
-
 			toolChange(e) {
 				console.log(e);
 			},
-
 			toolGroupChange(e) {
 				this.toolValue = e;
 				let currentText = this.toolList.filter((item) => {
@@ -634,11 +607,9 @@
 				});
 				this.toolName = currentText[0]['text']
 			},
-
 			isBackGroupChange(e) {
 				console.log(e);
 			},
-
 			// 查询目的地
 			getAllDestination() {
 				return new Promise((resolve, reject) => {
@@ -652,7 +623,6 @@
 						})
 				})
 			},
-
 			// 查询转运工具
 			getTransportTools() {
 				return new Promise((resolve, reject) => {
@@ -670,7 +640,6 @@
 						})
 				})
 			},
-
 			// 查询运送类型小类
 			getTransPorttype(data) {
 				return new Promise((resolve, reject) => {
@@ -685,7 +654,6 @@
 						})
 				})
 			},
-
 			// 查询运送类型大类
 			getTransportsTypeParent() {
 				return new Promise((resolve, reject) => {
@@ -704,7 +672,6 @@
 						})
 				})
 			},
-
 			// 根据运送类型大类查询运送类型小类
 			querytransportChildByTransportParent(index, id) {
 				queryTransportType({
@@ -732,7 +699,6 @@
 						}).then(() => {})
 					})
 			},
-
 			// 并行查询目的地、转运工具、运送类型小类、运送类型大类
 			parallelFunction(type) {
 				Promise.all([this.getAllDestination(), this.getTransportTools(), this.getTransPorttype({
@@ -882,7 +848,6 @@
 					sampleId: this.titleText.id
 				});
 			},
-
 			// 病人信息删除事件
 			deletetMessage(index) {
 				this.templateTwoMessage.splice(index, 1)
@@ -896,85 +861,6 @@
 				return `病人${this.this.templateTwoMessage.length+1}`
 			},
 			
-		  // 并行查询目的地、转运工具、运送类型
-		  parallelFunction (type) {
-        Promise.all([this.getAllDestination(),this.getTransportTools(), this.getTransPorttype({
-          proId: this.proId,
-          state: 0,
-          parentId: this.titleText.id
-        })])
-        .then((res) => {
-          if (res && res.length > 0) {
-            this.toolList = [];
-            this.transportList = [];
-            this.hospitalList = [];
-            let [item1,item2,item3] = res;
-            if (item1) {
-              Object.keys(item1).forEach((item) => {
-                this.hospitalList.push({
-                  value: item1[item],
-                  id: item
-                })
-              });
-              this.temporaryHospitalList = this.hospitalList
-            };
-            if (item2) {
-              for (let item of item2) {
-                this.toolList.push({
-                  text: item.toolName,
-                  value: item.id,
-                  checked: false
-                })
-              };
-              this.toolList.push({text: '无工具',value: 0, checked: false})
-            };
-            if (item3) {
-              for(let item of item3) {
-                this.transportList.push({
-                  text: item.typeName, 
-                  value: item.id
-                })
-              }
-            }
-          }
-        })
-        .catch((err) => {
-          this.$refs.uToast.show({
-            title: `${err}`,
-            type: 'warning'
-          })
-        })
-		  },
-		  
-      // 生成调度任务
-      postGenerateDispatchTask (data) {
-        this.showLoadingHint = true;
-        generateDispatchTask(data).then((res) => {
-          if (res && res.data.code == 200) {
-            this.$refs.uToast.show({
-              title: `${res.data.msg}`,
-              type: 'success'
-            });
-            setTimeout(()=> {
-              this.backTo()
-            },1000)
-          } else {
-            this.$refs.uToast.show({
-              title: `${res.data.msg}`,
-              type: 'warning'
-            })
-          };
-          this.showLoadingHint = false
-        })
-        .catch((err) => {
-          this.$refs.uToast.show({
-            title: `${err.message}`,
-            type: 'error'
-          })
-          this.showLoadingHint = false;
-        })
-      },
-
 			// 病人信息编辑事件
 			editMessage(index) {
 				this.updateIndex = index;
@@ -985,7 +871,6 @@
 				this.transferGenderTwo();
 				this.patienModalShow = true
 			},
-
 			// 生成调度任务(一个病人)
 			postGenerateDispatchTask(data) {
 				this.showLoadingHint = true;
@@ -1043,7 +928,6 @@
 						this.showLoadingHint = false;
 					})
 			},
-
 			// 运送类型信息确认事件
 			dispatchTaskSure() {
 				if (this.templateType === 'template_one') {
@@ -1148,12 +1032,10 @@
 					console.log('最终数据',taskMessageTwo);
 				}
 			},
-
 			// 调度任务生成
 			sure() {
 				this.dispatchTaskSure()
 			},
-
 			// 调度任务取消
 			cancel() {
 				this.backTo()
@@ -1164,7 +1046,6 @@
 
 <style lang="scss">
 	@import "~@/common/stylus/variable.scss";
-
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
@@ -1347,12 +1228,10 @@
 				}
 			}
 		};
-
 		.nav {
 			width: 100%;
 			z-index: 500
 		};
-
 		.creat-box {
 			position: relative;
 			width: 100%;
@@ -1362,13 +1241,11 @@
 			color: black;
 			display: flex;
 			flex-direction: column;
-
 			.creat-priority {
 				width: 100%;
 				height: 60px;
 				line-height: 60px;
 				border-bottom: 1px solid $color-underline;
-
 				.creat-priority-title {
 					height: 59px;
 					line-height: 59px;
@@ -1414,7 +1291,6 @@
 					}
 				}
 			};
-
 			.creat-chooseHospital {
 				width: 100%;
 				height: 60px;
@@ -1491,7 +1367,6 @@
 					width: 80%
 				}
 			};
-
 			.priority-box {
 				.creat-priority-title {
 					height: 59px;
@@ -1524,7 +1399,6 @@
 					}
 				};
 			};
-
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
@@ -1585,7 +1459,6 @@
 					}
 				}
 			};
-
 			.creat-form {
 				width: 100%;
 				padding: 4px 0;
@@ -1613,7 +1486,6 @@
 					}
 				}
 			};
-
 			.creat-is-back {
 				.creat-priority-title {
 					display: inline-block;
@@ -1638,7 +1510,6 @@
 					}
 				}
 			};
-
 			.task-describe {
 				height: 112px;
 				border-bottom: 12px solid #f6f6f6;
@@ -1667,7 +1538,6 @@
 				border-top: 12px solid #f6f6f6;
 			}
 		}
-
 		.template-two {
 			.trans-total {
 				.trans-total-title {
@@ -1696,7 +1566,6 @@
 					}
 				};
 			}
-
 			.patient-box {
 				border-top: 12px solid #f6f6f6;;
 				border-bottom: 12px solid #f6f6f6;
@@ -1722,11 +1591,9 @@
 				};
 				.patient-box-list {
 					margin-bottom: 4px;
-
 					.creat-transport-type{
 						margin-bottom: 0
 					};
-
 					.patient-title {
 						height: 50px;
 						line-height: 50px;
@@ -1759,7 +1626,6 @@
 							font-size: 20px !important
 						}
 					};
-
 					.creat-form {
 						width: 100%;
 						padding: 4px 0 0 4px;
@@ -1814,7 +1680,6 @@
 							}
 						}
 					};
-
 					.creat-gender {
 						width: 100%;
 						height: 30px;
@@ -1837,7 +1702,6 @@
 							}
 						};
 					};
-
 					.transport-parent-box {
 						padding-left: 6px;
 						height: 40px;
@@ -1871,7 +1735,6 @@
 							overflow: auto
 						};
 					};
-
 					.creat-transport-type {
 						width: 100%;
 						height: 110px;
@@ -1883,7 +1746,6 @@
 						flex: 1;
 						flex-direction: column;
 						border: 1px solid #bcbcbc;
-
 						.creat-transport-type-content {
 							flex: 1;
 							display: flex;
@@ -1895,13 +1757,11 @@
 							padding: 0 4px;
 							box-sizing: border-box;
 							overflow: auto;
-
 							.transTypeListStyle {
 								background: #75acef;
 								color: #fff;
 								border: none
 							};
-
 							.creat-transport-type-content-list {
 								width: 49%;
 								margin-bottom: 4px;
@@ -1948,12 +1808,10 @@
 					}
 				}
 			};
-
 			.task-describe {
 				margin: 4px 0;
 			}
 		};
-
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
@@ -1985,7 +1843,6 @@
 				}
 			}
 		}
-
 		.bottom-bar {
 			height: 50px;
 			width: 100%;
