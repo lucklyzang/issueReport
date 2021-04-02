@@ -80,6 +80,7 @@
 					url: '/pages/centerTransport/index/index'
 				});
 				this.changeIsProjectTask(false);
+				setCache('isProjectTask', {flag:false});
 				this.changeBottomBarIndex(-1);
 			},
 			// 工程管理touchStart事件
@@ -96,12 +97,21 @@
 					url: '/pages/projectManagement/index/index'
 				});
 				this.changeIsProjectTask(true);
+				setCache('isProjectTask', {flag:true});
 				this.changeBottomBarIndex(-1);
 			},
 			initStoreInfo() {
 				// 页面刷新时重新存入用户信息
 				if (getCache('userInfo')) {
 					this.$store.commit('storeUserInfo', getCache('userInfo'));
+				};
+				// 页面刷新时重新存入点击的系统信息
+				if (getCache('isProjectTask')) {
+					this.$store.commit('changeIsProjectTask', getCache('isProjectTask')['flag']);
+				};
+				// 重新存入模板信息
+				if (getCache('templateType')) {
+					this.$store.commit('changeTemplateType', getCache('templateType'));
 				};
 				// 页面刷新重新存入请求token
 				if (getCache('questToken')) {
@@ -130,7 +140,7 @@
 			color: black;
 			background: #fcfcfc;
 			font-size: 26px;
-			color: #065da7;
+			color: #2c9af1;
 			font-weight: bold;
 			font-size: 50px;
 
@@ -207,12 +217,18 @@
 
 			;
 
-			.center-transport {}
+			.center-transport {
+				.fa-icon {
+					color: $color-big-icon !important
+				}
+			}
 
 			;
 
 			.project-manage {
-				// visibility: hidden;
+				.fa-icon {
+					color: $color-big-icon !important
+				}
 			}
 		}
 	}

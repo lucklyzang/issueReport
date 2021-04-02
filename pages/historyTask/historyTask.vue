@@ -1,63 +1,96 @@
 <template>
 	<view class="container">
-		<u-calendar v-model="show" :mode="mode" @change="dateChange"></u-calendar>
+		<view>
+			<u-picker mode="time" v-model="startShow" :params="params" @confirm="startDateSure"></u-picker>
+		</view>
+		<view>
+			<u-picker mode="time" v-model="endShow" :params="params" @confirm="endDateSure"></u-picker>
+		</view>
 		<u-toast ref="uToast" />
 		<view class="empty-info" v-show="noDataShow">
 			<u-empty text="数据为空" mode="list"></u-empty>
 		</view>
 		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="加载中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="历史任务" @backClick="backTo"></nav-bar>
+			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="历史任务" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="time-change-box">
 			<view class="time-change-text">至</view>
 			<view class="time-change-left">
-				<u-field @click="showAction"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
+				<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
 			</view>
 			<view class="time-change-right">
-				<u-field @click="showAction" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
+				<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
 			</view>
 		</view>
-		<view class="search">
+		<!-- <view class="search">
 			<button @click="searchCompleteTask">搜索</button>
-		</view>
+		</view> -->
 		<view class="task-tail-content-box">
-			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
+			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
-						<view class="item-top-left">
+						<view class="item-top-one">
 							<view class="number">
-								<text>编号: {{item.number}}</text>
+								<text>编号 : {{item.number}}</text>
 							</view>
-							<view class="start-point">
-								<text>出发地: {{item.setOutPlaceName}}</text>
-							</view>
-							<view class="transport-type">
-								<text>运送类型: {{item.taskTypeName}}</text>
-							</view>
-							<view class="bed-number">
-								<text>床号: {{item.bedNumber}}</text>
-							</view>
-							<view class="createTime">
-								<text>创建时间: {{item.createTime}}</text>
-							</view>
-						</view>
-						<view class="item-top-right">
-							<view class="priority status">
-								<text>状态:</text>&nbsp;
+							<view class="priority" style="color:'#94e178'">
 								<text>{{stateTransfer(item.state)}}</text>
 							</view>
-							<view class="destination-point">
-								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
+						</view>
+						<view class="item-top-two">
+							<view class="start-point">
+								<text>优先级 :</text>
+								<text>{{priorityTransfer(item.priority)}}</text>
+							</view>
+							<view class="destination-point" v-if="templateType == 'template_one'">
+								<text>运送类型 :</text>
+								<text>{{item.taskTypeName}}</text>
+							</view>
+							<view class="destination-point" v-else-if="templateType === 'template_two'">
+								<text>运送类型 :</text>
+								<text>{{item.patientInfoList[0].typeList[0].parentTypeName}}</text>
+							</view>
+						</view>
+						<view class="item-top-three">
+							<view class="transport-type">
+								<text>转运工具 :</text>
+								<text>{{item.toolName}}</text>
 							</view>
 							<view class="transport-people">
-								<text>运送人: {{item.workerName}}</text>
+								<text>运送人 :</text>
+								<text>{{item.workerName}}</text>
 							</view>
-							<view class="transport-tool">
-								<text>转运工具: {{item.toolName}}</text>
+						</view>
+						<view class="item-top-three">
+							<view class="start-point">
+								<text>出发地 :</text>
+								<text>{{item.setOutPlaceName}}</text>
 							</view>
+							<view class="bed-number" v-if="templateType === 'template_one'">
+								<text>床号: </text>
+								<text>{{item.bedNumber}}</text>
+							</view>
+							<view class="bed-number" v-else-if="templateType === 'template_two'">
+								<text>床号 :</text>
+								<text>{{item.patientInfoList[0].bedNumber}}</text>
+							</view>
+						</view>
+						<view class="item-top-four">
+							<view class="bed-number">
+								<text>目的地: </text>
+								<text class="destina-list" v-for="(item,index) in item.destinations" :key="index">{{item.destinationName}}</text>
+							</view>
+						</view>
+					</view>
+					<view class="item-bottom">
+						<view class="item-bottom-left">
+							<view class="time">
+								<text>{{item.createTime}}</text>
+							</view>
+						</view>
+						<view class="item-bottom-right">
 							<view class="transport-tool">
 								<text>耗时: {{consueTime(item.responseTime,item.finishTime)}}</text>
 							</view>
@@ -65,39 +98,61 @@
 					</view>
 				</view>
 			</view>
-			<view class="task-tail-content task-tail-content-going" v-show="current == 1">
+			<view class="task-tail-content" v-show="current == 1">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
-						<view class="item-top-left">
-							<view class="number">
-								<text>编号: {{item.number}}</text>
+						<view class="item-top-one">
+								<view class="number">
+									<text>编号 : {{item.number}}</text>
+								</view>
+								<view class="priority">
+									<text>{{stateTransfer(item.state)}}</text>
+								</view>
 							</view>
-							<view class="start-point">
-								<text>出发地: {{item.setOutPlaceName}}</text>
+							<view class="item-top-two">
+								<view class="start-point">
+									<text>优先级 :</text>
+									<text>{{priorityTransfer(item.priority)}}</text>
+								</view>
+								<view class="destination-point" v-if="templateType == 'template_one'">
+									<text>运送类型 :</text>
+									<text>{{item.taskTypeName}}</text>
+								</view>
+								<view class="destination-point" v-else-if="templateType === 'template_two'">
+									<text>运送类型 :</text>
+									<text>{{item.patientInfoList[0].typeList[0].parentTypeName}}</text>
+								</view>
 							</view>
-							<view class="transport-type">
-								<text>运送类型: {{item.taskTypeName}}</text>
+							<view class="item-top-three">
+								<view class="transport-type">
+									<text>转运工具 :</text>
+									<text>{{item.toolName}}</text>
+								</view>
+								<view class="transport-people">
+									<text>运送人 :</text>
+									<text>{{item.workerName}}</text>
+								</view>
 							</view>
-							<view class="bed-number">
-								<text>床号: {{item.bedNumber}}</text>
+							<view class="item-top-three">
+								<view class="start-point">
+									<text>出发地 :</text>
+									<text>{{item.setOutPlaceName}}</text>
+								</view>
+								<view class="bed-number" v-if="templateType === 'template_one'">
+									<text>床号: </text>
+									<text>{{item.bedNumber}}</text>
+								</view>
+								<view class="bed-number" v-else-if="templateType === 'template_two'">
+									<text>床号 :</text>
+									<text>{{item.patientInfoList[0].bedNumber}}</text>
+								</view>
 							</view>
-						</view>
-						<view class="item-top-right">
-							<view class="priority status">
-								<text>状态:</text>&nbsp;
-								<text>{{stateTransfer(item.state)}}</text>
+							<view class="item-top-four">
+								<view class="bed-number">
+									<text>目的地: </text>
+									<text class="destina-list" v-for="(item,index) in item.destinations" :key="index">{{item.destinationName}}</text>
+								</view>
 							</view>
-							<view class="destination-point">
-								<text>目的地: </text>
-								<text v-for="(item,index) in item.distName" :key="index">{{item}}</text>
-							</view>
-							<view class="transport-people">
-								<text>运送人: {{item.workerName}}</text>
-							</view>
-							<view class="transport-tool">
-								<text>转运工具: {{item.toolName}}</text>
-							</view>
-						</view>
 					</view>
 				</view>
 			</view>
@@ -120,11 +175,19 @@
 		},
 		data() {
 			return {
+				params: {
+					year: true,
+					month: true,
+					day: true,
+					hour: false,
+					minute: false,
+					second: false
+				},
+				startShow: false,
+				endShow: false,
 				dateStart: '',
 				dateEnd: '',
-				show: false,
 				isFresh: false,
-				mode: 'range',
 				content: '',
 				showLoadingHint: false,
 				noDataShow: false,
@@ -161,7 +224,8 @@
       ...mapGetters([
         'titleText',
         'isToCallTaskPage',
-        'userInfo'
+        'userInfo',
+				'templateType'
       ]),
 			userName () {
 				return this.userInfo.userName
@@ -198,9 +262,14 @@
 				'changeIsToCallTaskPage'
 			]),
 			
-			// 触发日历显示事件
-			showAction () {
-				this.show = true
+			// 触发日历显示事件开始日期
+			showActionStart () {
+				this.startShow = true
+			},
+			
+			// 触发日历显示事件结束日期
+			showActionEnd () {
+				this.endShow = true
 			},
 			
 			// 任务优先级转换
@@ -329,7 +398,9 @@
                   priority: item.priority,
                   id: item.id,
                   number: item.taskNumber,
+									patientInfoList: item.patientInfoList,
                   distName: item.distName,
+									destinations: item.destinations,
                   patientName: item.patientName,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
@@ -373,10 +444,31 @@
 				this.changeIsToCallTaskPage(false)
 			},
 			
-			// 日期变化事件
-			dateChange(e) {
-				this.dateStart = e.startDate;
-				this.dateEnd = e.endDate
+			
+			// 开始时间确定
+			startDateSure(e) {
+				this.dateStart = `${e.year}-${e.month}-${e.day}`;
+				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
+					this.$refs.uToast.show({
+					  title: `结束日期不能小于开始日期`,
+					  type: 'warning'
+					});
+					return
+				};
+				this.searchCompleteTask()
+			},
+			
+			// 结束日期确定
+			endDateSure(e) {
+				this.dateEnd = `${e.year}-${e.month}-${e.day}`;
+				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
+					this.$refs.uToast.show({
+					  title: `结束日期不能小于开始日期`,
+					  type: 'warning'
+					});
+					return
+				};
+				this.searchCompleteTask()
 			},
 			
 			clickEvent (item) {
@@ -511,58 +603,212 @@
 					};
 					.item-top {
 						width: 100%;
-						display: inline-block;
 						font-size: 16px;
+						display: inline-block;
 						color: black;
-						.item-top-left {
-							width: 55%;
-							float: left;
-							height: 100%;
+					  > view {
+					    padding: 6px 0;
+					    display: flex;
+					    box-sizing: border-box;
+					    flex-flow: row nowrap;
+					    > view {
+					      width: 50%;
+					      > text {
+					        &:last-child {
+					          padding-left: 0;
+					        }
+					      }
+					    }
+					  };
+					  .item-top-one {
+							height:40px;
+							padding: 0 12px;
+							background: #f9f9f9;
+					    > view {
+								height: 20px;
+								line-height: 20px;
+								margin-top: 10px;
+					      word-break: break-all;
+					      font-size: 13px;
+					      text {
+					        color: #333;
+					      };
+					      &:first-child {
+					        width: 60%;
+									overflow: auto;
+					      };
+					      &:last-child {
+					        width: 40%;
+									overflow: auto;
+					        text-align: right;
+					        > text {
+					          &:first-child {
+					            color: black
+					          };
+					          &:last-child {
+					            color: red;
+											display: inline-block;
+											width: 80px;
+											text-align: center;
+											background: #fff;
+											border-radius: 4px;
+					          }
+					        }
+					      }
+					    }
+					  };
+						.item-top-two {
+							height:40px;
+							padding: 0 12px;
 							> view {
-								line-height: 35px;
-							}
-							.number {
-								text {
-									font-size: 14px;
-									color: #278ee6;
+								height: 40px;
+								line-height: 40px;
+							  &:first-child {
+							    width: 60%;
+									overflow: auto;
+									text {
+										&:first-child {
+											color: $color-text-left;
+											margin-right: 4px
+										};
+										&:last-child {
+											color: $color-text-right;
+											font-weight: bold
+										}
+									}
+							  };
+							  &:last-child {
+									width: 40%;
+									overflow: auto;
+									text {
+										&:first-child {
+											color: $color-text-left;
+											margin-right: 4px
+										};
+										&:last-child {
+											color: $color-text-right;
+											font-weight: bold
+										}
+									}
 								}
 							}
 						};
-						.item-top-right {
-							width: 45%;
-							float: right;
-							height: 100%;
-							> view {
-								line-height: 35px;
-							}
-							.priority {
+					  .item-top-three {
+					    height:40px;
+					    padding: 0 12px;
+					    > view {
+					    	height: 40px;
+					    	line-height: 40px;
+					      &:first-child {
+					        width: 60%;
+					    		overflow: auto;
+					    		text {
+					    			&:first-child {
+					    				color: $color-text-left;
+											margin-right: 4px
+					    			};
+					    			&:last-child {
+					    				color: $color-text-right;
+											font-weight: bold
+					    			}
+					    		}
+					      };
+					      &:last-child {
+									width: 40%;
+									overflow: auto;
+					    		text {
+					    			&:first-child {
+					    				color: $color-text-left;
+											margin-right: 4px
+					    			};
+					    			&:last-child {
+					    				color: $color-text-right;
+											font-weight: bold
+					    			}
+					    		}
+					    	}
+					    }
+					  };
+					  .item-top-four {
+							 height:80px;
+							 padding: 4px 12px;
+							 back-sizing: border-box;
+							 font-size: 15px;
+							 background: #f7f7f7;
+							 > view {
+								height: 80px;
+								width: 100%;
+								overflow: auto;
+								.destina-list {
+									color: $color-text-right;
+									margin-right: 4px;
+									font-weight: bold
+								};
 								text {
-									font-size: 14px
-								}
-							};
-							.destination-point {
-								text {
-									&:not(:first-child) {
+									display: inline-block;
+									&:first-child {
+										color: $color-text-left;
 										margin-right: 4px
-									}
-								}
-							};
-							.status {
-								text {
-									&:last-child {
-										color: red
-									}
+									};
 								}
 							}
-						}
+					  }
 					}
 				}
 			}
-			.task-tail-content-going {
-				.item-bottom {
-					.item-bottom-right {
-						.left {
-							float: right !important
+			.item-bottom {
+				width: 100%;
+				display: inline-block;
+				.item-bottom-left {
+					width: 45%;
+					height: 70px;
+					float: left;
+					font-size: 14px;
+					color: black;
+					padding-left: 12px;
+					.time {
+						height: 70px;
+						position: relative;
+						text {
+							width: 100%;
+							display: inline-block;
+							position: absolute;
+							left: 0;
+							top: 50%;
+							transform: translateY(-50%);
+							color: #c2c8cb
+						}
+					}
+				}
+				.item-bottom-right {
+					width: 55%;
+					height: 70px;
+					float: right;
+					position: relative;
+					> view {
+						width: 45%;
+						height: 40px;
+						line-height: 40px;
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						> button {
+							color: #fff;
+							height: 100%;
+							font-size: 16px;
+						}
+					}
+					.left  {
+						left: 0;
+						button {
+							background: #5ab3ff
+						}
+					};
+					.right  {
+						right: 0;
+						button {
+							color: #666;
+							background: #e8e8e8
 						}
 					}
 				}

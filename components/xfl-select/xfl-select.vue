@@ -67,6 +67,10 @@
 				  return [];
 			  }
 			},
+			outerIndex: {
+				type: Number,
+				default: 0,
+			},
 			focusShowList: null, // 当input获取焦点时，是否自动弹出列表框
 			initValue: null,   // 选择框的初始值
 			isCanInput: {      // 选择框是否可以输入值
@@ -325,7 +329,7 @@
 				  this.clearItemActive(); // 清空其它的选中的列表项
 					this.setItemActive(index, value); // 将这一项设置为选中项
 					this.$emit('change', {newVal: value, oldVal: this.selectText, 
-											index: index, orignItem: this.list[index]});
+											index: index, orignItem: this.list[index],parentIndex: this.outerIndex});
 											
 					this.setInput(value);   // 更改输入框的值
 				}
@@ -762,7 +766,7 @@
 <style scoped lang="less">
 	@normal-color: #606266;      //正常情况下的字体颜色
 	@hover-color: #c0c4cc;       //边框的颜色
-	@active-color: #8dc58d;       //活动的颜色
+	@active-color: #01a6ff;       //活动的颜色
 	@mouse-move-color: #f5f7fa;  //在列表项上按下时的列表项的背景色
 	@padding-left: 5%;           //两侧的边距
 	@arrowWidth: 12%;            //右边的小三角按钮区域的宽度

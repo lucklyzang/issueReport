@@ -26,7 +26,7 @@
 				type: Number,
 				default: 0
 			},
-			min: { 
+			min: {
 				type: [String, Number],
 				default: 0
 			},
@@ -38,10 +38,10 @@
 				type: Number,
 				default: 1
 			},
-			index: {
-				type: Number,
-				default: 0
-			},
+			// index: {
+			// 	type: Number,
+			// 	default: 0
+			// },
 			innerIndex: {
 				type: Number,
 				default: 0

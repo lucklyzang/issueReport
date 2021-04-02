@@ -7,7 +7,7 @@
 		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="创建中···" color="#fff" textColor="#fff"
 		 background-color="rgb(143 143 143)" />
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" :title="taskTypeText" @backClick="backTo">
+			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" :title="taskTypeText" @backClick="backTo">
 			</nav-bar>
 		</view>
 		<view class="creat-box">
@@ -15,10 +15,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#8dc58d">正常</u-radio>
-						<u-radio name="2" active-color="#8dc58d">重要</u-radio>
-						<u-radio name="3" active-color="#8dc58d">紧急</u-radio>
-						<u-radio name="4" active-color="#8dc58d">紧急重要</u-radio>
+						<u-radio name="1" active-color="#333">正常</u-radio>
+						<u-radio name="2" active-color="#333">重要</u-radio>
+						<u-radio name="3" active-color="#333">紧急</u-radio>
+						<u-radio name="4" active-color="#333">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -26,7 +26,7 @@
 				<view>科室选择</view>
 				<view>
 					<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
-					 :style_Container="'height: 50px; font-size: 16px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
+					 :style_Container="'height: 50px; font-size: 15px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
 					 @visible-change="visibleChange">
 					</xfl-select>
 				</view>
@@ -35,14 +35,14 @@
 				<view>目的房间</view>
 				<view>
 					<xfl-select ref="destionationParent" :list="destinationList" :clearable="false" :showItemNum="5" :isCanInput="true"
-					 :showList="destinationListShow" :style_Container="'height: 50px; font-size: 16px;'" :initValue="destinationName"
+					 :showList="destinationListShow" :style_Container="'height: 50px; font-size: 15px;'" :initValue="destinationName"
 					 @change="destinationListChangeEvent" @input="destinationInputEvent" @visible-change="destinationvisibleChange">
 					</xfl-select>
 				</view>
 			</view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
-					<text>任务类型:</text>
+					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
 					<view v-for="(item,index) in taskTypeList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)"
@@ -51,9 +51,6 @@
 			</view>
 			<view class="view-photoList">
 				<view>
-					<fa-icon type="plus" size="40" color="#00aaff" @click="getImg"></fa-icon>
-				</view>
-				<view>
 					<text>问题拍照</text>
 				</view>
 				<view>
@@ -61,6 +58,9 @@
 						<image :src="item" mode="aspectFill"></image>
 						<fa-icon type="window-close" size="20" color="#000000" @click="photoDelete(item,index)"></fa-icon>
 					</view>
+				</view>
+				<view>
+					<image class="" mode="aspectFill" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
 				</view>
 			</view>
 			<view class="task-describe">
@@ -74,10 +74,10 @@
 		</view>
 		<view class="btn-box">
 			<view>
-				<button type="primary" @click="sure">确认</button>
+				<button type="primary" @click="sure">确 认</button>
 			</view>
 			<view>
-				<button type="primary" @click="cancel">取消</button>
+				<button type="primary" @click="cancel">取 消</button>
 			</view>
 		</view>
 	</view>
@@ -283,6 +283,11 @@
 								};
 								this.temporaryDestinationList = this.destinationList;
 							}
+						} else {
+							this.$refs.uToast.show({
+								title: `${res.data.data.msg}`,
+								type: 'warning'
+							})
 						}
 					})
 					.catch((err) => {
@@ -376,6 +381,11 @@
 					queryAllDestination(this.proId).then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
 							}
 						})
 						.catch((err) => {
@@ -391,6 +401,11 @@
 						.then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
 							}
 						})
 						.catch((err) => {
@@ -464,6 +479,75 @@
 					})
 			},
 
+			// 查询备注信息
+			queryRemarks(data) {
+				return new Promise((resolve, reject) => {
+					getRemarks(data)
+						.then((res) => {
+							if (res && res.data.code == 200) {
+								resolve(res.data.data)
+							} else {
+								this.$refs.uToast.show({
+									title: `${res.data.data.msg}`,
+									type: 'warning'
+								})
+							}
+						})
+						.catch((err) => {
+							reject(err.message)
+						})
+				})
+			},
+
+			// 并行查询目的地、运送类型、备注信息
+			parallelFunction(type) {
+				Promise.all([this.getAllDestination(), this.getTaskType({
+						proId: this.proId,
+						state: 0,
+						parentId: this.titleText.id
+					}), this.queryRemarks({
+						proId: this.proId,
+						workerId: this.workerId,
+						flag: this.isMedicalMan ? 1 : 0, //查询类型 0-维修人员，1-医务人员
+					})])
+					.then((res) => {
+						if (res && res.length > 0) {
+							this.taskTypeList = [];
+							this.hospitalList = [];
+							this.helpWorkerList = [];
+							this.preinstallList = [];
+							let [item1, item2, item3] = res;
+							if (item1) {
+								Object.keys(item1).forEach((item) => {
+									this.hospitalList.push({
+										value: item1[item],
+										id: item
+									})
+								});
+								this.temporaryHospitalList = this.hospitalList
+							};
+							if (item2) {
+								for (let item of item2) {
+									this.taskTypeList.push({
+										text: item.typeName,
+										value: item.id
+									})
+								}
+							};
+							if (item3) {
+								for (let item of item3) {
+									this.preinstallList.push(item)
+								}
+							};
+						}
+					})
+					.catch((err) => {
+						this.$refs.uToast.show({
+							title: `${err}`,
+							type: 'warning'
+						})
+					})
+			},
 			// 创建自主任务
 			postTask(data) {
 				this.showLoadingHint = true;
@@ -570,24 +654,21 @@
 
 			.creat-priority {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				margin-top: 6px;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-
+				height: 60px;
+				line-height: 60px;
+				border-bottom: 1px solid $color-underline;
 				>view {
 					&:first-child {
 						float: left;
 						width: 20%;
 						padding-left: 4px;
-						box-sizing: border-box
-					}
-
+						box-sizing: border-box;
+						color: $color-text-left;
+					};
 					&:last-child {
 						float: right;
 						position: relative;
-						height: 50px;
+						height: 60px;
 						width: 80%;
 
 						/deep/ .u-radio-group {
@@ -686,44 +767,130 @@
 
 						>view {
 							flex: 0 0 31%;
+							.u-radio {
+								flex: 1 0 auto !important;
+								justify-content: space-between;
+								.u-radio__label {
+									margin-right: 9px;
+									color: #333
+								}
+							}
+						}
+					}
+				}
+			};
+	
+			.creat-chooseHospital {
+				width: 100%;
+				height: 60px;
+				border-bottom: 1px solid $color-underline;
+				>view {
+					&:first-child {
+						float: left;
+						width: 20%;
+						height: 60px;
+						line-height: 60px;
+						padding-left: 4px;
+						box-sizing: border-box;
+						color: $color-text-left;
+					}
+	
+					&:last-child {
+						float: right;
+						position: relative;
+						z-index: 100;
+						height: 60px;
+						width: 80%;
+						.show-box {
+							color: #333;
+							position: absolute;
+							left: 0;
+							top: 50%;
+							transform: translateY(-50%);
+							height: 40px !important;
+							background: #f9f9f9;
+							border: none;
+							/deep/ .input {
+								font-size: 15px !important
+							};
+							.right-arrow {
+								color: #333 !important
+							}
+						}
+					}
+				}
+			};
+			.view-photoList {
+				display: flex;
+				flex-flow: row wrap;
+				height: 112px;
+				background: #fff;
+				box-sizing: border-box;
+				border-bottom: 12px solid #f6f6f6;
+				>view {
+					&:first-child {
+						color: $color-text-left;
+						width: 80px;
+						height: 100px;
+						padding-left: 4px;
+						line-height: 100px;
+					};
+					&:nth-child(2) {
+						flex: 1;
+						font-size: 34px;
+						display: flex;
+						height: 100px;
+						line-height: 100px;
+						flex-flow: row wrap;
+						align-items: center;
+						overflow: auto;
+						>view {
+							flex: 0 0 48%;
 							height: 100px;
 							display: inline-block;
 							margin-right: 4px;
 							margin-bottom: 4px;
 							margin-top: 4px;
 							position: relative;
-
 							>fa-icon {
 								position: absolute;
 								top: -12px;
 								right: 0
-							}
-
-							;
-
+							};
 							&:last-child {
 								margin-right: 0
-							}
-
-							;
-
+							};
 							image {
 								width: 100%;
 								height: 100%
 							}
 						}
+					};
+					&:last-child {
+						width: 80px;
+						height: 80px;
+						margin-top: 10px;
+						margin-right: 4px;
+						image {
+							width: 100%;
+							height: 100%
+						};
+						.fa-icon {
+							color: #000000 !important
+						}
 					}
 				}
-			}
-
-			;
-
+			};
+	
 			.creat-chooseDestination {
 				margin-top: 0;
-			}
-
-			;
-
+				border: none;
+				> view {
+				    &:last-child {
+							z-index: 10;
+				    }
+				  }
+			};
 			.priority-box {
 				>view {
 					&:last-child {
@@ -736,76 +903,82 @@
 						}
 					}
 				}
-			}
-
-			;
-
+			};
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
 				overflow: auto;
-				margin-top: 6px;
 				display: flex;
 				flex: 1;
-				flex-direction: column;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-
+				flex-direction: row;
+				border-top: 12px solid #f6f6f6;
+				border-bottom: 12px solid #f6f6f6;
+	
 				.creat-transport-type-title {
-					height: 25px;
-					line-height: 25px;
-
+					margin-top: 8px;
+					width: 20%;
+					height: 35px;
+					line-height: 35px;
+					color: $color-text-left;
 					text {
 						&:nth-child(1) {
 							padding-left: 4px;
 							box-sizing: border-box;
 							margin-right: 8px
-						}
-
-						;
-
+						};
 						&:nth-child(2) {
 							font-size: 14px;
 							color: red
 						}
 					}
-				}
-
-				;
-
+				};
 				.creat-transport-type-content {
 					flex: 1;
 					display: flex;
+					font-size: 15px;
+					color: #333;
 					width: 100%;
 					flex-direction: row;
 					flex-wrap: wrap;
 					justify-content: space-between;
 					align-content: flex-start;
-					padding: 0 4px;
+					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					overflow: auto;
 
 					.transTypeListStyle {
-						background: #75b0f0;
-						color: #fff;
-						border: none
-					}
-
-					;
-
+						background: #d6f4ff;
+						color: #01a6ff;
+						border: 1px solid #4cc5f2
+					};
+	
 					>view {
 						width: 45%;
 						margin-bottom: 4px;
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
-						border: 1px solid #dfdfdf
+						background:: #f9f9f9;
+						border-radius: 16px
 					}
 				}
-			}
-
-			;
-
+			};
+			
+			.creat-form {
+				/deep/ .u-field {
+					padding: 10px 4px;
+					.u-label {
+						font-size: 14px;
+						color: $color-text-left !important
+					};
+					.fild-body {
+						color: #333 !important;
+						.u-flex-1  {
+							font-size: 15px !important
+						}
+					}
+				}
+			};
 			.preinstall-box {
 				width: 90%;
 				margin: 0 auto;
@@ -813,51 +986,57 @@
 				height: 60px;
 				flex-flow: row wrap;
 				justify-content: center;
-				align-items: top;
+				align-items: center;
 				overflow: auto;
-
+				border-bottom: 1px solid $color-underline;
 				>text {
 					display: inline-block;
 					height: 30px;
 					text-align: center;
-					color: black;
-					border: 1px solid #e1d3de;
+					color: #333;
+					background: #f9f9f9;
 					line-height: 30px;
 					padding: 0 3px;
 					margin-right: 4px;
-					margin-bottom: 4px
-				}
-
-				;
-
+					margin-bottom: 4px;
+					border-radius: 4px;
+				};
+	
 				.preinstallStyle {
-					background: #689dec;
-					color: #fff;
-					border: none
+					background: #d6f4ff;
+					color: #01a6ff;
+					border: 1px solid #4cc5f2;
 				}
-			}
-
-			;
-
+			};
+	
 			.task-describe {
-				margin: 6px 0;
-				border-top: 1px solid #bcbcbc;
-				border-bottom: 1px solid #bcbcbc;
-
+				height: 112px;
+				border-bottom: 12px solid #f6f6f6;
+	
 				/deep/ .u-field {
-					padding: 11px 2px;
-
+					padding: 16px 2px;
+					color: $color-text-left;
 					.u-label-text {
 						font-size: 14px
+					};
+					.u-label {
+						margin-top: 8px;
+					};
+					.fild-body {
+						color: #333;
+						height: 68px;
+						overflow: auto;
+						background: #f9f9f9;
+						.u-flex-1 {
+							font-size: 15px !important
+						}
 					}
 				}
 			}
-		}
-
+		};
 		.btn-box {
 			width: 100%;
 			box-sizing: border-box;
-			border-top: 1px solid #bcbcbc;
 			padding: 0 20px;
 			margin: 0 auto;
 			height: 80px;
@@ -868,30 +1047,24 @@
 			align-items: center;
 
 			view {
-				width: 45%;
-
+				width: 47%;
 				&:first-child {
 					button {
 						border-radius: 4px;
-						background: #75acef;
+						background-image: linear-gradient(to right, #37d5fc , #429bff);
 						color: #fff
 					}
-				}
-
-				;
-
+				};
 				&:last-child {
 					button {
 						border-radius: 4px;
-						background: #fff;
-						color: black
+						background: #e8e8e8;
+						border: none;
+						color: #666666
 					}
 				}
-
-				;
 			}
-		}
-
+		};
 		.bottom-bar {
 			height: 50px;
 			width: 100%;

@@ -3,6 +3,7 @@
 // time3  1593790157203  TO>>>  2019-11-11 12:01
 // time4  2019/11/11 || 2019/11/11 12:03 TO>>> 1593790157203
 // time5  (1593790157203,1593790157205) （开始与结束时间戳）  TO>>> 00:40 || 01:25 || 01:20:11 （时长）
+// time6  2019-11-11 || 2019/11/11 12:03 TO>>> 1593790157203
 
 const time1 = (timer) => {
 	var arrTimestamp = (timer + '').split('');
@@ -181,11 +182,18 @@ const time5 = (sTime,eTime) => {
 	}
 	
 }
+const time6 = (timer) => {
+	date = timer.replace(/：/g, ':')
+	var Etimer = new Date(date)
+	var Etime = Etimer.getTime()
+	return Etime
+}
 
 module.exports = {
 	time1,
 	time2,
 	time3,
 	time4,
-	time5
+	time5,
+	time6
 }

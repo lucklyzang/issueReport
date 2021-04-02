@@ -14,43 +14,47 @@
 		</view>
 		<ourLoading isFullScreen :active="showLoadingHint"  :translateY="50" text="加载中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="nav">
-			<nav-bar backState="3000" bgColor="#000" fontColor="#FFF" title="任务跟踪" @backClick="backTo"></nav-bar>
+			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="任务跟踪" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="task-tail-content-box">
 			<view class="task-tail-title">
-				<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" :current="current" @change="tabChange"></u-tabs>
+				<u-tabs :list="list" :is-scroll="false" font-size="35" active-color="#2c9af1" inactive-color="#7d7d7d" bar-width="150" :current="current" @change="tabChange"></u-tabs>
 			</view>
 			<view class="task-tail-content" v-show="current == 0">
 				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
 					<view class="item-top">
 						<view class="item-top-one">
 							<view class="number">
-								<text>编号: {{item.number}}</text>
+								<text>编号 : {{item.number}}</text>
 							</view>
               <view class="priority">
-              	<text>状态:</text>
               	<text>{{stateTransfer(item.state)}}</text>
               </view>
             </view>
             <view class="item-top-two">
               <view class="start-point">
-              	<text>优先级: {{priorityTransfer(item.priority)}}</text>
+								<text>优先级 :</text>
+              	<text>{{priorityTransfer(item.priority)}}</text>
               </view>
             	<view class="destination-point">
-            		<text>任务类型: {{item.taskTypeName}}</text>
+								<text>任务类型 :</text>
+            		<text>{{item.taskTypeName}}</text>
             	</view>
             </view>
             <view class="item-top-three">
             	<view class="transport-type">
-            		<text>目的地: {{item.destinationName}}</text>
+								<text>目的地 :</text>
+            		<text>{{item.destinationName}}</text>
             	</view>
               <view class="transport-people">
-              	<text>维修人员: {{item.workerName}}</text>
+								<text>维修人员 :</text>
+              	<text>{{item.workerName}}</text>
               </view>
             </view>
             <view class="item-top-four">
               <view class="bed-number">
-              	<text>任务描述: {{item.taskDesc}}</text>
+								<text>任务描述 :</text>
+              	<text>{{item.taskDesc}}</text>
               </view>
 						</view>
 					</view>
@@ -76,43 +80,45 @@
 					<view class="item-top">
 						<view class="item-top-one">
 							<view class="number">
-								<text>编号: {{item.number}}</text>
+								<text>编号 : {{item.number}}</text>
 							</view>
 						  <view class="priority">
-						  	<text>状态:</text>
-						  	<text>{{stateTransfer(item.state)}}</text>
+						  	<text style="color:rgb(148 225 120)">{{stateTransfer(item.state)}}</text>
 						  </view>
 						</view>
 						<view class="item-top-two">
 						  <view class="start-point">
-						  	<text>优先级: {{priorityTransfer(item.priority)}}</text>
+								<text>优先级 :</text>
+						  	<text> {{priorityTransfer(item.priority)}}</text>
 						  </view>
 							<view class="destination-point">
-								<text>任务类型: {{item.taskTypeName}}</text>
+								<text>任务类型 :</text>
+								<text> {{item.taskTypeName}}</text>
 							</view>
 						</view>
 						<view class="item-top-three">
 							<view class="transport-type">
-								<text>目的地: {{item.destinationName}}</text>
+								<text>目的地 :</text>
+								<text>{{item.destinationName}}</text>
 							</view>
 						  <view class="transport-people">
-						  	<text>维修人员: {{item.workerName}}</text>
+								<text>维修人员 :</text>
+						  	<text>{{item.workerName}}</text>
 						  </view>
 						</view>
 						<view class="item-top-four">
 						  <view class="bed-number">
-						  	<text>任务描述: {{item.taskDesc}}</text>
+								<text>任务描述 :</text>
+						  	<text>{{item.taskDesc}}</text>
 						  </view>
 						</view>
 					</view>
 					<view class="item-bottom-complete">
 						<view class="item-bottom-left">
 							<view class="time">
-								<text>开始时间:{{item.createTime}}</text>
+								<text>开始-完成时间 :</text>
+								<text>{{item.createTime}}-{{item.finishTime}}</text>
 							</view>
-              <view class="time">
-              	<text>完成时间:{{item.finishTime}}</text>
-              </view>
 						</view>
 					</view>
 				</view>
@@ -415,7 +421,7 @@
 				this.sureCancelShow = true;
 				this.cancelIndex = null;
 				this.taskCancelReason = '';
-				this.getProjectTaskCancelReason({proId: this.proId, state: 0,reason: '' });
+				this.getProjectTaskCancelReason({proId: this.proId, state: 0,reason: ''});
 				this.taskId = item.id
 			},
 			
@@ -431,7 +437,7 @@
 				this.cancelProjectTask({
 					proId: this.proId,	//当前项目ID
 					taskId: this.taskId, //当前任务ID
-					cancelReason: this.taskCancelReason //取消原因
+					reason: this.taskCancelReason //取消原因
 				  })
 			},
 			
@@ -487,7 +493,7 @@
 		};
 		/deep/ .u-mode-center-box {
 			.slot-content {
-				padding: 20px 4px 0;
+				padding: 10px;
 				box-sizing: border-box;
 				overflow: auto;
 				display: flex;
@@ -501,14 +507,39 @@
 					background: #ececec;
 					font-size: 14px;
 					color: black;
+					border-radius: 4px;
 					text-align: center;
 					line-height: 40px;
 					margin-bottom: 4%
 				};
 				 .spanStyle {
-					color: #fff;
-					background: #278ee6
-				  }
+					background: #d6f4ff;
+					color: #01a6ff;
+					border: 1px solid #4cc5f2;
+				}
+			};
+			.u-model__footer {
+				justify-content: space-between;
+				padding: 6px;
+				.u-model__footer__button {
+					border-radius: 30px;
+					flex: 0 0 45%;
+					margin-top: 4px;
+					height: 40px;
+					line-height: 40px;
+					background: #e8e8e8;
+					color: #666666
+				}
+			;
+
+				.hairline-left {
+					border-radius: 30px;
+					flex: 0 0 45%;
+					margin-top: 4px;
+					background: #fff;
+					color: #43c3f4 !important;
+					border: 1px solid #43c3f4
+				}
 			}
 		}
 		.task-tail-content-box {
@@ -519,9 +550,9 @@
 				overflow: auto;
 				background: #f7f7f7;
 				.task-tail-content-item {
-					width: 96%;
+					width: 100%;
 					margin: 0 auto;
-					margin-top: 6px;
+					padding: 0;
 					border-radius: 4px;
 					background: #FFFFFF;
 					&:last-child {
@@ -541,49 +572,143 @@
                 width: 50%;
                 > text {
                   &:last-child {
-                    padding-left: 4px;
+                    padding-left: 0;
                   }
                 }
               }
             };
             .item-top-one {
+							height:40px;
+							padding: 0 12px;
+							background: #f9f9f9;
               > view {
+								height: 20px;
+								line-height: 20px;
+								margin-top: 10px;
                 word-break: break-all;
-                font-size: 14px;
+                font-size: 13px;
                 text {
-                  color: #c2c8cb;
+                  color: #333;
                 };
                 &:first-child {
-                  width: 70%;
+                  width: 60%;
+									overflow: auto;
                 };
                 &:last-child {
-                  width: 30%;
-                  text-align: center;
+                  width: 40%;
+									overflow: auto;
+                  text-align: right;
                   > text {
                     &:first-child {
                       color: black
                     };
                     &:last-child {
-                      color: red
+                      color: red;
+											display: inline-block;
+											width: 80px;
+											text-align: center;
+											background: #fff;
+											border-radius: 4px;
                     }
                   }
                 }
               }
             };
+						.item-top-two {
+							height:40px;
+							padding: 0 12px;
+							> view {
+								height: 40px;
+								line-height: 40px;
+							  &:first-child {
+							    width: 60%;
+									overflow: auto;
+									text {
+										&:first-child {
+											color: $color-text-left;
+											margin-right: 4px
+										};
+										&:last-child {
+											color: $color-text-right;
+											font-weight: bold
+										}
+									}
+							  };
+							  &:last-child {
+									width: 40%;
+									overflow: auto;
+									text {
+										&:first-child {
+											color: $color-text-left;
+											margin-right: 4px
+										};
+										&:last-child {
+											color: $color-text-right;
+											font-weight: bold
+										}
+									}
+								}
+							}
+						};
             .item-top-three {
+              height:40px;
+              padding: 0 12px;
               > view {
-               &:first-child {
-                 > text {
-                   }
-                 }
-               }
+              	height: 40px;
+              	line-height: 40px;
+                &:first-child {
+                  width: 60%;
+              		overflow: auto;
+              		text {
+              			&:first-child {
+              				color: $color-text-left;
+											margin-right: 4px
+              			};
+              			&:last-child {
+              				color: $color-text-right;
+											font-weight: bold
+              			}
+              		}
+                };
+                &:last-child {
+									width: 40%;
+									overflow: auto;
+              		text {
+              			&:first-child {
+              				color: $color-text-left;
+											margin-right: 4px
+              			};
+              			&:last-child {
+              				color: $color-text-right;
+											font-weight: bold
+              			}
+              		}
+              	}
+              }
             };
             .item-top-four {
-              > view {
-                width: 100%;
-                > text {
-                }
-              }
+							 height:80px;
+							 padding: 4px 12px;
+							 font-size: 15px;
+							 background: #f7f7f7;
+							 box-sizing: border-box;
+							 > view {
+								height: 80px;
+								width: 100%;
+								overflow: auto;
+								text {
+									display: inline-block;
+									&:first-child {
+										color: $color-text-left;
+										margin-right: 4px
+									};
+									&:last-child {
+										width:70%;
+										color: $color-text-right;
+										font-weight: bold
+									}
+								}
+							}
             }
            };
 					.item-bottom {
@@ -595,7 +720,7 @@
 							float: left;
 							font-size: 14px;
 							color: black;
-              padding-left: 4px;
+              padding-left: 12px;
 							.time {
 								height: 70px;
                 position: relative;
@@ -630,34 +755,35 @@
 							.left  {
 								left: 0;
 								button {
-									background: #278ee6
+									background: #5ab3ff
 								}
 							};
 							.right  {
 								right: 0;
 								button {
-									background: #616161
+									color: #666;
+									background: #e8e8e8
 								}
 							}
 						}
 					};
           .item-bottom-complete {
-            height: 70px;
+            height: 40px;
             position: relative;
+						padding: 0 12px;
+						overflow: auto;
             .item-bottom-left {
               width: 100%;
                position: absolute;
                top: 50%;
-               padding-left: 4px;
                transform: translateY(-50%);
                > view {
                  text {
-                   width: 100%;
+									 &:first-child {
+										 margin-right: 4px;
+									 };
                    display: inline-block;
                    color: #aaa9a7
-                 };
-                 &:first-child {
-                   margin-bottom: 8px
                  }
                }
             }

@@ -19,9 +19,13 @@ instance.interceptors.request.use(function (config) {
 	if (config['url'] == 'project/queryAll') {
 		config.headers['HTTP_REQUEST_TYPE'] = 1
 	};
-	// 在发送请求之前做些什么
+	// 请求头添加token
 	if (store.getters.token) {
 	   config.headers['Authorization'] = store.getters.token
+	};
+	// 请求头添加模板信息
+	if (store.getters.templateType) {
+	   config.headers['REQUEST_TEMPLATE'] = store.getters.templateType
 	};
 	 return config;
 }, function (error) {

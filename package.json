@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "axios-miniprogram": "^1.2.2",
+    "lodash": "^4.17.21",
     "uview-ui": "^1.6.3"
   },
   "devDependencies": {},

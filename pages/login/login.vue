@@ -33,7 +33,7 @@
          </view>
       </view>
 			<view class="form-btn">
-				<button type="primary" @click="sure">登陆</button>
+				<button type="primary" @click="sure">登 录</button>
 			</view>
       <view class="weixin-login">
         <u-divider border-color="#6d6d6d" color="#333">微信授权登陆</u-divider>
@@ -87,7 +87,8 @@
 			...mapMutations([
 				'storeUserInfo',
 				'changeOverDueWay',
-        'changeIsMedicalMan'
+        'changeIsMedicalMan',
+				'changeTemplateType'
 			]),
       
       // 选中某个复选框时，由checkbox时触发
@@ -129,6 +130,11 @@
               } else {
                 this.changeIsMedicalMan(false)
               };
+							// 保存模板类型
+							if (res.data.data.mobile) {
+								this.changeTemplateType(res.data.data.mobile);
+								setCache('templateType', res.data.data.mobile)
+							};
 							uni.switchTab({
 								url: '/pages/index/index'
 							})
@@ -178,7 +184,7 @@
 				text-align: center;
 				color: black;
 				font-size: 26px;
-        color: #065da7;
+        color: #2c9af1;
         font-weight: bold;
         font-size: 50px;
           span {
@@ -218,7 +224,7 @@
         margin: 0 auto;
         margin-top: 30px;
 				button {
-          background: #78d035;
+          background-image: linear-gradient(to right, #37d5fc , #429afe);
           border-radius: 20px;
 				}
 			}
