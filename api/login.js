@@ -38,7 +38,7 @@ export function boundExist(code,data) {
 	return request({
 	    url: `login/wx/boundExist/${code}`,
 	    method: 'post',
-		data
+			data
 	})
 }
 
@@ -47,7 +47,6 @@ export function boundNotExist(proId,code) {
 	return request({
 	    url: `login/wx/boundNotExist/${proId}/${code}`,
 	    method: 'post',
-		data: {
-		}
+			data: {}
 	})
 }

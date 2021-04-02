@@ -18,12 +18,16 @@ const app = new Vue({
 		  store.commit('storeUserInfo',getCache('userInfo'));
 		};
 		// 重新存入模板信息
-		if (getCache('isTemplateOne')) {
-			this.$store.commit('changeIsTemplateOne', parseInt(getCache('isTemplateOne')));
+		if (getCache('templateType')) {
+			this.$store.commit('changeTemplateType', getCache('templateType'));
 		};
 		// 页面刷新重新存入请求token
 		if (getCache('questToken')) {
 		  store.commit('changeToken', getCache('questToken'));
+		};
+		// 页面刷新时重新存入点击的系统信息
+		if (getCache('isProjectTask')) {
+			this.$store.commit('changeIsProjectTask', getCache('isProjectTask')['flag']);
 		};
 		// 页面刷新重新存入用户微信信息
 		if (getCache('weixinInfo')) {

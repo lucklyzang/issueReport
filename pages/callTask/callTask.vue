@@ -89,7 +89,7 @@
 					</u-field>
 				</view>
 			</view>
-			<view class="creat-priority priority-box-one">
+			<view class="creat-priority priority-box-one tool-box">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
@@ -138,7 +138,7 @@
 					</u-radio-group>
 				</view>
 			</view>
-			<view class="creat-priority">
+			<view class="creat-priority tool-box">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
@@ -968,19 +968,19 @@
 			// 运送类型信息确认事件
 			dispatchTaskSure() {
 				if (this.templateType === 'template_one') {
-					if (!this.hospitalListValue) {
-						this.$refs.uToast.show({
-							title: '科室不能为空',
-							type: 'warning'
-						});
-						return 
-					};
+					// if (!this.hospitalListValue) {
+					// 	this.$refs.uToast.show({
+					// 		title: '科室不能为空',
+					// 		type: 'warning'
+					// 	});
+					// 	return 
+					// };
 					// 获取选中的运送工具信息
 					let taskMessage = {
 						setOutPlaceId: this.startPointId, //出发地ID
 						setOutPlaceName: this.startPointName, //出发地名称
 						destinationId: this.hospitalListValue, //目的地ID
-						destinationName: this.getDepartmentNameById(this.hospitalListValue), //目的地名称
+						destinationName: this.hospitalListValue == '' ? '' : this.getDepartmentNameById(this.hospitalListValue), //目的地名称
 						parentTypeId: this.titleText.id, //运送父类型Id
 						parentTypeName: this.titleText.value, //运送父类型名称
 						taskTypeId: this.typeValue, //运送类型 ID
@@ -1005,13 +1005,13 @@
 					// 创建调度任务
 					this.postGenerateDispatchTask(taskMessage)
 				} else if (this.templateType === 'template_two') {
-					if (this.hospitalListTwovalue.length == 0) {
-						this.$refs.uToast.show({
-							title: '科室不能为空',
-							type: 'warning'
-						});
-						return 
-					};
+					// if (this.hospitalListTwovalue.length == 0) {
+					// 	this.$refs.uToast.show({
+					// 		title: '科室不能为空',
+					// 		type: 'warning'
+					// 	});
+					// 	return 
+					// };
 					let taskMessageTwo = {
 						setOutPlaceId: this.startPointId, //出发地ID
 						setOutPlaceName: this.startPointName, //出发地名称
@@ -1022,20 +1022,22 @@
 						toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
 						actualCount: this.taskTotal, //实际数量
 						taskRemark: this.taskDescribe, //备注
-						workerId: this.workerId, //创建者ID  当前登录者
-						workerName: this.userName, //创建者名称  当前登陆者
+						createId: this.workerId, //创建者ID  当前登录者
+						createName: this.userName, //创建者名称  当前登陆者
 						proId: this.proId, //项目ID
 						proName: this.proName, //项目名称
 						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
 						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
 					};
 					// 获取目的地列表数据
-					for (let item of this.hospitalListTwovalue) {
-						taskMessageTwo.destinations.push({
-							destinationId: item,
-							destinationName: this.getDepartmentNameById(item)
-						})
-					};
+					if (this.hospitalListTwovalue.length > 0) {
+						for (let item of this.hospitalListTwovalue) {
+							taskMessageTwo.destinations.push({
+								destinationId: item,
+								destinationName: this.getDepartmentNameById(item)
+							})
+						}
+					};	
 					// 获取多个病人信息列表数据
 					for (let patientItem of this.templateTwoMessage) {
 						taskMessageTwo.patientInfoList.push({
@@ -1323,7 +1325,16 @@
 				.creat-priority-content {
 					width: 80% !important
 				}
-			}
+			};
+			
+			.tool-box {
+				.creat-priority-content {
+					overflow:auto;
+					/deep/ .u-radio-group {
+						height: 100%
+					}
+				}
+			};
 
 			.creat-chooseHospital {
 				width: 100%;

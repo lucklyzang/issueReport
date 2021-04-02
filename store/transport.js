@@ -4,7 +4,7 @@ export default {
     bottomBarIndex: 0,
     isToCallTaskPage: false,
     isMedicalMan: true,
-    isProjectTask: true,
+    isProjectTask: false,
     isCompleteRepairsWorkOrderPhotoList: []
   },
   getters:{
