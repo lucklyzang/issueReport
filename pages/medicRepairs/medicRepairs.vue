@@ -268,14 +268,14 @@
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.departmentValue = val;
-				// this.startPointId = val.orignItem.id;
-				// this.startPointName = val.orignItem.value;
-				// this.$refs.destionationParent.clearInput();
-				this.queryRoomByDepartment({
+				this.departmentValue != '' && 	this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
 					state: 0, // 状态默认传 0 即可
 					depId: this.departmentValue //科室ID
-				})
+				});
+				// this.startPointId = val.orignItem.id;
+				// this.startPointName = val.orignItem.value;
+				// this.$refs.destionationParent.clearInput();
 			},
 			// 根据科室查询房间号
 			queryRoomByDepartment(data) {
@@ -625,7 +625,6 @@
 					&:last-child {
 						float: right;
 						position: relative;
-						z-index: 100;
 						height: 60px;
 						width: 80%;
 						.show-box {
@@ -651,7 +650,6 @@
 						float: right;
 						position: relative;
 						width: 70%;
-						z-index: 300;
 						.main {
 							color: $color-text-right;
 							position: absolute;
