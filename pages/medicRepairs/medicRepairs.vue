@@ -24,20 +24,40 @@
 			</view>
 			<view class="creat-chooseHospital">
 				<view>科室选择</view>
-				<view>
-					<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
+				<view class="creat-chooseHospital-content-two">
+				<!-- 	<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
 					 :style_Container="'height: 50px; font-size: 15px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
 					 @visible-change="visibleChange">
-					</xfl-select>
+					</xfl-select> -->
+					<ld-select :list="hospitalList"
+						label-key="value" value-key="id"
+						clearable
+						placeholder="请选择"
+						color="#333"
+						selectColor="#43c3f3"
+						bgColor="#f9f9f9"
+						v-model="departmentValue"
+						@change="listChangeEvent">
+					</ld-select>
 				</view>
 			</view>
 			<view class="creat-chooseHospital creat-chooseDestination">
 				<view>目的房间</view>
-				<view>
-					<xfl-select ref="destionationParent" :list="destinationList" :clearable="false" :showItemNum="5" :isCanInput="true"
+				<view class="creat-chooseHospital-content creat-chooseHospital-content-two">
+					<!-- <xfl-select ref="destionationParent" :list="destinationList" :clearable="false" :showItemNum="5" :isCanInput="true"
 					 :showList="destinationListShow" :style_Container="'height: 50px; font-size: 15px;'" :initValue="destinationName"
 					 @change="destinationListChangeEvent" @input="destinationInputEvent" @visible-change="destinationvisibleChange">
-					</xfl-select>
+					</xfl-select> -->
+					<ld-select :list="destinationList"
+						label-key="value" value-key="id"
+						clearable
+						placeholder="请选择"
+						color="#333"
+						selectColor="#43c3f3"
+						bgColor="#f9f9f9"
+						v-model="hospitalListValue"
+						@change="destinationListChangeEvent">
+					</ld-select>
 				</view>
 			</view>
 			<view class="creat-transport-type">
@@ -103,12 +123,14 @@
 	import uniList from "@/components/uni-list/uni-list.vue"
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue";
+	import ldSelect from '@/components/ld-select/ld-select.vue'
 	import xflSelect from '@/components/xfl-select/xfl-select.vue';
 	export default {
 		components: {
 			navBar,
 			xflSelect,
 			uniList,
+			ldSelect,
 			uniListItem,
 			faIcon
 		},
@@ -116,6 +138,7 @@
 			return {
 				showLoadingHint: false,
 				content: '',
+				departmentValue: '',
 				sureCancelShow: false,
 				controlListShow: false,
 				destinationListShow: false,
@@ -126,6 +149,7 @@
 				preinstallList: [],
 				taskTypeText: '',
 				typeText: '',
+				hospitalListValue: '',
 				typeValue: '',
 				srcImage: '',
 				typeIndex: null,
@@ -243,13 +267,14 @@
 			},
 			// 科室选择列表变化时
 			listChangeEvent(val) {
-				this.startPointId = val.orignItem.id;
-				this.startPointName = val.orignItem.value;
-				this.$refs.destionationParent.clearInput();
+				this.departmentValue = val;
+				// this.startPointId = val.orignItem.id;
+				// this.startPointName = val.orignItem.value;
+				// this.$refs.destionationParent.clearInput();
 				this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
 					state: 0, // 状态默认传 0 即可
-					depId: val.orignItem.id //科室ID
+					depId: this.departmentValue //科室ID
 				})
 			},
 			// 根据科室查询房间号
@@ -283,8 +308,9 @@
 			},
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
-				this.destinationId = val.orignItem.id;
-				this.destinationName = val.orignItem.value;
+				this.hospitalListValue = val;
+				// this.destinationId = val.orignItem.id;
+				// this.destinationName = val.orignItem.value;
 			},
 			// 科室下拉框隐藏或显示时事件
 			visibleChange() {
@@ -309,6 +335,10 @@
 				this.destinationList = innerList.filter((item) => {
 					return item.value.indexOf(val.detail.value) != -1
 				});
+			},
+			// 根据科室id获取科室名称
+			getDepartmentNameById(id) {
+				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
 			},
 			// 运送类型点击事件
 			typeEvent(item, index) {
@@ -483,10 +513,10 @@
 				// 获取选中的运送工具信息
 				let taskMessage = {
 					priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-					depId: this.startPointId, //科室ID   必输
+					depId: this.departmentValue, //科室ID   必输
 					typeName: this.typeText,
 					typeId: this.typeValue,
-					space: this.destinationName, //当前地点
+					space: this.hospitalListValue, //当前地点
 					taskDesc: this.taskDescribe, //  问题描述  必填
 					taskRemark: '', //问题详情  非必输
 					workerId: this.workerId, //创建者ID  当前登录者
@@ -615,7 +645,37 @@
 							}
 						}
 					}
-				}
+				};
+				.creat-chooseHospital-content-two {
+						height: 60px;
+						float: right;
+						position: relative;
+						width: 70%;
+						z-index: 300;
+						.main {
+							color: $color-text-right;
+							position: absolute;
+							left: 0;
+							top: 10px;
+							width: 100%;
+							height: 40px !important;
+							background: #f9f9f9;
+							border: none;
+							/deep/ .input {
+								height: 100%;
+								border: none;
+								.uni-input-wrapper {
+									font-size: 15px !important
+								}
+							};
+							/deep/.text-blue {
+								color: #969696 !important
+							};
+							/deep/ .text-green {
+								color: #43c3f3 !important
+							}
+						}
+					}
 			};
 			.view-photoList {
 				display: flex;
