@@ -1287,7 +1287,6 @@
 				.creat-priority-content {
 					overflow:auto;
 					/deep/ .u-radio-group {
-						height: 100%
 					}
 				}
 			};

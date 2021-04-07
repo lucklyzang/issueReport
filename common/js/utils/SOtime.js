@@ -183,9 +183,9 @@ const time5 = (sTime,eTime) => {
 	
 }
 const time6 = (timer) => {
-	date = timer.replace(/：/g, ':')
-	var Etimer = new Date(date)
-	var Etime = Etimer.getTime()
+	var date = timer.replace(/：/g, ':');
+	var Etimer = new Date(date.replace(/-/g, "/"));
+	var Etime = Etimer.getTime();
 	return Etime
 }
 

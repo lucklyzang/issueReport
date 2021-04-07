@@ -302,6 +302,13 @@
 			
 			// tab切换改变事件
 			tabChange (index) {
+				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
+					this.$refs.uToast.show({
+					  title: `结束日期不能小于开始日期`,
+					  type: 'warning'
+					});
+					return
+				};
 				this.current = index;
 				if (index === 0) {
 				  this.queryProjectTask(
