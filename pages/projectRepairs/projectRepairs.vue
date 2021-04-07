@@ -240,13 +240,6 @@
       this.serviceMan = this.accountName;
       this.startPointId = this.depId;
       this.startPointName = this.depName;
-      if (this.depId) {
-        this.queryRoomByDepartment({
-          proId: this.proId,  //项目ID 必输
-          state: 0,    // 状态默认传 0 即可
-          depId: this.depId     //科室ID
-        })
-      };
 			this.parallelFunction()
 		},
 		

@@ -123,8 +123,8 @@
 	import uniList from "@/components/uni-list/uni-list.vue"
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue";
-	import ldSelect from '@/components/ld-select/ld-select.vue'
-	import xflSelect from '@/components/xfl-select/xfl-select.vue';
+	import ldSelect from "@/components/ld-select/ld-select.vue"
+	import xflSelect from "@/components/xfl-select/xfl-select.vue";
 	export default {
 		components: {
 			navBar,
@@ -200,13 +200,6 @@
 		mounted() {
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
-			if (this.depId) {
-				this.queryRoomByDepartment({
-					proId: this.proId, //项目ID 必输
-					state: 0, // 状态默认传 0 即可
-					depId: this.depId //科室ID
-				})
-			};
 			this.parallelFunction()
 		},
 		methods: {
@@ -268,7 +261,7 @@
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.departmentValue = val;
-				this.departmentValue != '' && 	this.queryRoomByDepartment({
+				this.departmentValue != '' && this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
 					state: 0, // 状态默认传 0 即可
 					depId: this.departmentValue //科室ID

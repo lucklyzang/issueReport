@@ -98,8 +98,6 @@
 				}
 			}
 		},
-		created() {
-		},
 		methods: {
 			get_value(val){ // 将数组值转换为以,隔开的字符串
 				if(val || val===0){
