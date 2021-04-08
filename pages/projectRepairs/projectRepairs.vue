@@ -66,6 +66,7 @@
 					<ld-select :list="destinationList"
 						label-key="value" value-key="id"
 						clearable
+						v-if="departmentShow"
 						placeholder="请选择"
 						color="#333"
 						selectColor="#43c3f3"
@@ -172,6 +173,7 @@
 			return {
 				showLoadingHint: false,
         controlListShow: false,
+				departmentShow: true,
         helpWorkerListShow: false,
 				hospitalListValue: '',
 				helpWorkerValue: '',
@@ -270,6 +272,7 @@
       listChangeEvent (val) {
 				this.hospitalListValue = '';
 				this.departmentValue = val;
+				this.departmentShow = false;
         // this.startPointId = val.orignItem.id;
         // this.startPointName = val.orignItem.value;
         // this.$refs.destionationParent.clearInput();
@@ -307,7 +310,8 @@
             title: `${err}`,
             type: 'warning'
           })
-        })
+        });
+				this.departmentShow = true
       },
 			
 			// 根据科室id获取科室名称

@@ -51,6 +51,7 @@
 					<ld-select :list="destinationList"
 						label-key="value" value-key="id"
 						clearable
+						v-if="departmentShow"
 						placeholder="请选择"
 						color="#333"
 						selectColor="#43c3f3"
@@ -137,6 +138,7 @@
 		data() {
 			return {
 				showLoadingHint: false,
+				departmentShow: true,
 				content: '',
 				departmentValue: '',
 				sureCancelShow: false,
@@ -262,6 +264,7 @@
 			listChangeEvent(val) {
 				this.departmentValue = val;
 				this.hospitalListValue = '';
+				this.departmentShow = false;
 				this.departmentValue != '' && this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
 					state: 0, // 状态默认传 0 即可
@@ -298,7 +301,8 @@
 							title: `${err}`,
 							type: 'warning'
 						})
-					})
+					});
+					this.departmentShow = true
 			},
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
