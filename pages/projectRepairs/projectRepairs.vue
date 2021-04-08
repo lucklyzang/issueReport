@@ -268,6 +268,7 @@
       
       // 科室选择列表变化时
       listChangeEvent (val) {
+				this.hospitalListValue = '';
 				this.departmentValue = val;
         // this.startPointId = val.orignItem.id;
         // this.startPointName = val.orignItem.value;

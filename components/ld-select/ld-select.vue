@@ -8,15 +8,24 @@
 			<view class="select-dialog" @tap.stop="" :style="{backgroundColor:bgColor}">
 				<view class="select-bar bg-white">
 					<view class="action text-blue" @tap="cancelClick">{{cancelText}}</view>
+					<view class="action search-box">
+						<u-field right-icon="search" :border-bottom="true"
+						 @input="searchEvent"
+						 v-model="searchText"
+						 placeholder="请输入搜索关键字"
+						:clearable="false" :border-top="true"
+						></u-field>
+					</view>
 					<view class="action text-green" @tap="confirmClick">{{confirmText}}</view>
 				</view>
 				<view class="select-content">
-					<view class="select-item" v-for="(item,index) in list" :key="index"
+					<view class="select-item" v-for="(item,index) in listData" :key="index"
 					:style="valueIndexOf(item)?'color:'+selectColor+';background-color:'+selectBgColor+';':'color:'+color+';'"
 					 @click="select(item)">
 						<view class="title">{{getLabelKeyValue(item)}}</view>
 						<text class="selectIcon icongou" v-if="valueIndexOf(item)"></text>
 					</view>
+					<view class="no-data" v-show="listData.length == 0">暂无数据 !</view>
 				</view>
 			</view>
 		</view>
@@ -24,10 +33,13 @@
 </template>
 
 <script>
+	import _ from 'lodash'
 	export default {
 		data() {
 			return {
 				isShowModal:false,
+				searchText: '',
+				listData: this.list
 			};
 		},
 		props: {
@@ -98,13 +110,22 @@
 				}
 			}
 		},
+		watch: {
+			searchText (newVal, oldVal) {
+				let temporaryArray = _.cloneDeep(this.list);
+				this.listData = temporaryArray.filter((item) => { return item.value.indexOf(newVal) != -1});
+				if (newVal === '') {
+					this.listData = _.cloneDeep(this.list)
+				}
+			}
+		},
 		methods: {
 			get_value(val){ // 将数组值转换为以,隔开的字符串
 				if(val || val===0){
 					if(Array.isArray(val)){
 						let chooseAttr = []
 						val.forEach(item=>{
-							let choose = this.list.find(temp => {
+							let choose = this.listData.find(temp => {
 								let val_val = this.getValueKeyValue(temp)
 								return item === val_val
 							})
@@ -113,7 +134,7 @@
 						let values = chooseAttr.map(temp => this.getLabelKeyValue(temp)).join(',')
 						return values
 					} else {
-						let choose = this.list.find(temp => {
+						let choose = this.listData.find(temp => {
 							let val_val = this.getValueKeyValue(temp)
 							return val === val_val
 						})
@@ -130,10 +151,10 @@
 					let index = _value.indexOf(val);
 					if(index!=-1){
 						_value.splice(index,1)
-						this.$emit('change', _value)
+						this.$emit('change', _value);
 					} else {
 						_value.push(val);
-						this.$emit('change', _value)
+						this.$emit('change', _value);
 					}
 				} else {
 					this.$emit('change', val)
@@ -148,34 +169,45 @@
 					return this.value === val
 				}
 			},
-			getLabelKeyValue(item){ // 获取label
-				return item[this.labelKey]
+			getLabelKeyValue(item){
+				// 获取label
+				if (item && item.hasOwnProperty('value')) {
+					return item[this.labelKey]
+				}
 			},
 			getValueKeyValue(item){ // 获取value
-				return item[this.valueKey]
+				if (item && item.hasOwnProperty('id')) {
+					return item[this.valueKey]
+				}
 			},
 			empty(){ // 清空
 				if(this.multiple){
-					this.$emit('change', [])
+					this.$emit('change', []);
 				} else {
 					this.$emit('change', '')
 				}
 			},
 			cancelClick(){ // 点击取消
-				this.$emit('cancel', this._value)
-				this.hideModal()
+				this.$emit('cancel', this._value);
+				this.hideModal();
 			},
 			confirmClick(){ // 点击确定
-				this.$emit('confirm', this._value)
+				this.$emit('confirm', this._value);
 				this.hideModal()
+			},
+			searchEvent (value) { // 搜索框值变化事件
 			},
 			showModal(){ // 显示model
 				if(!this.disabled){
-					this.isShowModal = true
+					this.isShowModal = true;
+					this.searchText = '';
+					this.listData = this.list
 				}
 			},
 			hideModal(){ // 隐藏model
-				this.isShowModal = false
+				this.isShowModal = false;
+				this.searchText = '';
+				this.listData = this.list
 			}
 		}
 	}
@@ -268,10 +300,23 @@
 			width: 100%;
 			border-radius: 0;
 			.select-content{
-				// background-color: #F1F1F1;
 				max-height: 420rpx;
 				overflow:auto;
+				// overflow:auto;
+				// display: flex;
+				// flex-flow: column nowrap;
+				// align-items: center;
+				// justify-content: center;
+				.no-data {
+					width: 100%;
+					height: 200rpx;
+					line-height: 200rpx;
+					text-align: center;
+					color: #43c3f3;
+					font-size: 16px
+				};
 				.select-item{
+					width: 100%;
 					padding: 20rpx;
 					display: flex;
 					.title{
@@ -304,6 +349,13 @@
 			height: 100%;
 			justify-content: center;
 			max-width: 100%;
+		};
+		.search-box {
+			/deep/ .u-field {
+				.u-label {
+					flex: 0 0 10px !important;
+				}
+			}
 		}
 	}
 </style>

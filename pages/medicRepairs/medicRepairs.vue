@@ -261,6 +261,7 @@
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.departmentValue = val;
+				this.hospitalListValue = '';
 				this.departmentValue != '' && this.queryRoomByDepartment({
 					proId: this.proId, //项目ID 必输
 					state: 0, // 状态默认传 0 即可

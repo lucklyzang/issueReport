@@ -479,6 +479,15 @@
 				this.hospitalListTwovalue = val;
 			},
 			
+			// 科室搜索事件
+			searchEvent (e) {
+				let temporaryArray = _.cloneDeep(this.hospitalList);
+				this.hospitalList = temporaryArray.filter((item) => { return item.value.indexOf(e) != -1});
+				if (e === '') {
+					this.hospitalList = _.cloneDeep(temporaryArray);
+				}
+			},
+			
 			// 根据科室id获取科室名称
 			getDepartmentNameById(id) {
 				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
