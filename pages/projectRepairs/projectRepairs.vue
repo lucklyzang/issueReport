@@ -694,7 +694,6 @@
 					&:last-child {
 						float: right;
 						position: relative;
-						z-index: 100;
 						height: 60px;
 						width: 80%;
 						.show-box {
@@ -720,7 +719,6 @@
 					float: right;
 					position: relative;
 					width: 70%;
-					z-index: 300;
 					.main {
 						color: $color-text-right;
 						position: absolute;
@@ -764,7 +762,6 @@
 					&:last-child {
 						float: right;
 						position: relative;
-						z-index: 100;
 						height: 60px;
 						width: 80%;
 					}
