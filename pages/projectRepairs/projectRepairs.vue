@@ -288,6 +288,7 @@
         this.destinationList = [];
         this.temporaryDestinationList = [];
         departmentRoom(data).then((res) => {
+					this.departmentShow = true;
           if (res && res.data.code == 200) {
             if (res.data.data.length > 0) {
               for (let item of res.data.data) {
@@ -306,12 +307,12 @@
 					}
         })
         .catch((err) => {
+					this.departmentShow = true;
           this.$refs.uToast.show({
             title: `${err}`,
             type: 'warning'
           })
-        });
-				this.departmentShow = true
+        })
       },
 			
 			// 根据科室id获取科室名称

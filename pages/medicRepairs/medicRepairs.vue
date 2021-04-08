@@ -279,6 +279,7 @@
 				this.temporaryDestinationList = [];
 				this.destinationList = [];
 				departmentRoom(data).then((res) => {
+					this.departmentShow = true;
 						if (res && res.data.code == 200) {
 							if (res.data.data.length > 0) {
 								for (let item of res.data.data) {
@@ -297,12 +298,12 @@
 						}
 					})
 					.catch((err) => {
+						this.departmentShow = true;
 						this.$refs.uToast.show({
 							title: `${err}`,
 							type: 'warning'
 						})
-					});
-					this.departmentShow = true
+					})
 			},
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
