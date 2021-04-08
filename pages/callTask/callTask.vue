@@ -244,26 +244,26 @@
 			@confirm="patienModalSure"
 			@cancel="patienModalCancel"
 			>
-			<view class="slot-content">
-				<view class="bedNumberBox">
+			<scroll-view  scroll-y="true" class="scroll-Y slot-content">
+				<view class="bedNumberBox scroll-view-item">
 					<view>床号</view>
 					<view>
 						<u-input v-model="patienModalMessage.bedNumber"/>
 					</view>
 				</view>
-				<view class="bedNumberBox">
+				<view class="bedNumberBox scroll-view-item">
 					<view>姓名</view>
 					<view>
 						<u-input v-model="patienModalMessage.patientName"/>
 					</view>
 				</view>
-				<view class="bedNumberBox">
+				<view class="bedNumberBox scroll-view-item">
 					<view>住院号</view>
 					<view>
 						<u-input v-model="patienModalMessage.patientNumber"/>
 					</view>
 				</view>
-				<view class="genderBox">
+				<view class="genderBox scroll-view-item">
 					<view>性别</view>
 					<view>
 						<u-radio-group v-model="patienModalMessage.genderValue">
@@ -272,13 +272,13 @@
 						</u-radio-group>
 					</view>
 				</view>
-				<view class="bedNumberBox">
+				<view class="bedNumberBox scroll-view-item">
 					<view>运送数量</view>
 					<view>
 						<u-input v-model="patienModalMessage.actualData" disabled/>
 					</view>
 				</view>
-				<view class="transportBox">
+				<view class="transportBox scroll-view-item">
 					<view>运送类型</view>
 					<view v-if="xflSelectShow">
 						<xfl-select :list="patienModalMessage.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
@@ -287,7 +287,7 @@
 						</xfl-select>
 					</view>
 				</view>
-				<view class="transport-type-child-box">
+				<view class="transport-type-child-box scroll-view-item">
 					<view class="transport-type-child-content" v-for="(innerItem,innerIndex) in patienModalMessage.transportList"
 								@click="sampleTypeEvent(innerItem,innerIndex)" :key="innerItem.text">
 						<view :class="{'transTypeListStyle': innerItem.checked }">
@@ -304,7 +304,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
 		</u-modal>
 	</view>
 </template>
@@ -1061,6 +1061,12 @@
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
 		
+		::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+		background-color: transparent;
+		};
+		
 		// 病人信息模态框样式
 		/deep/ .u-mode-center-box {
 			.u-model {
@@ -1070,10 +1076,9 @@
 				};
 				.u-model__content {
 					max-height: 500px;
-					overflow: scroll;
+					-webkit-overflow-scrolling:touch;
 					.slot-content {
 						height: 400px;
-						padding: 16px;
 						.bedNumberBox {
 							height: 60px;
 							> view {
