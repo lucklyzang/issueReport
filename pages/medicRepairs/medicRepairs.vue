@@ -746,7 +746,7 @@
 				border: none;
 				> view {
 				    &:last-child {
-							z-index: 10;
+							// z-index: 10;
 				    }
 				  }
 			};
