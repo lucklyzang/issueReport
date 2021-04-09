@@ -266,7 +266,7 @@
 				<view class="genderBox scroll-view-item">
 					<view>性别</view>
 					<view>
-						<u-radio-group v-model="patienModalMessage.genderValue">
+						<u-radio-group v-model="patienModalMessage.genderValue" @change="genderChange">
 							<u-radio name="1" active-color="#333">男</u-radio>
 							<u-radio name="2" active-color="#333">女</u-radio>
 						</u-radio-group>
@@ -386,7 +386,7 @@
 					patientName: '',
 					patientNumber: '',
 					actualData: 0,
-					genderValue: '',
+					genderValue: '1',
 					transportList: [],
 					sampleList: [],
 					sampleValue: '',
@@ -458,6 +458,10 @@
 			]),
 			
 			textChange () {
+				
+			},
+			
+			radio () {
 				
 			},
 			
@@ -617,6 +621,9 @@
 				this.toolName = currentText[0]['text']
 			},
 			isBackGroupChange(e) {
+				console.log(e);
+			},
+			genderChange (e) {
 				console.log(e);
 			},
 			// 查询目的地
@@ -850,6 +857,7 @@
 					bedNumber: '',
 					patientName: '',
 					patientNumber: '',
+					genderValue: '1',
 					actualData: 0,
 					transportList: this.transportTypeChild,
 					sampleList: this.transportTypeParent,

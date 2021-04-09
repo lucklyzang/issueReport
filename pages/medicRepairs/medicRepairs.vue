@@ -265,11 +265,16 @@
 				this.departmentValue = val;
 				this.hospitalListValue = '';
 				this.departmentShow = false;
-				this.departmentValue != '' && this.queryRoomByDepartment({
-					proId: this.proId, //项目ID 必输
-					state: 0, // 状态默认传 0 即可
-					depId: this.departmentValue //科室ID
-				});
+				if (this.departmentValue != '') {
+					this.queryRoomByDepartment({
+						proId: this.proId, //项目ID 必输
+						state: 0, // 状态默认传 0 即可
+						depId: this.departmentValue //科室ID
+					});
+				} else {
+					this.destinationList = [];
+					this.departmentShow = true
+				}
 				// this.startPointId = val.orignItem.id;
 				// this.startPointName = val.orignItem.value;
 				// this.$refs.destionationParent.clearInput();
