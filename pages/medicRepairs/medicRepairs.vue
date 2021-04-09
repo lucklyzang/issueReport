@@ -682,7 +682,7 @@
 			.view-photoList {
 				display: flex;
 				flex-flow: row wrap;
-				height: 112px;
+				// min-height: 112px;
 				background: #fff;
 				box-sizing: border-box;
 				border-bottom: 12px solid #f6f6f6;
@@ -698,8 +698,8 @@
 						flex: 1;
 						font-size: 34px;
 						display: flex;
-						height: 100px;
-						line-height: 100px;
+						// height: 100px;
+						// line-height: 100px;
 						flex-flow: row wrap;
 						align-items: center;
 						overflow: auto;
@@ -767,10 +767,9 @@
 	
 			.creat-transport-type {
 				width: 100%;
-				height: 110px;
+				max-height: 120px;
 				overflow: auto;
 				display: flex;
-				flex: 1;
 				flex-direction: row;
 				border-top: 12px solid #f6f6f6;
 				border-bottom: 12px solid #f6f6f6;
@@ -846,11 +845,11 @@
 				width: 90%;
 				margin: 0 auto;
 				display: flex;
-				height: 60px;
+				max-height: 60px;
 				flex-flow: row wrap;
 				justify-content: center;
 				align-items: center;
-				overflow: auto;
+				overflow: scroll;
 				border-bottom: 1px solid $color-underline;
 	
 				>text {
