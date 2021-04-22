@@ -77,7 +77,7 @@
 			},
 			skipPageTrans() {
 				uni.navigateTo({
-					url: '/pages/centerTransport/index/index'
+					url: '/transportPackage/pages/centerTransport/index/index'
 				});
 				this.changeIsProjectTask(false);
 				setCache('isProjectTask', {flag:false});
@@ -94,7 +94,7 @@
 			},
 			skipPageManage() {
 				uni.navigateTo({
-					url: '/pages/projectManagement/index/index'
+					url: '/projectPackage/pages/projectManagement/index/index'
 				});
 				this.changeIsProjectTask(true);
 				setCache('isProjectTask', {flag:true});

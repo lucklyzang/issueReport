@@ -110,7 +110,7 @@
 				this.changeTitleText(item);
 				this.changeBottomBarIndex(0);
 				uni.redirectTo({
-					url: '/pages/callTask/callTask?title=' + this.typeText
+					url: '/transportPackage/pages/callTask/callTask?title=' + this.typeText
 				});
 				this.changeIsToCallTaskPage(true)
 			},
@@ -169,20 +169,20 @@
 				if (item.text == '呼叫') {
 					if (this.isToCallTaskPage) {
 						uni.redirectTo({
-							url: '/pages/centerTransport/index/index'
+							url: '/transportPackage/pages/centerTransport/index/index'
 						});
 						this.changeBottomBarIndex(0)
 					}
 				} else if (item.text == '任务跟踪') {
 					this.changeBottomBarIndex(1);
 					uni.redirectTo({
-						url: '/pages/task-tail/task-tail'
+						url: '/transportPackage/pages/task-tail/task-tail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/pages/historyTask/historyTask'
+						url: '/transportPackage/pages/historyTask/historyTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)

@@ -91,7 +91,7 @@
 				// 返回
 				backTo () {
 					uni.redirectTo({
-            url: '/pages/myInfo/myInfo'
+            url: '/pages/login/login'
 					})
 				},
 				

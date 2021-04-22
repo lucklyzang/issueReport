@@ -21,81 +21,6 @@
 			}
 		},
 		{
-			"path": "pages/centerTransport/index/index",
-			"style": {
-				"navigationBarTitleText": "中央运送",
-				"navigationBarBackgroundColor": "#ffffff",
-        "backgroundColorTop": "#fff,",
-        "backgroundColorBottom": "#fff"
-			}
-		},
-    {
-    	"path": "pages/projectManagement/index/index",
-    	"style": {
-    		"navigationBarTitleText": "工程管理",
-    		"navigationBarBackgroundColor": "#ffffff",
-        "backgroundColorTop": "#fff,",
-        "backgroundColorBottom": "#fff"
-    	}
-    },
-    {
-    	"path": "pages/medicRepairs/medicRepairs",
-    	"style": {
-    		"navigationBarTitleText": "创建自主任务",
-    		"navigationBarBackgroundColor": "#ffffff",
-        "backgroundColorTop": "#fff,",
-        "backgroundColorBottom": "#fff"
-    	}
-    },
-    {
-    	"path": "pages/projectRepairs/projectRepairs",
-    	"style": {
-    		"navigationBarTitleText": "创建自主任务",
-    		"navigationBarBackgroundColor": "#ffffff",
-        "backgroundColorTop": "#fff,",
-        "backgroundColorBottom": "#fff"
-    	}
-    },
-		{
-			"path": "pages/callTask/callTask",
-			"style": {
-				"navigationBarTitleText": "标本",
-				"navigationBarBackgroundColor": "#000000"
-			}
-		},
-		{
-			"path": "pages/task-tail/task-tail",
-			"style": {
-				"navigationBarTitleText": "任务跟踪",
-				"navigationBarBackgroundColor": "#000000",
-				"enablePullDownRefresh": true
-			}
-		},
-    {
-    	"path": "pages/projectTaskTail/projectTaskTail",
-    	"style": {
-    		"navigationBarTitleText": "任务跟踪",
-    		"navigationBarBackgroundColor": "#000000",
-    		"enablePullDownRefresh": true
-    	}
-    },
-		{
-			"path": "pages/historyTask/historyTask",
-			"style": {
-				"navigationBarTitleText": "历史任务",
-				"navigationBarBackgroundColor": "#000000",
-				"enablePullDownRefresh": true
-			}
-		},
-    {
-    	"path": "pages/projectHistoryTask/projectHistoryTask",
-    	"style": {
-    		"navigationBarTitleText": "历史任务",
-    		"navigationBarBackgroundColor": "#000000",
-    		"enablePullDownRefresh": true
-    	}
-    },
-		{
 			"path": "pages/personInfo/personInfo",
 			"style": {
 				"navigationBarTitleText": "个人资料",
@@ -119,6 +44,103 @@
 			}
     }
   ],
+	"subPackages": [
+		{
+			"root": "projectPackage",
+			"pages": [
+				{
+					"path": "pages/projectManagement/index/index",
+					"style": {
+						"navigationBarTitleText": "工程管理",
+						"navigationBarBackgroundColor": "#ffffff",
+						"backgroundColorTop": "#fff,",
+						"backgroundColorBottom": "#fff"
+					}
+				},
+				{
+					"path": "pages/projectRepairs/projectRepairs",
+					"style": {
+						"navigationBarTitleText": "创建自主任务",
+						"navigationBarBackgroundColor": "#ffffff",
+				    "backgroundColorTop": "#fff,",
+				    "backgroundColorBottom": "#fff"
+					}
+				},
+				{
+					"path": "pages/medicRepairs/medicRepairs",
+					"style": {
+						"navigationBarTitleText": "创建自主任务",
+						"navigationBarBackgroundColor": "#ffffff",
+				    "backgroundColorTop": "#fff,",
+				    "backgroundColorBottom": "#fff"
+					}
+				},
+				{
+					"path": "pages/projectHistoryTask/projectHistoryTask",
+					"style": {
+						"navigationBarTitleText": "历史任务",
+						"navigationBarBackgroundColor": "#000000",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/projectTaskTail/projectTaskTail",
+					"style": {
+						"navigationBarTitleText": "任务跟踪",
+						"navigationBarBackgroundColor": "#000000",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
+	  }, 
+		{
+			"root": "transportPackage",
+			"pages": [
+				{
+					"path": "pages/callTask/callTask",
+					"style": {
+						"navigationBarTitleText": "标本",
+						"navigationBarBackgroundColor": "#000000"
+					}
+				},
+				{
+					"path": "pages/historyTask/historyTask",
+					"style": {
+						"navigationBarTitleText": "历史任务",
+						"navigationBarBackgroundColor": "#000000",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/task-tail/task-tail",
+					"style": {
+						"navigationBarTitleText": "任务跟踪",
+						"navigationBarBackgroundColor": "#000000",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/centerTransport/index/index",
+					"style": {
+						"navigationBarTitleText": "中央运送",
+						"navigationBarBackgroundColor": "#ffffff",
+				    "backgroundColorTop": "#fff,",
+				    "backgroundColorBottom": "#fff"
+					}
+				}
+			]
+		}
+	],
+	"preloadRule": {
+		"transportPackage/pages/centerTransport/index/index": {
+				"network": "all",
+				"packages": ["transportPackage"]
+		},
+		"projectPackage/pages/projectManagement/index/index": {
+				"network": "all",
+				"packages": ["projectPackage"]
+		}
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "",

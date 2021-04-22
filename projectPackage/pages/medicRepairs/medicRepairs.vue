@@ -125,11 +125,9 @@
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue";
 	import ldSelect from "@/components/ld-select/ld-select.vue"
-	import xflSelect from "@/components/xfl-select/xfl-select.vue";
 	export default {
 		components: {
 			navBar,
-			xflSelect,
 			uniList,
 			ldSelect,
 			uniListItem,
@@ -214,7 +212,7 @@
 			backTo() {
 				this.changeBottomBarIndex(0);
 				uni.redirectTo({
-					url: '/pages/projectManagement/index/index'
+					url: '/projectPackage/pages/projectManagement/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
 			},
@@ -357,20 +355,20 @@
 						this.backTo()
 					} else {
 						uni.redirectTo({
-							url: '/pages/callTask/callTask'
+							url: '/projectPackage/pages/medicRepairs/medicRepairs'
 						});
 						this.changeBottomBarIndex(0);
 						this.changeIsToCallTaskPage(true)
 					}
 				} else if (item.text == "任务跟踪") {
 					uni.redirectTo({
-						url: '/pages/task-tail/task-tail'
+						url: '/projectPackage/pages/projectTaskTail/projectTaskTail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/pages/historyTask/historyTask'
+						url: '/projectPackage/pages/projectHistoryTask/projectHistoryTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)

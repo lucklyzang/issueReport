@@ -329,14 +329,12 @@
 		generateDispatchTaskMany
 	} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
-	import xflSelect from '@/components/xfl-select/xfl-select.vue'
 	import ldSelect from '@/components/ld-select/ld-select.vue'
-	import stepNumberBox from '@/components/step-number-box/step-number-box.vue'
+	import stepNumberBox from '@/transportPackage/components/step-number-box/step-number-box.vue'
 	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	export default {
 		components: {
 			navBar,
-			xflSelect,
 			ldSelect,
 			stepNumberBox,
 			faIcon
@@ -469,7 +467,7 @@
 			backTo() {
 				this.changeBottomBarIndex(0);
 				uni.redirectTo({
-					url: '/pages/centerTransport/index/index'
+					url: '/transportPackage/pages/centerTransport/index/index'
 				});
 				this.changeIsToCallTaskPage(false)
 			},
@@ -588,20 +586,20 @@
 						this.backTo()
 					} else {
 						uni.redirectTo({
-							url: '/pages/callTask/callTask'
+							url: '/transportPackage/pages/callTask/callTask'
 						});
 						this.changeBottomBarIndex(0);
 						this.changeIsToCallTaskPage(true)
 					}
 				} else if (item.text == "任务跟踪") {
 					uni.redirectTo({
-						url: '/pages/task-tail/task-tail'
+						url: '/transportPackage/pages/task-tail/task-tail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/pages/historyTask/historyTask'
+						url: '/transportPackage/pages/historyTask/historyTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)

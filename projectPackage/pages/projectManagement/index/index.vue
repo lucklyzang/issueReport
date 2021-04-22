@@ -103,11 +103,11 @@
         this.changeBottomBarIndex(0);
         if (item == '设备维保') {
           uni.redirectTo({
-          	url: '/pages/medicRepairs/medicRepairs'
+          	url: '/projectPackage/pages/medicRepairs/medicRepairs'
           });
         } else {
           uni.redirectTo({
-          	url: '/pages/projectRepairs/projectRepairs'
+          	url: '/projectPackage/pages/projectRepairs/projectRepairs'
           });
         };
         this.changeIsToCallTaskPage(true)
@@ -119,20 +119,20 @@
 				if (item.text == '呼叫下单') {
 					if (this.isToCallTaskPage) {
 						uni.redirectTo({
-						    url: '/pages/projectManagement/index/index'
+						    url: '/projectPackage/pages/projectManagement/index/index'
 						});
 						this.changeBottomBarIndex(0)
 					} 
 			  } else if (item.text == '任务跟踪') {
 					this.changeBottomBarIndex(1);
 					uni.redirectTo({
-						url: '/pages/projectTaskTail/projectTaskTail'
+						url: '/projectPackage/pages/projectTaskTail/projectTaskTail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/pages/projectHistoryTask/projectHistoryTask'
+						url: '/projectPackage/pages/projectHistoryTask/projectHistoryTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
