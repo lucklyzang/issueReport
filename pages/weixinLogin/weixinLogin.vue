@@ -44,7 +44,8 @@
 					<view>申请获取以下权限</view>
 					<text>获得你的公开信息(昵称，头像、地区等)</text>
 				</view>
-				<button class='bottom' type='primary' open-type="getUserInfo" withCredentials="true" lang="zh_CN" @getuserinfo="wxGetUserInfo">
+				<button v-if="canUseGetUserProfile" class='bottom' type='primary' @tap="getUserProfile">微信登录</button>
+				<button v-else class='bottom' type='primary' open-type="getUserInfo" withCredentials="true" lang="zh_CN" @getuserinfo="wxGetUserInfo">
 					授权登录
 				</button>
 			</view>
@@ -65,15 +66,14 @@
         return {
           SessionKey: '',
           OpenId: '',
+					canUseGetUserProfile: false,
           showChooseWay: false,
           showAccount: false,
           showHospitailList: false,
-          nickName: null,
-          avatarUrl: null,
           typeIndex: null,
           typeText: '',
           code: '',
-          isCanUse: false,
+          isCanUse: true,
           hospitalOptions: [],
           username: '',
           password: ''
@@ -95,6 +95,57 @@
 					})
 				},
 				
+				// 用户同意授权(uni.getUserProfile获取用户信息)
+				getUserProfile() {
+					let _this = this;
+					this.isCanUse = false;
+					uni.getUserProfile({
+						desc: '用于完善用户信息',
+						success: function(res) {
+							_this.sendCode(_this.code);
+							_this.changeWeixinInfo(res.userInfo);
+							setCache('weixinInfo',res.userInfo)
+						},
+						fail: function (err) {
+							_this.$refs.uToast.show({
+								title: `${err.errMsg}`,
+								duration: 3000,
+								url: '/pages/login/login',
+								type: 'error'
+							})
+						}
+					})
+				},
+				
+				// 用户同意授权(uni.getUserInfo获取用户信息)
+				wxGetUserInfo() {
+				  this.isCanUse = false;
+					let _this = this;
+				  uni.getUserInfo({
+				  	provider: 'weixin',
+				  	success: function(infoRes) {
+				  		_this.sendCode(_this.code);
+				  		_this.changeWeixinInfo(infoRes.userInfo);
+				  		setCache('weixinInfo',infoRes.userInfo)
+				  	},
+				  	fail: function (err) {
+				  		_this.$refs.uToast.show({
+				  			title: `${err.errMsg}`,
+				  			duration: 3000,
+				  			url: '/pages/login/login',
+				  			type: 'error'
+				  		})
+				  	}
+				  });
+				  //将用户登录code传递到后台置换用户SessionKey、OpenId等信息
+				  //小程序appid
+				  let appid = 'wxe7ea58a8f75b0816';
+				  //小程序secret
+				  let secret = '44d0550eefb1a5e919b63a7966a9abf4';
+				  //wx接口路径
+				  // let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + _this.code + '&grant_type=authorization_code';	
+				},
+					
 				// 实时获取code
 				getCode () {
 					let _this = this;
@@ -288,55 +339,11 @@
 					this.backTo()
 				},
 				
-				// 查看已授权选项
-				getSettingMes() {
-					let _this = this;
-					uni.getSetting({
-						success: function (res) {
-							if (res.authSetting['scope.userInfo']) {
-								uni.showLoading({
-									title: '登录中...'
-								});
-								// 用户信息已授权，获取用户信息
-								uni.getUserInfo({
-									success: function (res) {
-										_this.isCanUse = false;
-										_this.login()
-									},
-									fail: function (err) {
-										uni.hideLoading();
-										_this.$refs.uToast.show({
-											title: `${err.errMsg}`,
-											duration: 3000,
-											url: '/pages/myInfo/myInfo',
-											type: 'error'
-										})
-									}
-								})
-							} else if (!res.authSetting['scope.userInfo']) {
-								_this.isCanUse = true
-							}
-						},
-						fail: function (err) {
-							_this.$refs.uToast.show({
-								title: '获取已授权选项失败了',
-								type: 'error'
-							})
-						}
-					})
-				},
-				
-				// 用户同意授权
-	      wxGetUserInfo() {
-          this.isCanUse = false;
-          uni.showLoading({
-            title: '登录中...'
-          });
-          this.login()
-	       },
-				
 				// 发送code到后台
 				sendCode (code) {
+					uni.showLoading({
+					  title: '登录中...'
+					});
 					weixinLogIn(code).then((res) => {
 						if (res['headers']['Status'] == '2003') {
 							//当前微信未绑定过账号
@@ -369,7 +376,7 @@
 								this.$refs.uToast.show({
 									title: `${res.data.msg}`,
 									duration: 3000,
-									url: '/pages/myInfo/myInfo',
+									url: '/pages/login/login',
 									type: 'error'
 								})
 							}
@@ -398,7 +405,7 @@
 								this.$refs.uToast.show({
 									title: `${res.data.msg}`,
 									duration: 3000,
-									url: '/pages/myInfo/myInfo',
+									url: '/pages/login/login',
 									type: 'error'
 								})
 							}
@@ -409,62 +416,34 @@
 						this.$refs.uToast.show({
 							title: `${err.message}`,
 							duration: 3000,
-							url: '/pages/myInfo/myInfo',
+							url: '/pages/login/login',
 							type: 'error'
 						})
 					})
-				},
-	
-	　　　//登录
-	     login() {
-					let _this = this;
-				   // 1.wx获取登录用户code
-					uni.login({
-						provider: 'weixin',
-						success: function(loginRes) {
-							_this.code = loginRes.code;
-							uni.getUserInfo({
-								provider: 'weixin',
-								success: function(infoRes) {
-									_this.nickName = infoRes.userInfo.nickName; //昵称
-									_this.avatarUrl = infoRes.userInfo.avatarUrl; //头像
-									_this.sendCode(_this.code);
-									_this.changeWeixinInfo(infoRes.userInfo);
-									setCache('weixinInfo',infoRes.userInfo)
-								},
-								fail: function (err) {
-									uni.hideLoading();
-									_this.$refs.uToast.show({
-										title: `${err.errMsg}`,
-										duration: 3000,
-										url: '/pages/myInfo/myInfo',
-										type: 'error'
-									})
-								}
-							});
-							//2.将用户登录code传递到后台置换用户SessionKey、OpenId等信息
-							//小程序appid
-							let appid = 'wxe7ea58a8f75b0816';
-							//小程序secret
-							let secret = '44d0550eefb1a5e919b63a7966a9abf4';
-							//wx接口路径
-							// let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + code + '&grant_type=authorization_code';
-						},
-						fail: function(err) {
-							uni.hideLoading();
-							_this.$refs.uToast.show({
-								title: `${err.errMsg}`,
-								duration: 3000,
-								url: '/pages/myInfo/myInfo',
-								type: 'error'
-							})
-						}
-					})
 				}
-	    },
+			},
 			
       onLoad() {
-        this.getSettingMes()
+				let _this = this;
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						_this.code = loginRes.code;
+						//判断是否存在getUserProfile方法
+						if (uni.getUserProfile) {
+							 _this.canUseGetUserProfile = true
+						}
+					},
+					fail: function(err) {
+						uni.hideLoading();
+						_this.$refs.uToast.show({
+							title: `${err.errMsg}`,
+							duration: 3000,
+							url: '/pages/myInfo/myInfo',
+							type: 'error'
+						})
+					}
+				})
       }
 	 }
 </script>
@@ -475,6 +454,7 @@
 			.slot-content {
 				padding: 20px 4px 0;
 				box-sizing: border-box;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				display: flex;
 				flex-direction: row;

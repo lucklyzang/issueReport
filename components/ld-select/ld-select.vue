@@ -303,6 +303,7 @@
 			.select-content{
 				max-height: 420rpx;
 				overflow:auto;
+				-webkit-overflow-scrolling: touch;
 				z-index: 2000;
 				// overflow:auto;
 				// display: flex;

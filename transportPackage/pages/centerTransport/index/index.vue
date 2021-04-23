@@ -216,6 +216,7 @@
 		.trans-type-list {
 			padding: 50px 0;
 			flex: 1;
+			-webkit-overflow-scrolling: touch;
 			overflow: auto;
 			display: flex;
 			flex-direction: column;

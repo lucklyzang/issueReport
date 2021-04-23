@@ -546,6 +546,7 @@
 			flex: 1;
 			.task-tail-content {
 				height: 93%;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				background: #f7f7f7;
 				.task-tail-content-item {
@@ -591,11 +592,13 @@
 		            };
 		            &:first-child {
 		              width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 		            };
 		            &:last-child {
 		              width: 40%;
 		              text-align: right;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 		              > text {
 		                &:first-child {
@@ -621,6 +624,7 @@
 								line-height: 40px;
 							  &:first-child {
 							    width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -635,6 +639,7 @@
 							  };
 							  &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -657,6 +662,7 @@
 		          	line-height: 40px;
 		            &:first-child {
 		              width: 60%;
+									-webkit-overflow-scrolling: touch;
 		          		overflow: auto;
 		          		text {
 		          			&:first-child {
@@ -671,6 +677,7 @@
 		            };
 		            &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 		          		text {
 		          			&:first-child {
@@ -696,6 +703,7 @@
 								line-height: 40px;
 								&:first-child  {
 									width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										display: inline-block;
@@ -713,6 +721,7 @@
 								};
 								&:last-child  {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										display: inline-block;
@@ -791,6 +800,7 @@
 		        height: 40px;
 		        position: relative;
 						padding: 0 12px;
+						-webkit-overflow-scrolling: touch;
 						overflow: auto;
 		        .item-bottom-left {
 		          width: 100%;

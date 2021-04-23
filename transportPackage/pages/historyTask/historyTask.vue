@@ -586,9 +586,11 @@
 		.task-tail-content-box {
 			width: 100%;
 			flex: 1;
+			-webkit-overflow-scrolling: touch;
 			overflow: auto;
 			.task-tail-content {
 				height: 94%;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				position: relative;
 				background: #f7f7f7;
@@ -643,10 +645,12 @@
 					      };
 					      &:first-child {
 					        width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 					      };
 					      &:last-child {
 					        width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 					        text-align: right;
 					        > text {
@@ -673,6 +677,7 @@
 								line-height: 40px;
 							  &:first-child {
 							    width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -687,6 +692,7 @@
 							  };
 							  &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -709,6 +715,7 @@
 					    	line-height: 40px;
 					      &:first-child {
 					        width: 60%;
+									-webkit-overflow-scrolling: touch;
 					    		overflow: auto;
 					    		text {
 					    			&:first-child {
@@ -723,6 +730,7 @@
 					      };
 					      &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 					    		text {
 					    			&:first-child {
@@ -746,6 +754,7 @@
 							 > view {
 								height: 80px;
 								width: 100%;
+								-webkit-overflow-scrolling: touch;
 								overflow: auto;
 								.destina-list {
 									color: $color-text-right;

@@ -495,6 +495,7 @@
 			.slot-content {
 				padding: 10px;
 				box-sizing: border-box;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				display: flex;
 				flex-direction: row;
@@ -546,6 +547,7 @@
 			flex: 1;
 			.task-tail-content {
 				height: 93%;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				background: #f7f7f7;
 				.task-tail-content-item {
@@ -591,10 +593,12 @@
                 };
                 &:first-child {
                   width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
                 };
                 &:last-child {
                   width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
                   text-align: right;
                   > text {
@@ -621,6 +625,7 @@
 								line-height: 40px;
 							  &:first-child {
 							    width: 60%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -635,6 +640,7 @@
 							  };
 							  &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 									text {
 										&:first-child {
@@ -657,6 +663,7 @@
               	line-height: 40px;
                 &:first-child {
                   width: 60%;
+									-webkit-overflow-scrolling: touch;
               		overflow: auto;
               		text {
               			&:first-child {
@@ -671,6 +678,7 @@
                 };
                 &:last-child {
 									width: 40%;
+									-webkit-overflow-scrolling: touch;
 									overflow: auto;
               		text {
               			&:first-child {
@@ -694,6 +702,7 @@
 							 > view {
 								height: 80px;
 								width: 100%;
+								-webkit-overflow-scrolling: touch;
 								overflow: auto;
 								text {
 									display: inline-block;
@@ -770,6 +779,7 @@
             height: 40px;
             position: relative;
 						padding: 0 12px;
+						-webkit-overflow-scrolling: touch;
 						overflow: auto;
             .item-bottom-left {
               width: 100%;

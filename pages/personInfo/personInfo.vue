@@ -74,7 +74,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '1.6',
+				versionNumber: '1.8',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
@@ -108,7 +108,7 @@
 			}
 		},
 		mounted() {
-			console.log(this.userInfo)
+			console.log('飒飒',this.weixinInfo)
 		},
 		methods: {
 			...mapMutations([

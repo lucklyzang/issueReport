@@ -153,6 +153,7 @@
 
 		.title-wrapper {
 			flex: 1;
+			-webkit-overflow-scrolling: touch;
 			overflow: auto;
 			font-size: 20px;
 			color: #333;

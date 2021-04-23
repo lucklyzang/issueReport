@@ -238,7 +238,7 @@
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
-		<u-modal v-model="patienModalShow" :title="isPressEdit ? `病人${updateIndex+1}`: `病人${templateTwoMessage.length+1}`" 
+		<u-modal v-model="patienModalShow" :title="isPressEdit ? `病人${updateIndex+1}`:`病人${templateTwoMessage.length+1}`" 
 			:show-cancel-button="true" width="90%" 
 			:title-style="{color: '#000000',textAlign: 'left',fontSize: '18px'}"
 			@confirm="patienModalSure"
@@ -1083,6 +1083,7 @@
 				.u-model__content {
 					max-height: 500px;
 					-webkit-overflow-scrolling:touch;
+					overflow: auto;
 					.slot-content {
 						height: 400px;
 						.bedNumberBox {
@@ -1191,6 +1192,7 @@
 										height: 60px;
 										color: $color-text-left;
 										box-sizing: border-box;
+										-webkit-overflow-scrolling: touch;
 										overflow-x: auto;
 									};
 									&:last-child {
@@ -1256,6 +1258,7 @@
 			position: relative;
 			width: 100%;
 			flex: 1;
+			-webkit-overflow-scrolling: touch;
 			overflow: auto;
 			font-size: 14px;
 			color: black;
@@ -1305,6 +1308,7 @@
 			
 			.tool-box {
 				.creat-priority-content {
+					-webkit-overflow-scrolling: touch;
 					overflow:auto;
 					/deep/ .u-radio-group {
 					}
@@ -1421,6 +1425,7 @@
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				display: flex;
 				flex: 1;
@@ -1460,6 +1465,7 @@
 					align-content: flex-start;
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
+					-webkit-overflow-scrolling: touch;
 					overflow: auto;
 					.transTypeListStyle {
 						background: #d6f4ff;
@@ -1545,6 +1551,7 @@
 					.fild-body {
 						color: $color-text-right;
 						height: 68px;
+						-webkit-overflow-scrolling: touch;
 						overflow: auto;
 						background: #f9f9f9;
 						.u-flex-1 {
@@ -1590,6 +1597,7 @@
 				border-bottom: 12px solid #f6f6f6;
 				padding: 0 0 8px 4px;
 				height: 400px;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				.addpatient-message-btn {
 					width: 96%;
@@ -1751,6 +1759,7 @@
 							line-height: 40px;
 							flex: 1;
 							font-size: 12px;
+							-webkit-overflow-scrolling: touch;
 							overflow: auto
 						};
 					};
@@ -1758,6 +1767,7 @@
 						width: 100%;
 						height: 110px;
 						border: 1px solid red;
+						-webkit-overflow-scrolling: touch;
 						overflow: auto;
 						margin: 0 auto;
 						padding: 4px 0;
@@ -1775,6 +1785,7 @@
 							align-content: flex-start;
 							padding: 0 4px;
 							box-sizing: border-box;
+							-webkit-overflow-scrolling: touch;
 							overflow: auto;
 							.transTypeListStyle {
 								background: #75acef;
@@ -1794,6 +1805,7 @@
 									width: 45%;
 									text-align: left;
 									left: 2px;
+									-webkit-overflow-scrolling: touch;
 									overflow-x: auto;
 								};
 								.creat-transport-type-content-list-content {

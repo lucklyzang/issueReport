@@ -636,6 +636,7 @@
 			position: relative;
 			width: 100%;
 			flex: 1;
+			-webkit-overflow-scrolling: touch;
 			overflow: auto;
 			font-size: 14px;
 			color: black;
@@ -799,6 +800,7 @@
 			.creat-transport-type {
 				width: 100%;
 				height: 110px;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				display: flex;
 				flex: 1;
@@ -838,6 +840,7 @@
 					align-content: flex-start;
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
+					-webkit-overflow-scrolling: touch;
 					overflow: auto;
 					.transTypeListStyle {
 						background: #d6f4ff;
@@ -881,6 +884,7 @@
 				flex-flow: row wrap;
 				justify-content: center;
 				align-items: center;
+				-webkit-overflow-scrolling: touch;
 				overflow: auto;
 				border-bottom: 1px solid $color-underline;
 	
@@ -920,6 +924,7 @@
 					.fild-body {
 						color: $color-text-right;
 						height: 68px;
+						-webkit-overflow-scrolling: touch;
 						overflow: auto;
 						background: #f9f9f9;
 						.u-flex-1 {
