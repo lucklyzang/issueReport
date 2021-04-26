@@ -202,12 +202,14 @@
 					this.isShowModal = true;
 					this.searchText = '';
 					this.listData = this.list
-				}
+				};
+				this.$emit('ldShow',this.isShowModal);
 			},
 			hideModal(){ // 隐藏model
 				this.isShowModal = false;
 				this.searchText = '';
-				this.listData = this.list
+				this.listData = this.list;
+				this.$emit('ldHide',this.isShowModal);
 			}
 		}
 	}
@@ -279,11 +281,11 @@
 		-ms-transform: scale(1.185);
 		transform: scale(1.185);
 		backface-visibility: hidden;
-		perspective: 2000rpx;
+		perspective: 2000px;
 		background: rgba(0, 0, 0, 0.6);
 		transition: all 0.3s ease-in-out 0s;
 		pointer-events: none;
-		margin-bottom: -1000rpx;
+		margin-bottom: -1000px;
 		&::before {
 			content: "\200B";
 			display: inline-block;

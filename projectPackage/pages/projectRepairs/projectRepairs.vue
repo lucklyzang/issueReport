@@ -6,7 +6,7 @@
 			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" :title="taskTypeText" @backClick="backTo">
       </nav-bar>
 		</view>
-		<view class="creat-box">
+		<view class="creat-box" :class="{'creatStyle':isShowModal}">
 			<view class="creat-priority priority-box">
 				<view>优先级</view>
 				<view>
@@ -35,6 +35,8 @@
           >
           </xfl-select> -->
 					<ld-select :list="hospitalList"
+						@ldShow="ldSelectShow"
+						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
 						placeholder="请选择"
@@ -64,6 +66,8 @@
           >
           </xfl-select> -->
 					<ld-select :list="destinationList"
+						@ldShow="ldSelectShow"
+						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
 						v-if="departmentShow"
@@ -81,7 +85,7 @@
 					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in taskTypeList" :class="{'transTypeListStyle': typeIndex === index}" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
+					<view v-for="(item,index) in taskTypeList" :class="[{'transTypeListStyle': typeIndex === index},{'transTypeListMarginStyle': taskTypeList.length <= 2}]" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
 				</view>
 			</view>
       <view class="creat-form">
@@ -113,6 +117,8 @@
           >
           </xfl-select> -->
 					<ld-select :list="helpWorkerList"
+						@ldShow="ldSelectShow"
+						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
 						placeholder="请选择"
@@ -135,7 +141,7 @@
 				>
 				</u-field>
 			</view>
-      <view class="preinstall-box" >
+      <view class="preinstall-box" v-if="preinstallList.length > 0">
       	<text v-for="(item,index) in preinstallList" :key="index" :class="{'preinstallStyle':index == preinstallIndex}" @click="preinstallEvent(item,index)">{{item}}</text>
       </view>
 		</view>
@@ -169,6 +175,7 @@
 		},
 		data() {
 			return {
+				isShowModal: false,
 				showLoadingHint: false,
         controlListShow: false,
 				departmentShow: true,
@@ -317,7 +324,14 @@
           })
         })
       },
-			
+			// 科室选择组件显示事件
+			ldSelectShow(val) {
+				this.isShowModal = val
+			},
+			// 科室选择组件隐藏事件
+			ldSelectHide(val) {
+				this.isShowModal = val
+			},
 			// 根据科室id获取科室名称
 			getDepartmentNameById(id) {
 				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
@@ -603,7 +617,7 @@
           images: []  ,// 问题图片信息 非必输
           spaceId: this.destinationId,    // 选择的空间ID
           flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
-          present: [{id: this.helpWorkerValue, name: this.getHelpWorkerNameById(this.helpWorkerValue)}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
+          present: this.helpWorkerValue === '' ? [] : [{id: this.helpWorkerValue, name: this.getHelpWorkerNameById(this.helpWorkerValue)}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
         };
         // 创建调度任务
         this.postTask(taskMessage)
@@ -624,6 +638,10 @@
 
 <style lang="scss">
 	@import "~@/common/stylus/variable.scss";
+	page {
+		width: 100%;
+		height: 100%
+	};
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
@@ -631,6 +649,9 @@
 		padding-bottom: env(safe-area-inset-bottom);
 		.nav {
 			width: 100%;
+		};
+		.creatStyle {
+			overflow: hidden !important
 		};
 		.creat-box {
 			position: relative;
@@ -778,7 +799,6 @@
 				border: none;
 				> view {
 				    &:last-child {
-							// z-index: 10;
 				    }
 				  }
 			};
@@ -799,20 +819,17 @@
 	
 			.creat-transport-type {
 				width: 100%;
-				height: 110px;
-				-webkit-overflow-scrolling: touch;
-				overflow: auto;
-				display: flex;
-				flex: 1;
-				flex-direction: row;
 				border-top: 12px solid #f6f6f6;
 				border-bottom: 12px solid #f6f6f6;
-	
+				> view {
+					display: inline-block;
+				};
 				.creat-transport-type-title {
 					margin-top: 8px;
 					width: 20%;
 					height: 35px;
 					line-height: 35px;
+					vertical-align: top;
 					color: $color-text-left;
 					text {
 						&:nth-child(1) {
@@ -820,24 +837,27 @@
 							box-sizing: border-box;
 							margin-right: 8px
 						};
-	
+					
 						&:nth-child(2) {
 							font-size: 14px;
 							color: red
 						}
 					}
 				};
-	
+					
 				.creat-transport-type-content {
-					flex: 1;
-					display: flex;
+					width: 80%;
 					font-size: 15px;
-					color: $color-text-right;
-					width: 100%;
-					flex-direction: row;
-					flex-wrap: wrap;
-					justify-content: space-between;
-					align-content: flex-start;
+					color: #333;
+					vertical-align: top;
+					> view {
+						width: 48%;
+						display: inline-block;
+						margin-right: 2%;
+						&:last-child {
+							margin-right: 0
+						}
+					};
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
 					-webkit-overflow-scrolling: touch;
@@ -847,7 +867,9 @@
 						color: #01a6ff;
 						border: 1px solid #4cc5f2
 					};
-	
+					.transTypeListMarginStyle {
+						margin-bottom: 0 !important;
+					};
 					>view {
 						width: 45%;
 						margin-bottom: 4px;
@@ -879,20 +901,15 @@
 			.preinstall-box {
 				width: 90%;
 				margin: 0 auto;
-				display: flex;
-				height: 60px;
-				flex-flow: row wrap;
-				justify-content: center;
-				align-items: center;
-				-webkit-overflow-scrolling: touch;
-				overflow: auto;
+				text-align: center;
+				padding: 4px 0 0 0;
+				box-sizing: border-box;
 				border-bottom: 1px solid $color-underline;
-	
 				>text {
 					display: inline-block;
 					height: 30px;
 					text-align: center;
-					color: $color-text-right;
+					color: #333;
 					background: #f9f9f9;
 					line-height: 30px;
 					padding: 0 3px;
@@ -900,7 +917,7 @@
 					margin-bottom: 4px;
 					border-radius: 4px;
 				};
-	
+					
 				.preinstallStyle {
 					background: #d6f4ff;
 					color: #01a6ff;

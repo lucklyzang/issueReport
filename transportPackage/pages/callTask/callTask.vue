@@ -6,7 +6,7 @@
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" :title="taskTypeText" @backClick="backTo"></nav-bar>
 		</view>
-		<view class="creat-box template-one" v-if="templateType === 'template_one'">
+		<view class="creat-box template-one" :class="{'creatStyle':isShowModal}" v-if="templateType === 'template_one'">
 			<view class="creat-priority priority-box-one">
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
@@ -22,6 +22,8 @@
 				<view class="creat-chooseHospital-title">科室选择</view>
 				<view class="creat-chooseHospital-content creat-chooseHospital-content-two">
 					<ld-select :list="hospitalList"
+						@ldShow="ldSelectShow"
+						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
 						placeholder="请选择"
@@ -89,7 +91,7 @@
 					</u-field>
 				</view>
 			</view>
-			<view class="creat-priority priority-box-one tool-box">
+			<view class="tool-box">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
@@ -126,7 +128,7 @@
 				</u-field>
 			</view>
 		</view>
-		<view class="creat-box template-two" v-else-if="templateType === 'template_two'">
+		<view class="creat-box template-two" :class="{'creatStyle':isShowModal}" v-else-if="templateType === 'template_two'">
 			<view class="creat-priority priority-box">
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
@@ -138,7 +140,7 @@
 					</u-radio-group>
 				</view>
 			</view>
-			<view class="creat-priority tool-box">
+			<view class="tool-box">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
@@ -169,6 +171,8 @@
 				<view class="creat-chooseHospital-content-two">
 					 <ld-select :multiple="true" :list="hospitalList"
 						label-key="value" value-key="id"
+						@ldShow="ldSelectShow"
+						@ldHide="ldSelectHide"
 						clearable
 						placeholder="请选择"
 						color="#333"
@@ -238,7 +242,7 @@
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
 			</view>
 		</view>
-		<u-modal v-model="patienModalShow" :title="isPressEdit ? `病人${updateIndex+1}`:`病人${templateTwoMessage.length+1}`" 
+		<u-modal v-model="patienModalShow" :title="isPressEdit ? `病人${updateIndex+1}`:`病人信息`" 
 			:show-cancel-button="true" width="90%" 
 			:title-style="{color: '#000000',textAlign: 'left',fontSize: '18px'}"
 			@confirm="patienModalSure"
@@ -267,6 +271,7 @@
 					<view>性别</view>
 					<view>
 						<u-radio-group v-model="patienModalMessage.genderValue" @change="genderChange">
+							<u-radio name="0" active-color="#333">未知</u-radio>
 							<u-radio name="1" active-color="#333">男</u-radio>
 							<u-radio name="2" active-color="#333">女</u-radio>
 						</u-radio-group>
@@ -281,7 +286,7 @@
 				<view class="transportBox scroll-view-item">
 					<view>运送类型</view>
 					<view v-if="xflSelectShow">
-						<xfl-select :list="patienModalMessage.sampleList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
+						<xfl-select :list="patienModalMessage.sampleList" disabled :clearable="false" :showItemNum="5" :isCanInput="true" :showList="transportParentControlListShow"
 						 :style_Container="'height: 50px; font-size: 16px;'" :initValue="patienModalMessage.sampleValue" @change="transportParentChange"
 						 @input="transportParentInputEvent" @visible-change="transportParentVisibleChange">
 						</xfl-select>
@@ -289,8 +294,8 @@
 				</view>
 				<view class="transport-type-child-box scroll-view-item">
 					<view class="transport-type-child-content" v-for="(innerItem,innerIndex) in patienModalMessage.transportList"
-								@click="sampleTypeEvent(innerItem,innerIndex)" :key="innerItem.text">
-						<view :class="{'transTypeListStyle': innerItem.checked }">
+								:key="innerItem.text">
+						<view :class="{'transTypeListStyle': innerItem.typerNumber > 0 }">
 							{{innerItem.text}}
 						</view>
 						<view>
@@ -341,6 +346,7 @@
 		},
 		data() {
 			return {
+				isShowModal: false,
 				showLoadingHint: false,
 				controlListShow: false,
 				transportParentControlListShow: false,
@@ -374,7 +380,7 @@
 					patientNumber: '',
 					actualData: 0,
 					transportList: [],
-					genderValue: '男',
+					genderValue: '未知',
 					sampleList: [],
 					sampleValue: '',
 					sampleId: ''
@@ -384,7 +390,7 @@
 					patientName: '',
 					patientNumber: '',
 					actualData: 0,
-					genderValue: '1',
+					genderValue: '0',
 					transportList: [],
 					sampleList: [],
 					sampleValue: '',
@@ -471,6 +477,17 @@
 				});
 				this.changeIsToCallTaskPage(false)
 			},
+			
+			// 科室选择组件显示事件
+			ldSelectShow(val) {
+				this.isShowModal = val
+			},
+			
+			// 科室选择组件隐藏事件
+			ldSelectHide(val) {
+				this.isShowModal = val
+			},
+			
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.hospitalListValue = val;
@@ -525,7 +542,7 @@
 			jointTransportMessage(index) {
 				let finalMsg = '';
 				let targetMsg = this.templateTwoMessage[index].transportList.filter((item) => {
-					return item.checked == true
+					return item.typerNumber > 0
 				});
 				for (let item of targetMsg) {
 					finalMsg += `${item.text}${item.typerNumber}个,`
@@ -573,7 +590,7 @@
 			reduceTotal(index) {
 				// 求该病人信息对应的运送数量
 				let targetMsg = this.patienModalMessage.transportList.filter((item) => {
-					return item.checked == true
+					return item.typerNumber > 0
 				});
 				this.patienModalMessage.actualData = targetMsg.reduce((accumulator, currentValue) => {
 					return accumulator + currentValue.typerNumber
@@ -810,8 +827,8 @@
 					this.templateTwoMessage[index].genderValue = '男'
 				} else if (this.templateTwoMessage[index].genderValue === '2') {
 					this.templateTwoMessage[index].genderValue = '女'
-				} else {
-					this.templateTwoMessage[index].genderValue = ''
+				} else if (this.templateTwoMessage[index].genderValue === '0'){
+					this.templateTwoMessage[index].genderValue = '未知'
 				}
 			},
 			transferGenderTwo () {
@@ -819,8 +836,8 @@
 					this.patienModalMessage.genderValue = '1'
 				} else if (this.patienModalMessage.genderValue == '女') {
 					this.patienModalMessage.genderValue = '2'
-				} else {
-					this.patienModalMessage.genderValue = ''
+				} else if (this.patienModalMessage.genderValue === '未知'){
+					this.patienModalMessage.genderValue = '0'
 				}
 			},
 			// 病人模态框信息确认事件
@@ -835,8 +852,8 @@
 						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '男'
 					} else if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '2') {
 						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '女'
-					} else {
-						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = ''
+					} else if (this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue === '0'){
+						this.templateTwoMessage[this.templateTwoMessage.length-1].genderValue = '未知'
 					}
 				};
 				this.xflSelectShow = false
@@ -855,7 +872,7 @@
 					bedNumber: '',
 					patientName: '',
 					patientNumber: '',
-					genderValue: '1',
+					genderValue: '0',
 					actualData: 0,
 					transportList: this.transportTypeChild,
 					sampleList: this.transportTypeParent,
@@ -964,7 +981,7 @@
 						taskTypeId: this.typeValue, //运送类型 ID
 						taskTypeName: this.typeText, //运送类型 名 称
 						priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-						toolId: this.toolValue == 0 ? '' : this.toolValue, //运送工具ID
+						toolId: this.toolValue == 0 ? 0 : this.toolValue, //运送工具ID
 						toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
 						actualCount: this.actualData, //实际数量
 						patientName: this.patientName, //病人姓名
@@ -996,7 +1013,7 @@
 						destinations: [],//多个目的地列表
 						patientInfoList: [], //多个病人信息列表
 						priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
-						toolId: this.toolValue == 0 ? '' : this.toolValue, //运送工具ID
+						toolId: this.toolValue == 0 ? 0 : this.toolValue, //运送工具ID
 						toolName: this.toolName == '无工具' ? '' : this.toolName, //运送工具名称
 						actualCount: this.taskTotal, //实际数量
 						taskRemark: this.taskDescribe, //备注
@@ -1022,7 +1039,7 @@
 							bedNumber: patientItem['bedNumber'],
 							patientName: patientItem['patientName'],
 							number: patientItem['patientNumber'],
-							sex:  patientItem['genderValue'] == '男' ? 1 : 2,
+							sex:  patientItem['genderValue'] === '男' ? 1 : patientItem['genderValue'] === '女' ? 2 : 0,
 							quantity: patientItem['actualData'],
 							typeList: []
 						})
@@ -1061,6 +1078,10 @@
 
 <style lang="scss">
 	@import "~@/common/stylus/variable.scss";
+	page {
+		width: 100%;
+		height: 100%;
+	};
 	.container {
 		@include content-wrapper;
 		padding-bottom: 0;
@@ -1254,6 +1275,9 @@
 			width: 100%;
 			z-index: 500
 		};
+		.creatStyle {
+			overflow: hidden !important
+		};
 		.creat-box {
 			position: relative;
 			width: 100%;
@@ -1307,10 +1331,29 @@
 			};
 			
 			.tool-box {
+				width: 100%;
+				border-bottom: 12px solid #f6f6f6;
+				> view {
+					display: inline-block
+				};
+				.creat-priority-title {
+					width: 20%;
+					padding-left: 4px;
+					box-sizing: border-box;
+					height: 48px;
+					vertical-align: middle;
+					line-height: 48px;
+					color: #7d7d7d;
+				};	 
 				.creat-priority-content {
-					-webkit-overflow-scrolling: touch;
-					overflow:auto;
-					/deep/ .u-radio-group {
+					font-size: 15px;
+					color: $color-text-right;
+					width: 80%;
+					vertical-align: middle;
+					padding: 6px 6px 8px 0;
+					box-sizing: border-box;
+					/deep/ u-radio-group {
+						width: 100%
 					}
 				}
 			};
@@ -1424,15 +1467,10 @@
 			};
 			.creat-transport-type {
 				width: 100%;
-				height: 110px;
-				-webkit-overflow-scrolling: touch;
-				overflow: auto;
 				display: flex;
-				flex: 1;
 				flex-direction: row;
 				border-top: 12px solid #f6f6f6;
 				border-bottom: 12px solid #f6f6f6;
-	
 				.creat-transport-type-title {
 					margin-top: 8px;
 					width: 20%;
@@ -1465,8 +1503,6 @@
 					align-content: flex-start;
 					padding: 8px 6px 8px 0;
 					box-sizing: border-box;
-					-webkit-overflow-scrolling: touch;
-					overflow: auto;
 					.transTypeListStyle {
 						background: #d6f4ff;
 						color: #01a6ff;
@@ -1486,8 +1522,6 @@
 			};
 			.creat-form {
 				width: 100%;
-				padding: 4px 0;
-				box-sizing: border-box;
 				border-bottom: 12px solid #f6f6f6;
 				display: flex;
 				width: 100%;
@@ -1593,12 +1627,9 @@
 				};
 			}
 			.patient-box {
-				border-top: 12px solid #f6f6f6;;
+				border-top: 12px solid #f6f6f6;
 				border-bottom: 12px solid #f6f6f6;
 				padding: 0 0 8px 4px;
-				height: 400px;
-				-webkit-overflow-scrolling: touch;
-				overflow: auto;
 				.addpatient-message-btn {
 					width: 96%;
 					height: 40px;
@@ -1814,8 +1845,6 @@
 									top: 0;;
 									width: 55%;
 									right: 0;
-									// display: flex;
-									// flex-flow: row nowrap;
 									.subtract-box  {
 										width: 30px;
 										height: 33px;
@@ -1840,7 +1869,6 @@
 				}
 			};
 			.task-describe {
-				margin: 4px 0;
 			}
 		};
 		.btn-box {
