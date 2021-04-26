@@ -42,17 +42,17 @@
 							</view>
 							<view class="destination-point" v-else-if="templateType === 'template_two'">
 								<text>运送类型 :</text>
-								<text>{{item.patientInfoList[0].typeList[0].parentTypeName}}</text>
+								<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
 							</view>
 						</view>
 						<view class="item-top-three">
 							<view class="transport-type">
 								<text>转运工具 :</text>
-								<text>{{item.toolName}}</text>
+								<text>{{!item.toolName ? '无' : item.toolName}}</text>
 							</view>
 						  <view class="transport-people">
 								<text>运送人 :</text>
-						  	<text>{{item.workerName}}</text>
+						  	<text>{{!item.workerName ? '无' : item.workerName}}</text>
 						  </view>
 						</view>
 						<view class="item-top-three">
@@ -72,7 +72,7 @@
 						<view class="item-top-four">
 						  <view class="bed-number">
 								<text>目的地 :</text>
-								<text class="destina-list" v-for="(item,index) in item.destinations" :key="index">{{item.destinationName}}</text>
+								<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
 						  </view>
 						</view>
 					</view>
@@ -115,17 +115,17 @@
 							</view>
 							<view class="destination-point" v-else-if="templateType === 'template_two'">
 								<text>运送类型 :</text>
-								<text>{{item.patientInfoList[0].typeList[0].parentTypeName}}</text>
+								<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
 							</view>
 						</view>
 						<view class="item-top-three">
 							<view class="transport-type">
 								<text>转运工具 :</text>
-								<text>{{item.toolName}}</text>
+								<text>{{!item.toolName ? '无' : item.toolName}}</text>
 							</view>
 						  <view class="transport-people">
 								<text>运送人 :</text>
-						  	<text>{{item.workerName}}</text>
+						  	<text>{{!item.workerName ? '无' : item.workerName}}</text>
 						  </view>
 						</view>
 						<view class="item-top-three">
@@ -145,7 +145,7 @@
 						<view class="item-top-four">
 						  <view class="bed-number">
 								<text>目的地 :</text>
-								<text class="destina-list" v-for="(item,index) in item.destinations" :key="index">{{item.destinationName}}</text>
+								<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
 						  </view>
 						</view>
 					</view>
@@ -439,6 +439,7 @@
 						  createTime: item.createTime,
 						  planUseTime: item.planUseTime,
 						  planStartTime: item.planStartTime,
+							patientInfoList: item.patientInfoList,
 						  state: item.state,
 						  setOutPlaceName: item.setOutPlaceName,
 						  destinationName: item.destinationName,
@@ -449,7 +450,6 @@
 						  id: item.id,
 						  distName: item.distName,
 							destinations: item.destinations,
-							patientInfoList: item.patientInfoList,
 						  patientName: item.patientName,
 						  bedNumber: item.bedNumber,
 						  startPhoto: item.startPhoto,
