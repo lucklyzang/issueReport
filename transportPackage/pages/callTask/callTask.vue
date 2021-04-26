@@ -1048,7 +1048,7 @@
 					for (let i = 0, len = this.templateTwoMessage.length; i < len; i++) {
 						if (this.templateTwoMessage[i]['transportList'].length > 0) {
 							// 获取选中的运送类型小类
-							let checkChildTypeList = this.templateTwoMessage[i]['transportList'].filter((item) => {return item.checked});
+							let checkChildTypeList = this.templateTwoMessage[i]['transportList'].filter((item) => {return item.typerNumber > 0});
 							for (let innerItem of checkChildTypeList) {
 								taskMessageTwo.patientInfoList[i]['typeList'].push({
 									quantity: innerItem['typerNumber'],
