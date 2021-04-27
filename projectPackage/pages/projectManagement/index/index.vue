@@ -9,7 +9,11 @@
 			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="工程管理" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="trans-type-list">
-			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in serviceList" :key="item" @click="typeEvent(item,index)">
+			<view :class="{'enlargeTransStyle': typeIndex == index && projectTypeClass, 'shrinkTransStyle': typeIndex == index && !projectTypeClass}" v-for="(item,index) in serviceList" :key="item" 
+				@click="typeEvent(item,index)"
+				@touchstart="projectTypeTouchStart(index)" 
+				@touchend="projectTypeTouchEnd(index)"
+			>
         <view>
           <fa-icon v-show="item == '设备维保'" type="wrench" size="100" color="#065da7"></fa-icon>
           <fa-icon v-show="item == '工程人员维修'" type="cog" size="100" color="#065da7"></fa-icon>
@@ -43,6 +47,7 @@
 		},
 		data() {
       return {
+				projectTypeClass: '',
 				typeText: '',
 				serviceList: ['设备维保','工程人员维修'],
 				typeIndex: null,
@@ -87,6 +92,18 @@
 				'changeTitleText',
 				'changeIsToCallTaskPage'
 			]),
+			
+			// 运送类型TouchStart事件
+			projectTypeTouchStart(index) {
+				this.projectTypeClass = true;
+				this.typeIndex = index
+			},
+			
+			// 运送类型TouchEnd事件
+			projectTypeTouchEnd(index) {
+				this.projectTypeClass = false;
+				this.typeIndex = index
+			},
 			
 			// 返回上一页
 			backTo () {
@@ -172,6 +189,42 @@
 			.fa-icon {
 				color: #0e89ec !important
 			};
+			.enlargeTransStyle {
+				animation: enlarge 0.2s linear both
+			}
+			
+			;
+			
+			.shrinkTransStyle {
+				animation: shink 0.2s linear both
+			}
+			
+			;
+			
+			@keyframes enlarge {
+				from {
+					transform: scale3d(1, 1, 1);
+				}
+			
+				to {
+					transform: scale3d(1.3, 1.3, 1.3);
+				}
+			}
+			
+			;
+			
+			@-webkit-keyframes shink {
+				from {
+					transform: scale3d(1.3, 1.3, 1.3);
+				}
+			
+				to {
+					transform: scale3d(1, 1, 1);
+				}
+			}
+			
+			;
+			
 			.transTypeListStyle {
 				background: #ededed
 			};

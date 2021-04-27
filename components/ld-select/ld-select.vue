@@ -25,7 +25,9 @@
 						<view class="title">{{getLabelKeyValue(item)}}</view>
 						<text class="selectIcon icongou" v-if="valueIndexOf(item)"></text>
 					</view>
-					<view class="no-data" v-if="listData.length == 0">暂无数据 !</view>
+					<view class="no-data" v-if="listData.length == 0">
+						<u-empty></u-empty>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -307,18 +309,9 @@
 				overflow:auto;
 				-webkit-overflow-scrolling: touch;
 				z-index: 2000;
-				// overflow:auto;
-				// display: flex;
-				// flex-flow: column nowrap;
-				// align-items: center;
-				// justify-content: center;
 				.no-data {
 					width: 100%;
 					height: 200rpx;
-					line-height: 200rpx;
-					text-align: center;
-					color: #43c3f3;
-					font-size: 16px;
 					z-index: 1000
 				};
 				.select-item{

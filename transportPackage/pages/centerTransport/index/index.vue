@@ -10,8 +10,10 @@
 			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="中央运送" @backClick="backTo"></nav-bar>
 		</view>
 		<view class="trans-type-list">
-			<view :class="{'transTypeListStyle': typeIndex == index}" v-for="(item,index) in transTypeList" :key="item.value"
-			 @click="typeEvent(item,index)">
+			<view :class="{'enlargeTransStyle': typeIndex == index && transTypeClass, 'shrinkTransStyle': typeIndex == index && !transTypeClass}" v-for="(item,index) in transTypeList" :key="item.value"
+			 @click="typeEvent(item,index)"
+			 @touchstart="transTypeTouchStart(index)" @touchend="transTypeTouchEnd(index)"
+			 >
 				<view>
 					<fa-icon v-show="item.value == '标本'" type="flask" size="100" color="#065da7"></fa-icon>
 					<fa-icon v-show="item.value == '药、物、文书'" type="plus-square-o" size="100" color="#065da7"></fa-icon>
@@ -55,6 +57,7 @@
 		},
 		data() {
 			return {
+				transTypeClass: '',
 				typeText: '',
 				transTypeList: [],
 				typeIndex: null,
@@ -113,6 +116,18 @@
 					url: '/transportPackage/pages/callTask/callTask?title=' + this.typeText
 				});
 				this.changeIsToCallTaskPage(true)
+			},
+			
+			// 运送类型TouchStart事件
+			transTypeTouchStart(index) {
+				this.transTypeClass = true;
+				this.typeIndex = index
+			},
+			
+			// 运送类型TouchEnd事件
+			transTypeTouchEnd(index) {
+				this.transTypeClass = false;
+				this.typeIndex = index
 			},
 
 			//运送类型
@@ -226,7 +241,43 @@
 			background: #FFF;
 			.fa-icon {
 				color: $color-big-icon !important
+			};
+			
+			.enlargeTransStyle {
+				animation: enlarge 0.2s linear both
 			}
+			
+			;
+			
+			.shrinkTransStyle {
+				animation: shink 0.2s linear both
+			}
+			
+			;
+			
+			@keyframes enlarge {
+				from {
+					transform: scale3d(1, 1, 1);
+				}
+			
+				to {
+					transform: scale3d(1.3, 1.3, 1.3);
+				}
+			}
+			
+			;
+			
+			@-webkit-keyframes shink {
+				from {
+					transform: scale3d(1.3, 1.3, 1.3);
+				}
+			
+				to {
+					transform: scale3d(1, 1, 1);
+				}
+			}
+			
+			;
 
 			.transTypeListStyle {
 				background: #ededed
