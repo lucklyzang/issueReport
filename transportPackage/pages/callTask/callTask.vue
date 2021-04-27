@@ -1175,7 +1175,6 @@
 									float: right;
 									position: relative;
 									width: 70%;
-									z-index: 300;
 									border-bottom: 1px solid #ececec;
 									.show-box {
 										color: $color-text-right;
@@ -1221,7 +1220,6 @@
 										float: right;
 										position: relative;
 										width: 50%;
-										z-index: 100;
 										border-bottom: 1px solid #f9f9f9;
 										.num-box {
 											align-items: center;
@@ -1374,7 +1372,6 @@
 					float: right;
 					position: relative;
 					width: 70%;
-					z-index: 300;
 					
 					.show-box {
 						color: $color-text-right;
@@ -1398,7 +1395,6 @@
 					float: right;
 					position: relative;
 					width: 70%;
-					z-index: 300;
 					.main {
 						color: $color-text-right;
 						position: absolute;
@@ -1574,7 +1570,7 @@
 				border-bottom: 12px solid #f6f6f6;
 					
 				/deep/ .u-field {
-					padding: 16px 2px;
+					padding:10px 0 10px 4px;
 					color: $color-text-left;
 					.u-label-text {
 						font-size: 14px
@@ -1738,28 +1734,6 @@
 							}
 						}
 					};
-					.creat-gender {
-						width: 100%;
-						height: 30px;
-						position: relative;
-						.creat-gender-title {
-							position: absolute;
-							top: 50%;
-							transform: translateY(-50%);
-							left: 4px;
-							width: 20%;
-						};
-						.creat-gender-content {
-							position: absolute;
-							right: 0;
-							width: 80%;
-							z-index: 200;
-							
-							.show-box {
-								height: 30px !important;
-							}
-						};
-					};
 					.transport-parent-box {
 						padding-left: 6px;
 						height: 40px;
@@ -1767,7 +1741,6 @@
 						flex-flow: row nowrap;
 						background: #f9f9f9;
 						justify-content: space-between;
-						z-index: 100;
 						.content-type-title {
 							color: $color-text-left;
 							font-size: 14px;
