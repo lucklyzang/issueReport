@@ -175,7 +175,6 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache } from '@/common/js/utils'
 	import {getDispatchTaskComplete, taskReminder, queryDispatchTaskCancelReason,updateDispatchTask} from '@/api/task.js'
 	import bottomBar from '@/components/bottom-bar/bottom-bar.vue'
 	import navBar from "@/components/zhouWei-navBar"

@@ -60,7 +60,6 @@
 	} from 'vuex'
 	import {
 		setCache,
-		getCache,
 		removeAllLocalStorage
 	} from '@/common/js/utils'
 	import {

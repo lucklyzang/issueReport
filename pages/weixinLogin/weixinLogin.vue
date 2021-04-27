@@ -56,7 +56,7 @@
 <script>
 	import navBar from "@/components/zhouWei-navBar"
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache } from '@/common/js/utils'
+	import { setCache } from '@/common/js/utils'
 	import {weixinLogIn, boundExist, boundNotExist, getHospitalList} from '@/api/login.js'
     export default {
       components:{

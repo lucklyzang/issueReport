@@ -16,7 +16,7 @@
 
 <script>
 	import {phoneLogin} from '@/api/login.js'
-	import { setCache, getCache } from '@/common/js/utils'
+	import { getCache } from '@/common/js/utils'
 	export default {
 		data () {
 			return {

@@ -34,8 +34,6 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache } from '@/common/js/utils'
-	import {queryTransportTypeClass} from '@/api/task.js'
 	import bottomBar from '@/components/bottom-bar/bottom-bar.vue'
 	import navBar from "@/components/zhouWei-navBar"
   import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"

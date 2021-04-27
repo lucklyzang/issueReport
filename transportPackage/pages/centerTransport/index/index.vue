@@ -40,10 +40,6 @@
 		mapMutations
 	} from 'vuex'
 	import {
-		setCache,
-		getCache
-	} from '@/common/js/utils'
-	import {
 		queryTransportTypeClass
 	} from '@/api/task.js'
 	import bottomBar from '@/components/bottom-bar/bottom-bar.vue'

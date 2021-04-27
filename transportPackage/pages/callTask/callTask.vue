@@ -322,10 +322,6 @@
 	import _ from 
 		'lodash'
 	import {
-		setCache,
-		getCache
-	} from '@/common/js/utils'
-	import {
 		queryTransportTypeClass,
 		queryTransportTools,
 		queryTransportType,

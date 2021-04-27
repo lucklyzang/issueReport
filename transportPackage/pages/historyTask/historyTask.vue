@@ -166,7 +166,7 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache, getDate } from '@/common/js/utils'
+	import { getDate } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
 	import {getDispatchTaskComplete} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
