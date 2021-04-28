@@ -85,7 +85,7 @@
 					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in taskTypeList" :class="[{'transTypeListStyle': typeIndex === index},{'transTypeListMarginStyle': taskTypeList.length <= 2}]" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
+					<view v-for="(item,index) in taskTypeList" :class="[{'transTypeListStyle': typeIndex === index}]" @click="typeEvent(item,index)" :key="index">{{item.text}}</view>
 				</view>
 			</view>
       <view class="creat-form">
@@ -158,7 +158,6 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache } from '@/common/js/utils'
 	import {queryTaskType, queryAllDestination, reportProblem, departmentRoom, helpWorkers, getRemarks} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
   import uniList from "@/components/uni-list/uni-list.vue"
@@ -867,17 +866,20 @@
 						color: #01a6ff;
 						border: 1px solid #4cc5f2
 					};
-					.transTypeListMarginStyle {
-						margin-bottom: 0 !important;
-					};
 					>view {
 						width: 45%;
-						margin-bottom: 4px;
+						margin-top: 4px;
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
 						background:: #f9f9f9;
-						border-radius: 16px
+						border-radius: 16px;
+						&:nth-child(1) {
+							margin-top: 0;
+						};
+						&:nth-child(2) {
+							margin-top: 0;
+						};
 					}
 				}
 			};

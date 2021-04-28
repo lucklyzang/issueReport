@@ -70,7 +70,7 @@
 					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
-					<view v-for="(item,index) in taskTypeList" :class="[{'transTypeListStyle': typeIndex === index},{'transTypeListMarginStyle': taskTypeList.length <= 2}]" @click="typeEvent(item,index)"
+					<view v-for="(item,index) in taskTypeList" :class="[{'transTypeListStyle': typeIndex === index}]" @click="typeEvent(item,index)"
 					 :key="index">{{item.text}}</view>
 				</view>
 			</view>
@@ -80,11 +80,11 @@
 				</view>
 				<view>
 					<view v-for="(item, index) in imgArr" :key='index'>
-						<image :src="item" mode="aspectFill"></image>
+						<image :src="item" mode="aspectFit"></image>
 						<fa-icon type="window-close" size="20" color="#000000" @click="photoDelete(item,index)"></fa-icon>
 					</view>
 					<view>
-						<image class="" mode="aspectFill" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
+						<image class="" mode="aspectFit" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
 					</view>
 				</view>
 			</view>
@@ -831,17 +831,20 @@
 						color: #01a6ff;
 						border: 1px solid #4cc5f2
 					};
-					.transTypeListMarginStyle {
-						margin-bottom: 0 !important;
-					};
 					>view {
 						width: 45%;
-						margin-bottom: 4px;
+						margin-top: 4px;
 						height: 35px;
 						text-align: center;
 						line-height: 35px;
 						background:: #f9f9f9;
-						border-radius: 16px
+						border-radius: 16px;
+						&:nth-child(1) {
+							margin-top: 0;
+						};
+						&:nth-child(2) {
+							margin-top: 0;
+						};
 					}
 				}
 			};
