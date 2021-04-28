@@ -83,9 +83,9 @@
 						<image :src="item" mode="aspectFill"></image>
 						<fa-icon type="window-close" size="20" color="#000000" @click="photoDelete(item,index)"></fa-icon>
 					</view>
-				</view>
-				<view>
-					<image class="" mode="aspectFill" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
+					<view>
+						<image class="" mode="aspectFill" :lazy-load="true" src="/static/img/plus.png"  @click="getImg"/>
+					</view>
 				</view>
 			</view>
 			<view class="task-describe">
@@ -709,6 +709,7 @@
 			.view-photoList {
 				background: #fff;
 				box-sizing: border-box;
+				padding: 4px 0;
 				border-bottom: 12px solid #f6f6f6;
 				>view {
 					display: inline-block;
@@ -721,42 +722,37 @@
 						line-height: 100px;
 					};
 					&:nth-child(2) {
-						width: calc(100% - 164px);
+						width: calc(100% - 80px);
 						font-size: 34px;
-						padding: 4px 0;
 						>view {
-							width: 48%;
+							width: 32%;
 							height: 100px;
 							display: inline-block;
-							margin-right: 4px;
-							margin-bottom: 4px;
+							vertical-align: top;
+							margin-right: 2%;
+							margin-top: 2%;
 							position: relative;
+							&:nth-child(1) {
+								margin-top: 0;
+							};
+							&:nth-child(2) {
+								margin-top: 0;
+							};
+							&:nth-child(3) {
+								margin-top: 0;
+							};
+							&:nth-child(3n+3) {
+								margin-right: 0;
+							};
 							>fa-icon {
 								position: absolute;
 								top: -12px;
 								right: 0
 							};
-							&:last-child {
-								margin-right: 0
-							};
 							image {
 								width: 100%;
 								height: 100%
 							}
-						}
-					};
-					&:last-child {
-						vertical-align: top;
-						width: 80px;
-						height: 80px;
-						margin-top: 10px;
-						margin-right: 4px;
-						image {
-							width: 100%;
-							height: 100%
-						};
-						.fa-icon {
-							color: #000000 !important
 						}
 					}
 				}
