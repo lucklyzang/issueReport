@@ -41,7 +41,7 @@ const app = new Vue({
 			})
 		  } else {
 			uni.redirectTo({
-				url: '/pages/myInfo/myInfo'
+				url: '/pages/login/login'
 			})
 		}
 	}
