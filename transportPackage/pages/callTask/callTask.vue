@@ -1852,6 +1852,10 @@
 			justify-content: space-between;
 			align-items: center;
 			view {
+				::after {
+					border-radius: 4px;
+					border: none;
+				};
 				width: 47%;
 				&:first-child {
 					button {

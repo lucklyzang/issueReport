@@ -223,6 +223,10 @@
         width: 80%;
         margin: 0 auto;
         margin-top: 30px;
+				::after {
+					border-radius: 4px;
+					border: none;
+				};
 				button {
           background-image: linear-gradient(to right, #37d5fc , #429afe);
           border-radius: 20px;

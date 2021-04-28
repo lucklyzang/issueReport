@@ -966,20 +966,20 @@
 			justify-content: space-between;
 			align-items: center;
 			view {
+				::after {
+					border-radius: 4px;
+					border: none;
+				};
 				width: 47%;
 				&:first-child {
 					button {
-						border-radius: 4px;
 						background-image: linear-gradient(to right, #37d5fc , #429bff);
 						color: #fff
 					}
 				};
-	
 				&:last-child {
 					button {
-						border-radius: 4px;
 						background: #e8e8e8;
-						border: none;
 						color: #666666
 					}
 				}
