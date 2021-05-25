@@ -169,7 +169,7 @@
 			<view class="creat-chooseHospital">
 				<view class="creat-chooseHospital-title">科室选择</view>
 				<view class="creat-chooseHospital-content-two">
-					 <ld-select :multiple="true" :list="hospitalList"
+					 <ld-select :list="hospitalList"
 						label-key="value" value-key="id"
 						@ldShow="ldSelectShow"
 						@ldHide="ldSelectHide"
@@ -354,7 +354,7 @@
 				priorityValue: 1,
 				transportList: [],
 				hospitalList: [],
-				hospitalListTwovalue: [],
+				hospitalListTwovalue: '',
 				hospitalListValue: '',
 				temporaryHospitalList: [],
 				bedNumber: '',
@@ -968,10 +968,10 @@
 					// };
 					// 获取选中的运送工具信息
 					let taskMessage = {
-						setOutPlaceId: this.startPointId, //出发地ID
-						setOutPlaceName: this.startPointName, //出发地名称
-						destinationId: this.hospitalListValue, //目的地ID
-						destinationName: this.hospitalListValue == '' ? '' : this.getDepartmentNameById(this.hospitalListValue), //目的地名称
+						setOutPlaceId: this.hospitalListValue == '' ? this.startPointId : this.hospitalListValue, //出发地ID
+						setOutPlaceName: this.hospitalListValue == '' ? this.startPointName : this.getDepartmentNameById(this.hospitalListValue),//出发地名称
+						// destinationId: this.hospitalListValue, //目的地ID
+						// destinationName: this.hospitalListValue == '' ? '' : this.getDepartmentNameById(this.hospitalListValue), //目的地名称
 						parentTypeId: this.titleText.id, //运送父类型Id
 						parentTypeName: this.titleText.value, //运送父类型名称
 						taskTypeId: this.typeValue, //运送类型 ID
@@ -1004,8 +1004,8 @@
 					// 	return 
 					// };
 					let taskMessageTwo = {
-						setOutPlaceId: this.startPointId, //出发地ID
-						setOutPlaceName: this.startPointName, //出发地名称
+						setOutPlaceId: this.hospitalListTwovalue == '' ? this.startPointId : this.hospitalListTwovalue, //出发地ID
+						setOutPlaceName: this.hospitalListTwovalue == '' ? this.startPointName : this.getDepartmentNameById(this.hospitalListTwovalue),//出发地名称
 						destinations: [],//多个目的地列表
 						patientInfoList: [], //多个病人信息列表
 						priority: this.priorityValue, //优先级   0-正常, 1-重要,2-紧急, 3-紧急重要
@@ -1021,14 +1021,14 @@
 						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
 					};
 					// 获取目的地列表数据
-					if (this.hospitalListTwovalue.length > 0) {
-						for (let item of this.hospitalListTwovalue) {
-							taskMessageTwo.destinations.push({
-								destinationId: item,
-								destinationName: this.getDepartmentNameById(item)
-							})
-						}
-					};	
+					// if (this.hospitalListTwovalue.length > 0) {
+					// 	for (let item of this.hospitalListTwovalue) {
+					// 		taskMessageTwo.destinations.push({
+					// 			destinationId: item,
+					// 			destinationName: this.getDepartmentNameById(item)
+					// 		})
+					// 	}
+					// };	
 					// 获取多个病人信息列表数据
 					for (let patientItem of this.templateTwoMessage) {
 						taskMessageTwo.patientInfoList.push({
