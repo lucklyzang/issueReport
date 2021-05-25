@@ -15,10 +15,10 @@
 				<view>优先级</view>
 				<view>
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#333">正常</u-radio>
-						<u-radio name="2" active-color="#333">重要</u-radio>
-						<u-radio name="3" active-color="#333">紧急</u-radio>
-						<u-radio name="4" active-color="#333">紧急重要</u-radio>
+						<u-radio name="1" active-color="#2c9af1">正常</u-radio>
+						<u-radio name="2" active-color="#2c9af1">重要</u-radio>
+						<u-radio name="3" active-color="#2c9af1">紧急</u-radio>
+						<u-radio name="4" active-color="#2c9af1">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>

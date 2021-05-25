@@ -11,10 +11,10 @@
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#333">正常</u-radio>
-						<u-radio name="2" active-color="#333">重要</u-radio>
-						<u-radio name="3" active-color="#333">紧急</u-radio>
-						<u-radio name="4" active-color="#333">紧急重要</u-radio>
+						<u-radio name="1" active-color="#2c9af1">正常</u-radio>
+						<u-radio name="2" active-color="#2c9af1">重要</u-radio>
+						<u-radio name="3" active-color="#2c9af1">紧急</u-radio>
+						<u-radio name="4" active-color="#2c9af1">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -111,8 +111,8 @@
 				<view class="creat-priority-title">运送员是否返回</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-						<u-radio name="0" active-color="#333">否</u-radio>
-						<u-radio name="1" active-color="#333">是</u-radio>
+						<u-radio name="0" active-color="#2c9af1">否</u-radio>
+						<u-radio name="1" active-color="#2c9af1">是</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -133,10 +133,10 @@
 				<view class="creat-priority-title">优先级</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="priorityValue" @change="radioGroupChange">
-						<u-radio name="1" active-color="#333">正常</u-radio>
-						<u-radio name="2" active-color="#333">重要</u-radio>
-						<u-radio name="3" active-color="#333">紧急</u-radio>
-						<u-radio name="4" active-color="#333">紧急重要</u-radio>
+						<u-radio name="1" active-color="#2c9af1">正常</u-radio>
+						<u-radio name="2" active-color="#2c9af1">重要</u-radio>
+						<u-radio name="3" active-color="#2c9af1">紧急</u-radio>
+						<u-radio name="4" active-color="#2c9af1">紧急重要</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -144,7 +144,7 @@
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="toolValue" @change="toolGroupChange">
-						<u-radio @change="toolChange" active-color="#333" shape="circle" v-for="(item, index) in toolList" :key="index"
+						<u-radio @change="toolChange" active-color="#2c9af1" shape="circle" v-for="(item, index) in toolList" :key="index"
 						 :name="item.value">
 							{{item.text}}
 						</u-radio>
@@ -155,8 +155,8 @@
 				<view class="creat-priority-title">运送员是否返回</view>
 				<view class="creat-priority-content">
 					<u-radio-group v-model="isBackValue" @change="isBackGroupChange">
-						<u-radio name="0" active-color="#333">否</u-radio>
-						<u-radio name="1" active-color="#333">是</u-radio>
+						<u-radio name="0" active-color="#2c9af1">否</u-radio>
+						<u-radio name="1" active-color="#2c9af1">是</u-radio>
 					</u-radio-group>
 				</view>
 			</view>
@@ -271,9 +271,9 @@
 					<view>性别</view>
 					<view>
 						<u-radio-group v-model="patienModalMessage.genderValue" @change="genderChange">
-							<u-radio name="0" active-color="#333">未知</u-radio>
-							<u-radio name="1" active-color="#333">男</u-radio>
-							<u-radio name="2" active-color="#333">女</u-radio>
+							<u-radio name="0" active-color="#2c9af1">未知</u-radio>
+							<u-radio name="1" active-color="#2c9af1">男</u-radio>
+							<u-radio name="2" active-color="#2c9af1">女</u-radio>
 						</u-radio-group>
 					</view>
 				</view>
