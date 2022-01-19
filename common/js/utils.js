@@ -106,6 +106,20 @@ export const getDate = () => {
 
 }
 
+/*
+ * 获取字符串的长度
+ * @param{String} str 指定字符串
+*/
+export const getStringLength = (str) => {
+	let realLength = 0, len = str.length, charCode = -1;
+	for (let i = 0; i < len; i++) {
+			charCode = str.charCodeAt(i);
+			if (charCode >= 0 && charCode <= 128) realLength += 1;
+			else realLength += 2;
+	}
+	return realLength
+}
+
 export const removeAllLocalStorage = () => {
   // removeStore('userName');
   // removeStore('userPassword');

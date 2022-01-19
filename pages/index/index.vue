@@ -4,19 +4,29 @@
 			<text>BLINK</text>
 		</view>
 		<view class="title-wrapper">
-			<view class="center-transport" :class="transClass" @click="skipPageTrans" @touchstart="transTouchStart" @touchend="transTouchEnd"
-			 v-if="isMedicalMan">
-				<view>
-					<fa-icon type="plus-square" size="100" color="#065da7"></fa-icon>
+			<!-- <view class="title-top"> -->
+				<view class="center-transport" :class="transClass" @click="skipPageTrans" @touchstart="transTouchStart" @touchend="transTouchEnd"
+				 v-if="isMedicalMan">
+					<view>
+						<fa-icon type="plus-square" size="100" color="#065da7"></fa-icon>
+					</view>
+					<text>中央运送系统</text>
 				</view>
-				<text>中央运送系统</text>
-			</view>
-			<view class="project-manage" :class="manageClass" @click="skipPageManage" @touchstart="manageTouchStart" @touchend="manageTouchEnd">
-				<view>
-					<fa-icon type="wrench" size="100" color="#065da7"></fa-icon>
+				<view class="project-manage" :class="manageClass" @click="skipPageManage" @touchstart="manageTouchStart" @touchend="manageTouchEnd">
+					<view>
+						<fa-icon type="wrench" size="100" color="#065da7"></fa-icon>
+					</view>
+					<text>工程管理系统</text>
 				</view>
-				<text>工程管理系统</text>
-			</view>
+			<!-- </view> -->
+			<!-- <view class="title bottom">
+				<view class="project-manage" :class="qualityClass" @click="skipQualityPageManage" @touchstart="QualityManageTouchStart" @touchend="QualityManageTouchEnd">
+					<view>
+						<fa-icon type="wrench" size="100" color="#065da7"></fa-icon>
+					</view>
+					<text>质量管理系统</text>
+				</view>
+			</view>	 -->
 		</view>
 	</view>
 </template>
@@ -38,7 +48,8 @@
 		data() {
 			return {
 				transClass: '',
-				manageClass: ''
+				manageClass: '',
+				qualityClass: ''
 			}
 		},
 		onReady() {
@@ -100,6 +111,25 @@
 				setCache('isProjectTask', {flag:true});
 				this.changeBottomBarIndex(-1);
 			},
+			// 质量管理touchStart事件
+			QualityManageTouchStart() {
+				this.qualityClass = 'enlargeTransStyle'
+			},
+
+			// 质量管理touchEnd事件
+			QualityManageTouchEnd() {
+				this.qualityClass = 'shrinkTransStyle'
+			},
+			
+			skipQualityPageManage () {
+				uni.navigateTo({
+					url: '/qualityPackage/pages/qualityManagement/index/index'
+				});
+				this.changeIsProjectTask(true);
+				setCache('isProjectTask', {flag:true});
+				this.changeBottomBarIndex(-1);
+			},
+			
 			initStoreInfo() {
 				// 页面刷新时重新存入用户信息
 				if (getCache('userInfo')) {
@@ -161,19 +191,14 @@
 			flex-flow: column nowrap;
 			justify-content: center;
 			align-items: center;
-
+			// width: 98%;
+			// margin: 0 auto;
 			.enlargeTransStyle {
 				animation: enlarge 0.2s linear both
-			}
-
-			;
-
+			};
 			.shrinkTransStyle {
 				animation: shink 0.2s linear both
-			}
-
-			;
-
+			};
 			@keyframes enlarge {
 				from {
 					transform: scale3d(1, 1, 1);
@@ -182,22 +207,15 @@
 				to {
 					transform: scale3d(1.3, 1.3, 1.3);
 				}
-			}
-
-			;
-
+			};
 			@-webkit-keyframes shink {
 				from {
 					transform: scale3d(1.3, 1.3, 1.3);
 				}
-
 				to {
 					transform: scale3d(1, 1, 1);
 				}
-			}
-
-			;
-
+			};
 			>view {
 				width: 180px;
 				flex-basis: 180px;
@@ -210,22 +228,37 @@
 				border: 1px solid #d6d3d3;
 				box-shadow: 0 15px 10px -15px #6d6d6d;
 				margin-bottom: 20px;
-
 				&:last-child {
 					margin-bottom: 0
 				}
-			}
-
-			;
-
+				// width: 100%;
+				// height: 170px;
+				// margin-bottom: 20px;
+				// display: flex;
+				// flex: wrap;
+				// justify-content: space-between;
+				// align-items: center;
+				// > view {
+				// 	width: 170px;
+				// 	height: 170px;
+				// 	border-radius: 50%;
+				// 	color: black;
+				// 	display: flex;
+				// 	flex-flow: column nowrap;
+				// 	justify-content: center;
+				// 	align-items: center;
+				// 	border: 1px solid #d6d3d3;
+				// 	box-shadow: 0 15px 10px -15px #6d6d6d;
+				// 	&:last-child {
+				// 		margin-right: 0
+				// 	}
+				// }
+			};
 			.center-transport {
 				.fa-icon {
 					color: $color-big-icon !important
 				}
-			}
-
-			;
-
+			};
 			.project-manage {
 				.fa-icon {
 					color: $color-big-icon !important
