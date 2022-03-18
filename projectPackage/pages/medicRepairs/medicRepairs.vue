@@ -127,7 +127,7 @@
 	import navBar from "@/components/zhouWei-navBar"
 	import uniList from "@/components/uni-list/uni-list.vue"
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
-	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue";
+	import faIcon from "@/components/kilvn-fa-icon/fa-icon.vue"
 	import ldSelect from "@/components/ld-select/ld-select.vue"
 	export default {
 		components: {

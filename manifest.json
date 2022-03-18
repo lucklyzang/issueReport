@@ -42,22 +42,18 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx4e932860ea01034b",
+        "appid" : "wx243da7c1b1e812a8",
         "setting" : {
             "urlCheck" : true,
             "minified" : true,
             "postcss" : false,
             "es6" : true
         },
-				// 开启分包优化
-				"optimization": {
-				   "subPackages": true
-				 },
-        "permission" : {
-            "scope.userLocation" : {
-                "desc" : "应用需要实时获取用户的地理位置"
-            }
-        }
+        // 开启分包优化
+        "optimization" : {
+            "subPackages" : true
+        },
+        "permission" : {}
     },
     "h5" : {
         "devServer" : {

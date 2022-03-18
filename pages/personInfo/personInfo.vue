@@ -73,7 +73,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '2.2.7',
+				versionNumber: '2.2.9',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
@@ -97,7 +97,7 @@
 				return this.userInfo.userName
 			},
 			depName() {
-				return this.userInfo.depName
+				return this.userInfo.depName == null ? '无' : this.userInfo.depName
 			},
 			accountName() {
 				return this.userInfo.name

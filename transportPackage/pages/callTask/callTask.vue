@@ -225,7 +225,7 @@
 					</view>
 				</view>
 				<view class="addpatient-message-btn" @click="addMessageEvent">
-						<text><fa-icon type="plus" color="#44c3f3"></fa-icon></text>
+						<fa-icon type="plus" color="#44c3f3"></fa-icon>
 						<text>添加病人信息</text>
 				</view>
 			</view>
@@ -1651,10 +1651,8 @@
 					border: 1px solid #44c3f3;
 					border-radius: 20px;
 					font-size: 16px;
-					text {
-						&:first-child {
-							margin-right: 6px
-						}
+					/deep/ .fa-plus {
+						margin-right: 6px
 					}
 				};
 				.patient-box-list {
