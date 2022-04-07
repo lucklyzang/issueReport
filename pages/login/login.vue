@@ -190,7 +190,7 @@
           span {
             box-shadow: 0 8px 6px -6px black
           }
-			},
+			};
 			.form-box {
         width: 90%;
         margin: 0 auto;
