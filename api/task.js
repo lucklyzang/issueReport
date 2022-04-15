@@ -97,6 +97,33 @@ export function departmentRoom(data) {
   })
 };
 
+/**
+ * 预约任务
+*/
+
+
+// 查询预约任务
+export function queryAppointTaskMessage(data) {
+  return request({
+    url: 'bookTask/queryTask',
+    method: 'get',
+    params: data
+  })
+};
+
+/**
+ * 循环任务
+*/
+
+// 查询循环任务
+export function queryCirculationTask(data) {
+  return request({
+    url: 'circleTask/workerTask',
+    method: 'get',
+    params: data
+  })
+};
+
 // 工程维修
 
 // 巡检问题上报

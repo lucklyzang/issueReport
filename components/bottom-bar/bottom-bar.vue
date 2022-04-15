@@ -24,6 +24,7 @@
 					{text: '呼叫下单', img: '/static/img/medical-call.png',imgCheckd: '/static/img/medical-call-checked.png'},
 					{text: '任务跟踪', img: '/static/img/task-tail.png',imgCheckd: '/static/img/task-tail-checked.png'},
 					{text: '历史任务', img: '/static/img/history-task.png',imgCheckd: '/static/img/history-task-checked.png'},
+					{text: '意见反馈', img: '/static/img/feedback-idea-selected.png',imgCheckd: '/static/img/feedback-idea.png'}
 				],
 				listIndex: ''
 			}
@@ -63,7 +64,7 @@
 		z-index: 1000;
 		background: #fff;
 		.bar-list {
-			width: 33.3333%;
+			width: 25%;
 			height: 50px;
 			text-align: center;
 			line-height: 65px;

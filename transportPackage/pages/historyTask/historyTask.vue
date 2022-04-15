@@ -14,150 +14,562 @@
 		<view class="nav">
 			<nav-bar backState="3000" bgColor="#2c9af1" fontColor="#FFF" title="历史任务" @backClick="backTo"></nav-bar>
 		</view>
-		<view class="time-change-box">
-			<view class="time-change-text">至</view>
-			<view class="time-change-left">
-				<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
-			</view>
-			<view class="time-change-right">
-				<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
-			</view>
-		</view>
-		<!-- <view class="search">
-			<button @click="searchCompleteTask">搜索</button>
-		</view> -->
-		<view class="task-tail-content-box">
-			<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-			<view class="task-tail-content" v-show="current == 0">
-				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
-					<view class="item-top">
-						<view class="item-top-one">
-							<view class="number">
-								<text>编号 : {{item.number}}</text>
-							</view>
-							<view class="priority" style="color:'#94e178'">
-								<text>{{stateTransfer(item.state)}}</text>
-							</view>
+		<!--任务切换栏-->
+		<view class="container-box">
+			<u-sticky>
+				<view class="task-switch">
+					<text v-for="(item,index) in taskNameList" :class="{'active-tab-style':taskNameIndex === index}" :key="index" @click="tabSwitchEvent(item,index)">{{item.name}}</text>
+				</view>
+			</u-sticky>	
+			<view class="historyTask-box">
+				<view class="historyTask-list-box historyTask-list-dispatch-box" v-show="taskNameIndex === 0">
+					<view class="time-change-box">
+						<view class="time-change-text">至</view>
+						<view class="time-change-left">
+							<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
 						</view>
-						<view class="item-top-two">
-							<view class="start-point">
-								<text>优先级 :</text>
-								<text>{{priorityTransfer(item.priority)}}</text>
-							</view>
-							<view class="destination-point" v-if="templateType == 'template_one'">
-								<text>运送类型 :</text>
-								<text>{{item.taskTypeName}}</text>
-							</view>
-							<view class="destination-point" v-else-if="templateType === 'template_two'">
-								<text>运送类型 :</text>
-								<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
-							</view>
-						</view>
-						<view class="item-top-three">
-							<view class="transport-type">
-								<text>转运工具 :</text>
-								<text>{{!item.toolName ? '无' : item.toolName}}</text>
-							</view>
-							<view class="transport-people">
-								<text>运送人 :</text>
-								<text>{{!item.workerName ? '无' : item.workerName}}</text>
-							</view>
-						</view>
-						<view class="item-top-three">
-							<view class="start-point">
-								<text>出发地 :</text>
-								<text>{{item.setOutPlaceName}}</text>
-							</view>
-							<view class="bed-number" v-if="templateType === 'template_one'">
-								<text>床号: </text>
-								<text>{{item.bedNumber}}</text>
-							</view>
-							<view class="bed-number" v-else-if="templateType === 'template_two'">
-								<text>床号 :</text>
-								<text>{{item.patientInfoList[0].bedNumber}}</text>
-							</view>
-						</view>
-						<view class="item-top-four">
-							<view class="bed-number">
-								<text>目的地: </text>
-								<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
-							</view>
+						<view class="time-change-right">
+							<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
 						</view>
 					</view>
-					<view class="item-bottom">
-						<view class="item-bottom-left">
-							<view class="time">
-								<text>{{item.createTime}}</text>
+					<!-- <view class="search">
+						<button @click="searchCompleteTask">搜索</button>
+					</view> -->
+					<view class="task-tail-content-box">
+						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
+						<view class="task-tail-content" v-show="current == 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+										<view class="number">
+											<text>编号 : {{item.number}}</text>
+										</view>
+										<view class="priority" style="color:'#94e178'">
+											<text>{{stateTransfer(item.state)}}</text>
+										</view>
+									</view>
+									<view class="task-type-name">
+										<view class="destination-point" v-if="templateType == 'template_one'">
+											<text>运送类型 :</text>
+											<text>{{item.taskTypeName}}</text>
+										</view>
+										<view class="destination-point" v-else-if="templateType === 'template_two'">
+											<text>运送类型 :</text>
+											<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="start-point">
+											<text>出发地 :</text>
+											<text>{{item.setOutPlaceName}}</text>
+										</view>
+										<view class="transport-type">
+											<text>转运工具 :</text>
+											<text>{{!item.toolName ? '无' : item.toolName}}</text>
+										</view>
+									</view>
+									<view class="item-top-two">
+										<view class="start-point">
+											<text>优先级 :</text>
+											<text>{{priorityTransfer(item.priority)}}</text>
+										</view>
+										<view class="bed-number" v-if="templateType === 'template_one'">
+											<text>床号: </text>
+											<text>{{item.bedNumber}}</text>
+										</view>
+										<view class="bed-number" v-else-if="templateType === 'template_two'">
+											<text>床号 :</text>
+											<text>{{item.patientInfoList[0].bedNumber}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>住院号 :</text>
+											<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>订单创建时间 :</text>
+											<text>{{!item.createTime ? '无' : item.createTime}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>完成时间 :</text>
+											<text>{{!item.finishTime ? '无' : item.finishTime}}</text>
+										</view>
+									</view>
+									<view class="item-top-four">
+										<view class="bed-number">
+											<text>目的地: </text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+										</view>
+									</view>
+								</view>
+								<view class="item-bottom">
+									<!-- 反馈区域 -->
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+												<view class="left-feedback-icon"  @click="feedBackEvent(item,index)">
+													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
+												</view>
+												<view class="right-like-icon" @click="giveLikeEvent(item,index)">
+													<u-icon name="arrow-up-fill" size="40" :color="item.isShowGiveLikeIconStyle ? 'orange' : '#a59f9f'" />
+													<text :class="{'give-like-text-style':item.isShowGiveLikeIconStyle}">
+														点赞
+													</text>
+												</view>
+											</view>
+											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+												感谢您的反馈!
+											</view>
+										</view>
+										<view class="feedback-bottom" v-show="item.isShowFeedBack">
+											<view class="idea-feedback">
+												请输入你的反馈意见
+											</view>
+											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<view class="guess-speak">
+												猜你想说
+											</view>
+											<view class="guess-speak-list">
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+											</view>  
+											<view class="submit-feedback">
+												提交反馈
+											</view> 
+										</view>
+									</view>
+								</view>
 							</view>
 						</view>
-						<view class="item-bottom-right">
-							<view class="transport-tool">
-								<text>耗时: </text>
-								<text>{{consueTime(item.responseTime,item.finishTime)}}</text>
+						<view class="task-tail-content" v-show="current == 1">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+											<view class="number">
+												<text>编号 : {{item.number}}</text>
+											</view>
+											<view class="priority">
+												<text>{{stateTransfer(item.state)}}</text>
+											</view>
+										</view>
+										<view class="task-type-name">
+											<view class="destination-point" v-if="templateType == 'template_one'">
+												<text>运送类型 :</text>
+												<text>{{item.taskTypeName}}</text>
+											</view>
+											<view class="destination-point" v-else-if="templateType === 'template_two'">
+												<text>运送类型 :</text>
+												<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="start-point">
+												<text>出发地 :</text>
+												<text>{{item.setOutPlaceName}}</text>
+											</view>
+											<view class="transport-type">
+												<text>转运工具 :</text>
+												<text>{{!item.toolName ? '无' : item.toolName}}</text>
+											</view>
+										</view>
+										<view class="item-top-two">
+											<view class="start-point">
+												<text>优先级 :</text>
+												<text>{{priorityTransfer(item.priority)}}</text>
+											</view>
+											<view class="bed-number" v-if="templateType === 'template_one'">
+												<text>床号: </text>
+												<text>{{item.bedNumber}}</text>
+											</view>
+											<view class="bed-number" v-else-if="templateType === 'template_two'">
+												<text>床号 :</text>
+												<text>{{item.patientInfoList[0].bedNumber}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>住院号 :</text>
+												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>订单创建时间 :</text>
+												<text>{{!item.createTime ? '无' : item.createTime}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>完成时间 :</text>
+												<text>{{!item.finishTime ? '无' : item.finishTime}}</text>
+											</view>
+										</view>
+										<view class="item-top-four">
+											<view class="bed-number">
+												<text>目的地: </text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+											</view>
+										</view>
+								</view>
+								<view class="item-bottom">
+								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-			</view>
-			<view class="task-tail-content" v-show="current == 1">
-				<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
-					<view class="item-top">
-						<view class="item-top-one">
-								<view class="number">
-									<text>编号 : {{item.number}}</text>
+				<view class="historyTask-list-box historyTask-list-appoint-box" v-show="taskNameIndex === 1">
+					<view class="time-change-box">
+						<view class="time-change-text">至</view>
+						<view class="time-change-left">
+							<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
+						</view>
+						<view class="time-change-right">
+							<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
+						</view>
+					</view>
+					<!-- <view class="search">
+						<button @click="searchCompleteTask">搜索</button>
+					</view> -->
+					<view class="task-tail-content-box">
+						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
+						<view class="task-tail-content" v-show="current == 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+										<view class="number">
+											<text>编号 : {{item.number}}</text>
+										</view>
+										<view class="priority" style="color:'#94e178'">
+											<text>{{stateTransfer(item.state)}}</text>
+										</view>
+									</view>
+									<view class="task-type-name">
+										<view class="destination-point" v-if="templateType == 'template_one'">
+											<text>运送类型 :</text>
+											<text>{{item.taskTypeName}}</text>
+										</view>
+										<view class="destination-point" v-else-if="templateType === 'template_two'">
+											<text>运送类型 :</text>
+											<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="start-point">
+											<text>出发地 :</text>
+											<text>{{item.setOutPlaceName}}</text>
+										</view>
+										<view class="transport-type">
+											<text>转运工具 :</text>
+											<text>{{!item.toolName ? '无' : item.toolName}}</text>
+										</view>
+									</view>
+									<view class="item-top-two">
+										<view class="start-point">
+											<text>优先级 :</text>
+											<text>{{priorityTransfer(item.priority)}}</text>
+										</view>
+										<view class="bed-number" v-if="templateType === 'template_one'">
+											<text>床号: </text>
+											<text>{{item.bedNumber}}</text>
+										</view>
+										<view class="bed-number" v-else-if="templateType === 'template_two'">
+											<text>床号 :</text>
+											<text>{{item.patientInfoList[0].bedNumber}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>住院号 :</text>
+											<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>任务开始时间 :</text>
+											<text>{{!item.startTime ? '无' : item.startTime}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>完成时间 :</text>
+											<text>{{!item.finishTime ? '无' : item.finishTime}}</text>
+										</view>
+									</view>
+									<view class="item-top-four">
+										<view class="bed-number">
+											<text>目的地: </text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+										</view>
+									</view>
 								</view>
-								<view class="priority">
-									<text>{{stateTransfer(item.state)}}</text>
+								<view class="item-bottom">
+									<!-- 反馈区域 -->
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+												<view class="left-feedback-icon"  @click="feedBackEvent(item,index)">
+													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
+												</view>
+												<view class="right-like-icon" @click="giveLikeEvent(item,index)">
+													<u-icon name="arrow-up-fill" size="40" :color="item.isShowGiveLikeIconStyle ? 'orange' : '#a59f9f'" />
+													<text :class="{'give-like-text-style':item.isShowGiveLikeIconStyle}">
+														点赞
+													</text>
+												</view>
+											</view>
+											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+												感谢您的反馈!
+											</view>
+										</view>
+										<view class="feedback-bottom" v-show="item.isShowFeedBack">
+											<view class="idea-feedback">
+												请输入你的反馈意见
+											</view>
+											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<view class="guess-speak">
+												猜你想说
+											</view>
+											<view class="guess-speak-list">
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+											</view>  
+											<view class="submit-feedback">
+												提交反馈
+											</view> 
+										</view>
+									</view>
 								</view>
 							</view>
-							<view class="item-top-two">
-								<view class="start-point">
-									<text>优先级 :</text>
-									<text>{{priorityTransfer(item.priority)}}</text>
+						</view>
+						<view class="task-tail-content" v-show="current == 1">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+											<view class="number">
+												<text>编号 : {{item.number}}</text>
+											</view>
+											<view class="priority">
+												<text>{{stateTransfer(item.state)}}</text>
+											</view>
+										</view>
+										<view class="task-type-name">
+											<view class="destination-point" v-if="templateType == 'template_one'">
+												<text>运送类型 :</text>
+												<text>{{item.taskTypeName}}</text>
+											</view>
+											<view class="destination-point" v-else-if="templateType === 'template_two'">
+												<text>运送类型 :</text>
+												<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="start-point">
+												<text>出发地 :</text>
+												<text>{{item.setOutPlaceName}}</text>
+											</view>
+											<view class="transport-type">
+												<text>转运工具 :</text>
+												<text>{{!item.toolName ? '无' : item.toolName}}</text>
+											</view>
+										</view>
+										<view class="item-top-two">
+											<view class="start-point">
+												<text>优先级 :</text>
+												<text>{{priorityTransfer(item.priority)}}</text>
+											</view>
+											<view class="bed-number" v-if="templateType === 'template_one'">
+												<text>床号: </text>
+												<text>{{item.bedNumber}}</text>
+											</view>
+											<view class="bed-number" v-else-if="templateType === 'template_two'">
+												<text>床号 :</text>
+												<text>{{item.patientInfoList[0].bedNumber}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>住院号 :</text>
+												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>任务开始时间 :</text>
+												<text>{{!item.createTime ? '无' : item.createTime}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>完成时间 :</text>
+												<text>{{!item.finishTime ? '无' : item.finishTime}}</text>
+											</view>
+										</view>
+										<view class="item-top-four">
+											<view class="bed-number">
+												<text>目的地: </text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+											</view>
+										</view>
 								</view>
-								<view class="destination-point" v-if="templateType == 'template_one'">
-									<text>运送类型 :</text>
-									<text>{{item.taskTypeName}}</text>
-								</view>
-								<view class="destination-point" v-else-if="templateType === 'template_two'">
-									<text>运送类型 :</text>
-									<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+								<view class="item-bottom">
 								</view>
 							</view>
-							<view class="item-top-three">
-								<view class="transport-type">
-									<text>转运工具 :</text>
-									<text>{{!item.toolName ? '无' : item.toolName}}</text>
-								</view>
-								<view class="transport-people">
-									<text>运送人 :</text>
-									<text>{{!item.workerName ? '无' : item.workerName}}</text>
-								</view>
-							</view>
-							<view class="item-top-three">
-								<view class="start-point">
-									<text>出发地 :</text>
-									<text>{{item.setOutPlaceName}}</text>
-								</view>
-								<view class="bed-number" v-if="templateType === 'template_one'">
-									<text>床号: </text>
-									<text>{{item.bedNumber}}</text>
-								</view>
-								<view class="bed-number" v-else-if="templateType === 'template_two'">
-									<text>床号 :</text>
-									<text>{{item.patientInfoList[0].bedNumber}}</text>
-								</view>
-							</view>
-							<view class="item-top-four item-top-four-cancel">
-								<view class="bed-number">
-									<text>目的地: </text>
-									<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
-								</view>
-							</view>
+						</view>
 					</view>
 				</view>
+				<view class="historyTask-list-box historyTask-list-circulation-box" v-show="taskNameIndex === 2">
+					<view class="time-change-box">
+						<view class="time-change-text">至</view>
+						<view class="time-change-left">
+							<u-field @click="showActionStart"  v-model="dateStart" :disabled="true" right-icon="calendar"></u-field>
+						</view>
+						<view class="time-change-right">
+							<u-field @click="showActionEnd" v-model="dateEnd" :disabled="true" right-icon="calendar"></u-field>
+						</view>
+					</view>
+					<!-- <view class="search">
+						<button @click="searchCompleteTask">搜索</button>
+					</view> -->
+					<view class="task-tail-content-box">
+						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
+						<view class="task-tail-content" v-show="current == 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+										<view class="number">
+											<text>编号 : {{item.number}}</text>
+										</view>
+										<view class="priority" style="color:'#94e178'">
+											<text>{{stateTransfer(item.state)}}</text>
+										</view>
+									</view>
+									<view class="task-type-name">
+										<view class="destination-point" v-if="templateType == 'template_one'">
+											<text>任务名称 :</text>
+											<text>{{item.taskTypeName}}</text>
+										</view>
+										<view class="destination-point" v-else-if="templateType === 'template_two'">
+											<text>任务名称 :</text>
+											<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>预计开始时间 :</text>
+											<text>{{!item.startTime ? '无' : item.startTime}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>实际开始时间 :</text>
+											<text>{{!item.startUpTime ? '无' : item.startUpTime}}</text>
+										</view>
+									</view>
+									<view class="dist-list">
+										<text v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{innerItem.name}}</text>
+									</view>
+								</view>
+								<view class="item-bottom">
+									<!-- 反馈区域 -->
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+												<view class="left-feedback-icon"  @click="feedBackEvent(item,index)">
+													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
+												</view>
+												<view class="right-like-icon" @click="giveLikeEvent(item,index)">
+													<u-icon name="arrow-up-fill" size="40" :color="item.isShowGiveLikeIconStyle ? 'orange' : '#a59f9f'" />
+													<text :class="{'give-like-text-style':item.isShowGiveLikeIconStyle}">
+														点赞
+													</text>
+												</view>
+											</view>
+											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+												感谢您的反馈!
+											</view>
+										</view>
+										<view class="feedback-bottom" v-show="item.isShowFeedBack">
+											<view class="idea-feedback">
+												请输入你的反馈意见
+											</view>
+											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<view class="guess-speak">
+												猜你想说
+											</view>
+											<view class="guess-speak-list">
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+											</view>  
+											<view class="submit-feedback">
+												提交反馈
+											</view> 
+										</view>
+									</view>
+								</view>
+							</view>
+						</view>
+						<view class="task-tail-content" v-show="current == 1">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+								<view class="item-top">
+									<view class="item-top-one">
+											<view class="number">
+												<text>编号 : {{item.number}}</text>
+											</view>
+											<view class="priority">
+												<text>{{stateTransfer(item.state)}}</text>
+											</view>
+										</view>
+										<view class="task-type-name">
+											<view class="destination-point" v-if="templateType == 'template_one'">
+												<text>任务名称 :</text>
+												<text>{{item.taskTypeName}}</text>
+											</view>
+											<view class="destination-point" v-else-if="templateType === 'template_two'">
+												<text>任务名称 :</text>
+												<text>{{item.patientInfoList[0].typeList.length > 0 ? item.patientInfoList[0].typeList[0].parentTypeName : '无'}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>预计开始时间 :</text>
+												<text>{{!item.startTime ? '无' : item.startTime}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>实际开始时间 :</text>
+												<text>{{!item.startUpTime ? '无' : item.startUpTime}}</text>
+											</view>
+										</view>
+										<view class="dist-list">
+											<text v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{innerItem.name}}</text>
+										</view>
+								</view>
+								<view class="item-bottom">
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>	
 			</view>
-		</view>
+		</view>			
 		<view class="bottom-bar">
 			<bottom-bar :itemIndex="2" @itemEvent="clickEvent"></bottom-bar>
 		</view>
@@ -168,7 +580,7 @@
 	import { mapGetters, mapMutations } from 'vuex'
 	import { getDate } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
-	import {getDispatchTaskComplete} from '@/api/task.js'
+	import {getDispatchTaskComplete,queryAppointTaskMessage,queryCirculationTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	export default {
 		components:{
@@ -192,6 +604,10 @@
 				content: '',
 				showLoadingHint: false,
 				noDataShow: false,
+				taskNameList: [{name: '调度任务'},{name: '预约任务'},{name: '循环任务'}],
+				taskCurrentName: '调度任务',
+				guessSpeakList: [{name: '服务态度有待改进'},{name: '运送时间比较长'},{name: '等待时间比较长'},{name: '服务不够细心'}],
+				taskNameIndex: 0,
 				list: [{name: '已完成'}, {name: '已取消'}],
 				stateCompleteList: [],
 				current: 0
@@ -200,25 +616,64 @@
 		onLoad (options) {
 			this.taskTypeText = this.titleText
 		},
+		
 		// 监听页面下拉刷新事件
 		onPullDownRefresh() {
 			this.isFresh = true;
-			if (this.current === 0) {
-			  this.queryCompleteDispatchTask(
-          {
-            proId:this.proId, workerId:'',state:7,
-            startDate: this.dateStart, endDate: this.dateEnd,
-            departmentId: this.userInfo.depId
-          }
-			  )
-			} else {
-			  this.queryCompleteDispatchTask(
-          {
-            proId:this.proId, workerId:'',state:6,
-            startDate: this.dateStart, endDate: this.dateEnd,
-            departmentId: this.userInfo.depId
-          }
-			  )
+			if (this.taskCurrentName == '调度任务') {
+				if (this.current === 0) {
+					this.queryCompleteDispatchTask(
+						{
+							proId:this.proId, workerId:'',state:7,
+							startDate: this.dateStart, endDate: this.dateEnd,
+							departmentId: this.userInfo.depId
+						}
+					)
+				} else {
+					this.queryCompleteDispatchTask(
+						{
+							proId:this.proId, workerId:'',state:6,
+							startDate: this.dateStart, endDate: this.dateEnd,
+							departmentId: this.userInfo.depId
+						}
+					)
+				}
+			}	else if (this.taskCurrentName == '预约任务') {
+			  if (this.current == 1) {
+			    this.queryCompleteAppointTask(
+			      {
+			        proId: this.proId, workerId: '', state: 6,
+			        startDate: this.dateStart, endDate: this.dateEnd,
+			        departmentId: this.userInfo.depId
+			      }
+			    )
+			  } else {
+			    this.queryCompleteAppointTask(
+			      {
+			        proId: this.proId, workerId: '', state: 7,
+			        startDate: this.dateStart, endDate: this.dateEnd,
+			        departmentId: this.userInfo.depId
+			      }
+			    )
+			  }
+			} else if (this.taskCurrentName == '循环任务') {
+			  if (this.current == 1) {
+			    this.queryCompleteCirculationTask(
+			      {
+			        proId: this.proId, workerId: '', state: 6,
+			        startDate: this.dateStart, endDate: this.dateEnd,
+			        departmentId: this.userInfo.depId
+			      }
+			    )
+			  } else {
+			    this.queryCompleteCirculationTask(
+			      {
+			        proId: this.proId, workerId: '', state: 7,
+			        startDate: this.dateStart, endDate: this.dateEnd,
+			        departmentId: this.userInfo.depId
+			      }
+			    )
+			  }
 			}
 		},
 		computed: {
@@ -246,6 +701,7 @@
 		},
 		
 		mounted () {
+			console.log('版本',this.$u.config.v);
 			this.initDate();
 			this.queryCompleteDispatchTask(
 				{
@@ -276,16 +732,16 @@
 			// 任务优先级转换
 		  priorityTransfer (index) {
         switch(index) {
-          case 1 :
+          case 0 :
           return '正常'
           break;
-          case 2 :
+          case 1 :
           return '重要'
           break;
-          case 3 :
+          case 2 :
           return '紧急'
           break;
-          case 4 :
+          case 3 :
           return '紧急重要'
           break;
         }
@@ -328,6 +784,57 @@
 				}
 			},
 			
+			// 反馈事件
+			feedBackEvent(item,index) {
+				this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
+				this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack']
+			},
+			// 点赞事件
+			giveLikeEvent(item,index) {
+				if (this.stateCompleteList[index]['isShowGiveLikeIconStyle']) {return};
+				this.stateCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCompleteList[index]['isShowGiveLikeIconStyle'];
+				this.stateCompleteList[index]['isShowFeedBackIconStyle'] = false;
+				this.stateCompleteList[index]['isShowFeedBack'] = false
+			},
+			// 任务猜你想说项点击事件
+			guessSpeakListEvent(index,innerItem,innerIndex) {
+				if (this.stateCompleteList[index]['deedbackContent'].length == 0) {
+					this.stateCompleteList[index]['deedbackContent'] = `${innerItem.name}`
+				} else {
+					this.stateCompleteList[index]['deedbackContent'] = `${this.stateCompleteList[index]['deedbackContent']},${innerItem.name}`
+				}
+			},
+			
+			// 任务类型tab切换事件
+			tabSwitchEvent (item,index) {
+				this.taskNameIndex = index;
+				this.taskCurrentName = item.name;
+				this.current = 0;
+				if (this.taskCurrentName == '调度任务') {
+					this.queryCompleteDispatchTask({
+						proId:this.proId, workerId:'',state:7,
+						startDate: this.dateStart, endDate: this.dateEnd,
+						departmentId: this.userInfo.depId
+					})
+				} else if (this.taskCurrentName == '预约任务') {
+					this.queryCompleteAppointTask(
+						{
+							proId: this.proId, workerId: '', state: 7,
+							startDate: this.dateStart, endDate: this.dateEnd,
+							departmentId: this.userInfo.depId
+						}
+					)
+				} else if (this.taskCurrentName == '循环任务') {
+					this.queryCompleteCirculationTask(
+						{
+							proId: this.proId, workerId: '', state: 7,
+							startDate: this.dateStart, endDate: this.dateEnd,
+							departmentId: this.userInfo.depId
+						}
+					)
+				}
+			},
+			
 			// tab切换改变事件
 			tabChange (index) {
 				if (SOtime.time6(this.dateEnd) < SOtime.time6(this.dateStart)) {
@@ -338,44 +845,120 @@
 					return
 				};
 				this.current = index;
-				if (index === 0) {
-				  this.queryCompleteDispatchTask(
-            {
-              proId:this.proId, workerId:'',state:7,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
-            }
-				  )
-				} else {
-				  this.queryCompleteDispatchTask(
-            {
-              proId:this.proId, workerId:'',state:6,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
-            }
-				  )
-				}
+				if (this.taskCurrentName == '调度任务') {
+					if (index === 0) {
+						this.queryCompleteDispatchTask(
+							{
+								proId:this.proId, workerId:'',state:7,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					} else {
+						this.queryCompleteDispatchTask(
+							{
+								proId:this.proId, workerId:'',state:6,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					}
+				}	else if (this.taskCurrentName == '预约任务') {
+          if (index == 1) {
+            this.queryCompleteAppointTask(
+              {
+                proId: this.proId, workerId: '', state: 6,
+                startDate: this.dateStart, endDate: this.dateEnd,
+                departmentId: this.userInfo.depId
+              }
+            )
+          } else {
+            this.queryCompleteAppointTask(
+              {
+                proId: this.proId, workerId: '', state: 7,
+                startDate: this.dateStart, endDate: this.dateEnd,
+                departmentId: this.userInfo.depId
+              }
+            )
+          }
+        } else if (this.taskCurrentName == '循环任务') {
+          if (index == 1) {
+            this.queryCompleteCirculationTask(
+              {
+                proId: this.proId, workerId: '', state: 6,
+                startDate: this.dateStart, endDate: this.dateEnd,
+                departmentId: this.userInfo.depId
+              }
+            )
+          } else {
+            this.queryCompleteCirculationTask(
+              {
+                proId: this.proId, workerId: '', state: 7,
+                startDate: this.dateStart, endDate: this.dateEnd,
+                departmentId: this.userInfo.depId
+              }
+            )
+          }
+        }
 			},
 			
       // 搜索完成的任务
       searchCompleteTask () {
-        if (this.current === 0) {
-          this.queryCompleteDispatchTask(
-            {
-              proId:this.proId, workerId:'',state:7,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
-            }
-          )
-        } else {
-          this.queryCompleteDispatchTask(
-            {
-              proId:this.proId, workerId:'',state:6,
-              startDate: this.dateStart, endDate: this.dateEnd,
-              departmentId: this.userInfo.depId
-            }
-          )
-        }
+        if (this.taskCurrentName == '调度任务') {
+					if (this.current == 0) {
+						this.queryCompleteDispatchTask(
+							{
+								proId: this.proId, workerId: '', state: 7,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					} else {
+						this.queryCompleteDispatchTask(
+							{
+								proId: this.proId, workerId: '', state: 6,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					}
+				} else if (this.taskCurrentName == '预约任务') {
+					if (this.current == 0) {
+						this.queryCompleteAppointTask(
+							{
+								proId: this.proId, workerId: '', state: 7,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					} else {
+						this.queryCompleteAppointTask(
+							{
+								proId: this.proId, workerId: '', state: 6,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					}
+				} else if (this.taskCurrentName == '循环任务') {
+					if (this.current == 0) {
+						this.queryCompleteCirculationTask(
+							{
+								proId: this.proId, workerId: '', state: 7,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					} else {
+						this.queryCompleteCirculationTask(
+							{
+								proId: this.proId, workerId: '', state: 6,
+								startDate: this.dateStart, endDate: this.dateEnd,
+								departmentId: this.userInfo.depId
+							}
+						)
+					}
+				}
       },
 			  
       // 查询历史调度任务(已完成)
@@ -408,8 +991,13 @@
                   number: item.taskNumber,
 									patientInfoList: item.patientInfoList,
                   distName: item.distName,
+									deedbackContent: '',
+									isShowFeedBack: false,
+									isShowFeedBackIconStyle: false,
+									isShowGiveLikeIconStyle: false,
 									destinations: item.destinations,
                   patientName: item.patientName,
+									patientNumber: item.patientNumber,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
@@ -436,6 +1024,125 @@
           }
         })
       },
+			
+			// 查询历史预约任务(已完成)
+			queryCompleteAppointTask (data) {
+				this.noDataShow = false;
+				this.showLoadingHint = true;
+				queryAppointTaskMessage(data).then((res) => {
+					this.showLoadingHint = false;
+					this.stateCompleteList = [];
+					if (this.isFresh) {
+					  uni.stopPullDownRefresh();
+					  this.isFresh = false
+					};
+					if (res && res.data.code == 200) {
+						this.isRefresh = false;
+						this.stateCompleteList = [];
+						if (res.data.data.length > 0) {
+							this.noDataShow = false;
+							for (let item of res.data.data) {
+								this.stateCompleteList.push({
+									createTime: item.createTime,
+									planUseTime: item.planUseTime,
+									planStartTime: item.planStartTime,
+									state: item.state,
+									setOutPlaceName: item.setOutPlaceName,
+									taskNumber: item.taskNumber,
+									destinationName: item.destinationName,
+									taskTypeName: item.taskTypeName,
+									toolName: item.toolName,
+									priority: item.priority,
+									patientNumber: item.patientNumber,
+									id: item.id,
+									distName: item.distName,
+									deedbackContent: '',
+									isShowFeedBack: false,
+									isShowFeedBackIconStyle: false,
+									isShowGiveLikeIconStyle: false,
+									workerName: item.workerName,
+									startTime: item.responseTime,
+									finishTime: item.finishTime,
+									patientName: item.patientName,
+									bedNumber: item.badNumber,
+									startPhoto: item.startPhoto,
+									endPhoto: item.endPhoto,
+									isBack: item.isBack,
+									isSign: item.isSign,
+									patientInfoList: item.patientInfoList
+								});
+								this.taskCount = this.stateCompleteList.length;
+							}
+						} else {
+							this.noDataShow = true
+						}
+					}
+				})
+				.catch((err) => {
+				  this.$refs.uToast.show({
+				    title: `${err.message}`,
+				    type: 'error'
+				  });
+				  this.showLoadingHint = false;
+				  this.noDataShow = true;
+				  if (this.isFresh) {
+				    uni.stopPullDownRefresh();
+				    this.isFresh = false
+				  }
+				})
+			},
+			// 查询历史循环任务(已完成)
+			queryCompleteCirculationTask (data) {
+				this.noDataShow = false;
+				this.showLoadingHint = true;
+				queryCirculationTask(data).then((res) => {
+					this.showLoadingHint = false;
+					this.stateCompleteList = [];
+					if (this.isFresh) {
+					  uni.stopPullDownRefresh();
+					  this.isFresh = false
+					};
+					if (res && res.data.code == 200) {
+						this.isRefresh = false;
+						this.stateCompleteList = [];
+						if (res.data.data.length > 0) {
+							this.noDataShow = false;
+							for (let item of res.data.data) {
+								this.stateCompleteList.push({
+									startTime: item.startTime,
+									startUpTime: item.startUpTime,
+									state: item.state,
+									taskNumber: item.taskNumber,
+									taskTypeName: item.taskTypeName,
+									id: item.id,
+									deedbackContent: '',
+									isShowFeedBack: false,
+									isShowFeedBackIconStyle: false,
+									isShowGiveLikeIconStyle: false,
+									workerName: item.workerName,
+									distName: Object.values(JSON.parse(item.hasAccess))
+								});
+								this.taskCount = this.stateCompleteList.length;
+							};
+							console.log('科室列表',this.stateCompleteList);
+						} else {
+							this.noDataShow = true
+						}
+					}
+				})
+				.catch((err) => {
+				  this.$refs.uToast.show({
+				    title: `${err.message}`,
+				    type: 'error'
+				  });
+				  this.showLoadingHint = false;
+				  this.noDataShow = true;
+				  if (this.isFresh) {
+				    uni.stopPullDownRefresh();
+				    this.isFresh = false
+				  }
+				})
+			},
 			
 			// 初始化当前日期
 			initDate () {
@@ -502,6 +1209,12 @@
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
+				} else if (item.text == "意见反馈") {
+					uni.redirectTo({
+						url: '/transportPackage/pages/totalFeedbackIdea/totalFeedbackIdea'
+					});
+					this.changeBottomBarIndex(3);
+					this.changeIsToCallTaskPage(true)
 				} 
 			}
 		}
@@ -527,315 +1240,465 @@
 		.nav {
 			width: 100%;
 		};
-		.time-change-box {
-			height: 60px;
-			width: 100%;
-			padding: 10px;
-			box-sizing: boredr-box;
-			position: relative;
-			.time-change-text {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 60px;
-				line-height: 60px;
-				text-align: center
-			}
-			.time-change-left {
-				width: 45%;
-				height: 100%;
-				float: left;
-				/deep/ .u-field {
-					border: 1px solid #d8d7d7;
-					padding: 5px 15px;
-					.u-label {
-						flex: 0 0 0 !important
-					}
-					.u-icon__icon {
-						font-size: 26px !important
-					}
-				}
-			};
-			.time-change-right {
-				width: 45%;
-				height: 100%;
-				float: right;
-				/deep/ .u-field {
-					border: 1px solid #d8d7d7;
-					padding: 5px 15px;
-					.u-label {
-						flex: 0 0 0 !important
-					}
-					.u-icon__icon {
-						font-size: 26px !important
-					}
-				}
-			}
-		}
-		.search {
-			width: 100px;
-			height: 40px;
-			margin: 0 auto;
-			button {
-				font-size: 14px;
-				color: #fff;
-				background: #278ee6
-			}
-		}
-		.task-tail-content-box {
-			width: 100%;
+		.container-box {
 			flex: 1;
-			-webkit-overflow-scrolling: touch;
+			display: flex;
+			flex-direction: column;
 			overflow: auto;
-			.task-tail-content {
-				height: 94%;
-				-webkit-overflow-scrolling: touch;
-				overflow: auto;
-				position: relative;
-				background: #f7f7f7;
-				.empty-info {
-					position: absolute;
-					top: 0;
-					left: 0;
-					bottom: 0;
-					right: 0;
-					margin: auto
+			/deep/ .u-sticky {
+				background: #FFFFFF
+			};
+			.task-switch {
+				width: 100%;
+				display: flex;
+				flex-flow: row nowrap;
+				justify-content: center;
+				align-items: center;
+				height: 50px;
+				>text {
+					display: inline-block;
+					font-size: 16px;
+					color: #333;
+					text-align: center;
+					width: 30%;
+					margin-right: 2%;
+					line-height: 50px;
+					height: 50px;
+					z-index: 1000;
+					&:last-child {
+						margin-right: 0
+					}
 				};
-				.task-tail-content-item {
-					background: #FFFFFF;
-					width: 98%;
-					margin: 0 auto;
-					margin-top: 6px;
-					border-radius: 4px;
-					.item-top {
+				.active-tab-style {
+					color: #2895ea;
+					font-size: 17px;
+					font-weight: bold;
+					position: relative;
+					&:after {
+						content: '';
+						position: absolute;
+						bottom: 4px;
+						left: 50%;
+						transform: translateX(-50%);
+						width: 26px;
+						height: 4px;
+						background: #2895ea;
+						border-radius: 2px;
+					}
+				};
+			};
+			.historyTask-box {
+				flex: 1;
+				.historyTask-list-box {
+					.time-change-box {
+						height: 60px;
 						width: 100%;
-						font-size: 16px;
-						display: inline-block;
-						color: black;
-					  > view {
-					    padding: 6px 0;
-					    display: flex;
-					    box-sizing: border-box;
-					    flex-flow: row nowrap;
-					    > view {
-					      width: 50%;
-					      > text {
-					        &:last-child {
-					          padding-left: 0;
-					        }
-					      }
-					    }
-					  };
-					  .item-top-one {
-							height:40px;
-							padding: 0 12px;
-							background: #f9f9f9;
-					    > view {
-								height: 20px;
-								line-height: 20px;
-								margin-top: 10px;
-					      word-break: break-all;
-					      font-size: 13px;
-					      text {
-					        color: #333;
-					      };
-					      &:first-child {
-					        width: 60%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-					      };
-					      &:last-child {
-					        width: 40%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-					        text-align: right;
-					        > text {
-					          &:first-child {
-					            color: black
-					          };
-					          &:last-child {
-					            color: red;
-											display: inline-block;
-											width: 80px;
-											text-align: center;
-											background: #fff;
-											border-radius: 4px;
-					          }
-					        }
-					      }
-					    }
-					  };
-						.item-top-two {
-							height:40px;
-							padding: 0 12px;
-							> view {
-								height: 40px;
-								line-height: 40px;
-							  &:first-child {
-							    width: 60%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-									text {
-										&:first-child {
-											color: $color-text-left;
-											margin-right: 4px
-										};
-										&:last-child {
-											color: $color-text-right;
-											font-weight: bold
-										}
-									}
-							  };
-							  &:last-child {
-									width: 40%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-									text {
-										&:first-child {
-											color: $color-text-left;
-											margin-right: 4px
-										};
-										&:last-child {
-											color: $color-text-right;
-											font-weight: bold
-										}
-									}
+						padding: 10px;
+						box-sizing: boredr-box;
+						position: relative;
+						.time-change-text {
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 60px;
+							line-height: 60px;
+							text-align: center
+						}
+						.time-change-left {
+							width: 45%;
+							height: 100%;
+							float: left;
+							/deep/ .u-field {
+								border: 1px solid #d8d7d7;
+								padding: 5px 15px;
+								.u-label {
+									flex: 0 0 0 !important
+								}
+								.u-icon__icon {
+									font-size: 26px !important
 								}
 							}
 						};
-					  .item-top-three {
-					    height:40px;
-					    padding: 0 12px;
-					    > view {
-					    	height: 40px;
-					    	line-height: 40px;
-					      &:first-child {
-					        width: 60%;
-									-webkit-overflow-scrolling: touch;
-					    		overflow: auto;
-					    		text {
-					    			&:first-child {
-					    				color: $color-text-left;
-											margin-right: 4px
-					    			};
-					    			&:last-child {
-					    				color: $color-text-right;
-											font-weight: bold
-					    			}
-					    		}
-					      };
-					      &:last-child {
-									width: 40%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-					    		text {
-					    			&:first-child {
-					    				color: $color-text-left;
-											margin-right: 4px
-					    			};
-					    			&:last-child {
-					    				color: $color-text-right;
-											font-weight: bold
-					    			}
-					    		}
-					    	}
-					    }
-					  };
-					  .item-top-four {
-							 height:80px;
-							 padding: 4px 12px;
-							 back-sizing: border-box;
-							 font-size: 15px;
-							 background: #f7f7f7;
-							 > view {
-								height: 80px;
-								width: 100%;
-								-webkit-overflow-scrolling: touch;
-								overflow: auto;
-								.destina-list {
-									color: $color-text-right;
-									margin-right: 4px;
-									font-weight: bold
-								};
-								text {
-									display: inline-block;
-									&:first-child {
-										color: $color-text-left;
-										margin-right: 4px
-									};
+						.time-change-right {
+							width: 45%;
+							height: 100%;
+							float: right;
+							/deep/ .u-field {
+								border: 1px solid #d8d7d7;
+								padding: 5px 15px;
+								.u-label {
+									flex: 0 0 0 !important
 								}
-							};
-					  };
-						.item-top-four-cancel {
-							background: #FFF;
-						}
-					}
-				}
-			}
-			.item-bottom {
-				width: 100%;
-				display: inline-block;
-				.item-bottom-left {
-					width: 45%;
-					height: 70px;
-					float: left;
-					font-size: 14px;
-					color: black;
-					padding-left: 12px;
-					.time {
-						height: 70px;
-						position: relative;
-						text {
-							width: 100%;
-							display: inline-block;
-							position: absolute;
-							left: 0;
-							top: 50%;
-							transform: translateY(-50%);
-							color: #c2c8cb
-						}
-					}
-				}
-				.item-bottom-right {
-					width: 55%;
-					height: 70px;
-					float: right;
-					position: relative;
-					> view {
-						width: 45%;
-						height: 40px;
-						line-height: 40px;
-						position: absolute;
-						top: 50%;
-						transform: translateY(-50%);
-						text {
-							&:first-child {
-								color: $color-text-left;
-								margin-right: 4px
-							};
-							&:last-child {
-								color: $color-text-right;
-								font-weight: bold
+								.u-icon__icon {
+									font-size: 26px !important
+								}
 							}
 						}
 					}
-					.left  {
-						left: 0;
+					.search {
+						width: 100px;
+						height: 40px;
+						margin: 0 auto;
 						button {
-							background: #5ab3ff
+							font-size: 14px;
+							color: #fff;
+							background: #278ee6
 						}
-					};
-					.right  {
-						right: 0;
-						button {
-							color: #666;
-							background: #e8e8e8
+					}
+					.task-tail-content-box {
+						width: 100%;
+						flex: 1;
+						-webkit-overflow-scrolling: touch;
+						overflow: auto;
+						/deep/ .u-tabs {
+							.u-tab-bar {
+								display: none !important;
+							}
+						};
+						.task-tail-content {
+							height: 94%;
+							-webkit-overflow-scrolling: touch;
+							overflow: auto;
+							position: relative;
+							background: #f7f7f7;
+							.empty-info {
+								position: absolute;
+								top: 0;
+								left: 0;
+								bottom: 0;
+								right: 0;
+								margin: auto
+							};
+							.task-tail-content-item {
+								background: #FFFFFF;
+								width: 98%;
+								margin: 0 auto;
+								margin-top: 6px;
+								border-radius: 4px;
+								.item-top {
+									width: 100%;
+									font-size: 16px;
+									display: inline-block;
+									color: black;
+									> view {
+										padding: 6px 0;
+										display: flex;
+										box-sizing: border-box;
+										flex-flow: row nowrap;
+										> view {
+											width: 50%;
+											> text {
+												&:last-child {
+													padding-left: 0;
+												}
+											}
+										}
+									};
+									.item-top-one {
+										height:40px;
+										padding: 0 12px;
+										background: #f9f9f9;
+										> view {
+											height: 20px;
+											line-height: 20px;
+											margin-top: 10px;
+											word-break: break-all;
+											font-size: 13px;
+											text {
+												color: #333;
+											};
+											&:first-child {
+												width: 60%;
+												-webkit-overflow-scrolling: touch;
+												overflow: auto;
+											};
+											&:last-child {
+												width: 40%;
+												-webkit-overflow-scrolling: touch;
+												overflow: auto;
+												text-align: right;
+												> text {
+													&:first-child {
+														color: black
+													};
+													&:last-child {
+														color: red;
+														display: inline-block;
+														width: 80px;
+														text-align: center;
+														background: #fff;
+														border-radius: 4px;
+													}
+												}
+											}
+										}
+									};
+									.task-type-name {
+										height: 40px;
+										padding: 0 12px;
+										line-height: 40px;
+										>view {
+											width: 100% !important;
+											font-size: 17px;
+											font-weight: bold;
+											overflow: auto;
+										}
+									};
+									.item-top-two {
+										height:40px;
+										padding: 0 12px;
+										> view {
+											height: 40px;
+											line-height: 40px;
+											&:first-child {
+												width: 60%;
+												-webkit-overflow-scrolling: touch;
+												overflow: auto;
+												text {
+													&:first-child {
+														color: $color-text-left;
+														margin-right: 4px
+													};
+													&:last-child {
+														color: $color-text-right;
+														font-weight: bold
+													}
+												}
+											};
+											&:last-child {
+												width: 40%;
+												-webkit-overflow-scrolling: touch;
+												overflow: auto;
+												text {
+													&:first-child {
+														color: $color-text-left;
+														margin-right: 4px
+													};
+													&:last-child {
+														color: $color-text-right;
+														font-weight: bold
+													}
+												}
+											}
+										}
+									};
+									.item-top-three {
+										height:40px;
+										padding: 0 12px;
+										> view {
+											height: 40px;
+											line-height: 40px;
+											&:first-child {
+												width: 60%;
+												-webkit-overflow-scrolling: touch;
+												overflow: hidden;
+												text-overflow: ellipsis;
+												white-space: nowrap;
+												text {
+													&:first-child {
+														color: $color-text-left;
+														margin-right: 4px
+													};
+													&:last-child {
+														color: $color-text-right;
+														font-weight: bold
+													}
+												}
+											};
+											&:last-child {
+												width: 40%;
+												-webkit-overflow-scrolling: touch;
+												overflow: auto;
+												text {
+													&:first-child {
+														color: $color-text-left;
+														margin-right: 4px
+													};
+													&:last-child {
+														color: $color-text-right;
+														font-weight: bold
+													}
+												}
+											}
+										};
+										.transport-people {
+											width: 100% !important
+										}
+									};
+									.item-top-four {
+										 height:80px;
+										 padding: 4px 12px;
+										 back-sizing: border-box;
+										 font-size: 15px;
+										 background: #f7f7f7;
+										 > view {
+											height: 80px;
+											width: 100%;
+											-webkit-overflow-scrolling: touch;
+											overflow: auto;
+											.destina-list {
+												color: $color-text-right;
+												margin-right: 4px;
+												font-weight: bold
+											};
+											text {
+												display: inline-block;
+												&:first-child {
+													color: $color-text-left;
+													margin-right: 4px
+												};
+											}
+										};
+									};
+									.item-top-four-cancel {
+										background: #FFF;
+									}
+								}
+							}
+						}
+						.item-bottom {
+							width: 100%;
+							display: inline-block;
+							 .feedback-area {
+									display: flex;
+									flex-direction: column;
+									padding: 0 12px;
+									box-sizing: border-box;
+									.feedback-top {
+										display: flex;
+										flex-flow: row nowrap;
+										justify-content: space-between;
+										align-items: center;
+										height: 60px;
+										.left {
+											width: 160px;
+											text {
+												color: black;
+												&:nth-child(2) {
+													font-size: 16px;
+													margin: 0 2px;
+												};
+												&:nth-child(3) {
+													font-size: 14px;
+												}
+											}
+										};
+										.right {
+											display: flex;
+											flex-flow: row nowrap;
+											justify-content: space-between;
+											align-items: center;
+											height: 50px;
+											width: 160px;
+											padding: 0 8px;
+											box-sizing: border-box;
+											border: 1px solid #e2e2e2;
+											border-radius: 30px;
+											.left-feedback-icon {
+												width: 50px;
+												height: 50px;
+												display: flex;
+												flex-flow: row nowrap;
+												justify-content: center;
+												align-items: center;
+												border-right: 1px solid #a59f9f;
+											};
+											.right-like-icon {
+												flex: 1;
+												text-align: center;
+												text {
+													font-size: 12px;
+													color: #a59f9f;
+													margin-left: 4px
+												};
+												.give-like-text-style {
+													color: orange
+												}
+											}
+										};
+										.thank-feedback {
+											display: flex;
+											flex-flow: row nowrap;
+											justify-content: space-between;
+											align-items: center;
+											height: 50px;
+											width: 160px;
+											padding: 0 8px;
+											box-sizing: border-box;
+											color: orange;
+											font-size: 14px;
+										}
+									};
+								.feedback-bottom {
+									.idea-feedback {
+										color: black;
+										font-size: 13px;
+										margin: 12px 0;
+									};
+									/deep/ .van-cell {
+										border: 1px solid #dadada
+									};
+									.guess-speak {
+										font-size: 12px;
+										color: #a59f9f;
+										margin: 12px 0;
+									};
+									.guess-speak-list {
+											display: flex;
+											flex-flow: row wrap;
+											justify-content: flex-start;
+											text {
+												font-size: 13px;
+												color: #a59f9f;
+												display: inline-block;
+												padding: 0 8px;
+												box-sizing: border-box;
+												height: 25px;
+												line-height: 25px;
+												text-align: center;
+												border: 1px solid #dcdfe6;
+												margin: 0 8px 8px 0;
+											}
+									};
+									.submit-feedback {
+										width: 180px;
+										height: 40px;
+										background: orange;
+										font-size: 13px;
+										text-align: center;
+										line-height: 40px;
+										color: #fff;
+										margin: 0 auto;
+										margin-top: 12px;
+										border-radius: 20px;
+									}
+								}
+							}
+						}
+					}
+				};
+				.historyTask-list-circulation-box {
+					.dist-list {
+						display: flex;
+						flex-flow: row wrap !important;
+						justify-content: space-between;
+						padding: 0 12px !important;
+						>text {
+							display: inline-block;
+							padding: 6px 10px;
+							box-sizing: border-box;
+							width: 48%;
+							margin-bottom: 10px;
+							border: 1px solid #d5d5d5;
+							font-size: 12px;
+							color: #333;
+							text-align: center
 						}
 					}
 				}
 			}
-		}
+		}			
 	};
 	.bottom-bar {
 		height: 50px;
