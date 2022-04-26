@@ -22,7 +22,7 @@
 				</view>
 			</u-sticky>	
 			<view class="historyTask-box">
-				<view class="historyTask-list-box historyTask-list-dispatch-box" v-show="taskNameIndex === 0">
+				<view class="historyTask-list-box historyTask-list-dispatch-box" v-if="taskNameIndex === 0">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -83,9 +83,13 @@
 										</view>
 									</view>
 									<view class="item-top-three">
-										<view class="transport-people">
+										<view class="transport-people" v-if="templateType === 'template_one'">
 											<text>住院号 :</text>
 											<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+										</view>
+										<view class="transport-people" v-else-if="templateType === 'template_two'">
+											<text>住院号 :</text>
+											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['patientNumber']:'无'}}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -226,7 +230,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-appoint-box" v-show="taskNameIndex === 1">
+				<view class="historyTask-list-box historyTask-list-appoint-box" v-if="taskNameIndex === 1">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -246,7 +250,7 @@
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
-											<text>编号 : {{item.number}}</text>
+											<text>编号 : {{item.taskNumber}}</text>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -414,7 +418,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-circulation-box" v-show="taskNameIndex === 2">
+				<view class="historyTask-list-box historyTask-list-circulation-box" v-if="taskNameIndex === 2">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -794,7 +798,7 @@
 					taskFinish : item.finishTime, //调度任务结束时间
 					taskState : 7, //调度任务状态
 					taskPriority : item.priority, //调度任务优先级
-					taskWorkerId : 123, //运送员ID
+					taskWorkerId : item.workerId, //运送员ID
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
@@ -815,11 +819,18 @@
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 2) {
 					data['taskCreateDep'] = item['setOutPlaceName'];
-					data['taskHospitalNo'] = item['patientName'];
-					data['taskDistDepartments'] = item['distDepartments'];
+					data['taskType'] = type;
+					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
 					data['taskHasAccess'] = item.hasAccess;
+					data['taskType'] = type;
+					data['taskNumber'] = item['taskNumber'];
+					data['taskName'] = item['taskTypeName'];
+					data['taskStart'] = item['startUpTime'];
+					data['taskStarttTime'] = item['startTime'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
@@ -845,7 +856,7 @@
 					taskFinish : item.finishTime, //调度任务结束时间
 					taskState : 7, //调度任务状态
 					taskPriority : item.priority, //调度任务优先级
-					taskWorkerId : 123, //运送员ID
+					taskWorkerId : item.workerId, //运送员ID
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
@@ -866,11 +877,18 @@
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 2) {
 					data['taskCreateDep'] = item['setOutPlaceName'];
-					data['taskHospitalNo'] = item['patientName'];
-					data['taskDistDepartments'] = item['distDepartments'];
+					data['taskType'] = type;
+					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
 					data['taskHasAccess'] = item.hasAccess;
+					data['taskType'] = type;
+					data['taskNumber'] = item['taskNumber'];
+					data['taskName'] = item['taskTypeName'];
+					data['taskStart'] = item['startUpTime'];
+					data['taskStarttTime'] = item['startTime'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
@@ -912,6 +930,7 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent (data,index,type,text) {
+				debugger;
 				submitTaskFeedback(data,type).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
@@ -1113,9 +1132,9 @@
       queryCompleteDispatchTask (data) {
         this.noDataShow = false;
         this.showLoadingHint = true;
+		this.stateCompleteList = [];
         getDispatchTaskComplete(data).then((res) => {
           this.showLoadingHint = false;
-          this.stateCompleteList = [];
           if (this.isFresh) {
             uni.stopPullDownRefresh();
             this.isFresh = false
@@ -1137,23 +1156,23 @@
                   priority: item.priority,
                   id: item.id,
                   number: item.taskNumber,
-									patientInfoList: item.patientInfoList,
+				patientInfoList: item.patientInfoList,
                   distName: item.distName,
-									startTime: item.startTime,
-									workerId: item.workerId,
-									deedbackContent: '',
-									isShowFeedBack: false,
-									isShowFeedBackIconStyle: false,
-									isShowGiveLikeIconStyle: false,
-									destinations: item.destinations,
+				startTime: item.startTime,
+				workerId: item.workerId,
+				deedbackContent: '',
+				isShowFeedBack: false,
+				isShowFeedBackIconStyle: false,
+				isShowGiveLikeIconStyle: false,
+				destinations: item.destinations,
                   patientName: item.patientName,
-									patientNumber: item.patientNumber,
+				 patientNumber: item.patientNumber,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
                   isBack: item.isBack,
                   isSign: item.isSign,
-                  workerName: item.workerName,
+                  workerName: item.workerName
                 })
               }
             } else {
@@ -1179,16 +1198,15 @@
 			queryCompleteAppointTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
+				this.stateCompleteList = [];
 				queryAppointTaskMessage(data).then((res) => {
 					this.showLoadingHint = false;
-					this.stateCompleteList = [];
 					if (this.isFresh) {
 					  uni.stopPullDownRefresh();
 					  this.isFresh = false
 					};
 					if (res && res.data.code == 200) {
 						this.isRefresh = false;
-						this.stateCompleteList = [];
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
@@ -1246,16 +1264,15 @@
 			queryCompleteCirculationTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
+				this.stateCompleteList = [];
 				queryCirculationTask(data).then((res) => {
 					this.showLoadingHint = false;
-					this.stateCompleteList = [];
 					if (this.isFresh) {
 					  uni.stopPullDownRefresh();
 					  this.isFresh = false
 					};
 					if (res && res.data.code == 200) {
 						this.isRefresh = false;
-						this.stateCompleteList = [];
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
@@ -1272,6 +1289,9 @@
 									isShowFeedBackIconStyle: false,
 									isShowGiveLikeIconStyle: false,
 									workerName: item.workerName,
+									priority: item.priority,
+									finishTime: item.finishTime,
+									createTime: item.createTime,
 									distName: Object.values(JSON.parse(item.hasAccess)),
 									hasAccess: item.hasAccess
 								});
