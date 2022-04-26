@@ -124,6 +124,33 @@ export function queryCirculationTask(data) {
   })
 };
 
+// 查询反馈意见
+export function queryFeedback(data) {
+  return request({
+    url: 'feedbackConf/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+
+// 提交总体反馈意见
+export function submitFeedback(data) {
+  return request({
+    url: 'wholeFeedback/add',
+    method: 'post',
+    data
+  })
+};
+
+// 提交任务反馈意见
+export function submitTaskFeedback(data,type) {
+  return request({
+    url: `feedback/feedback/${type}`,
+    method: 'post',
+    data
+  })
+};
+
 // 工程维修
 
 // 巡检问题上报
