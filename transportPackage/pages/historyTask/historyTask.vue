@@ -769,6 +769,9 @@
 				this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
 				this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack'];
 				if (this.stateCompleteList[index]['isShowFeedBack']) {
+					if (!this.stateCompleteList[index]['deedbackContent']) {
+						this.stateCompleteList[index]['deedbackContent'] == ''
+					};
 					this.inquireFeedback({
 						proId: this.proId,
 						signFlag: 2,
@@ -802,6 +805,9 @@
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item.planStartTime ? item.planStartTime.slice(0,item.planStartTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
 					data['taskType'] = type;
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
@@ -821,7 +827,7 @@
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					data['taskType'] = type;
 					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
-					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : [];
 					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
@@ -829,8 +835,10 @@
 					data['taskType'] = type;
 					data['taskNumber'] = item['taskNumber'];
 					data['taskName'] = item['taskTypeName'];
-					data['taskStart'] = item['startUpTime'];
-					data['taskStarttTime'] = item['startTime'];
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item['startUpTime'] ? item['startUpTime'].slice(0,item['startUpTime'].lastIndexOf(':')) : '';
+					data['taskStartTime'] = item['startTime'] ? item['startTime'].slice(0,item['startTime'].lastIndexOf(':')) : '';
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
@@ -860,6 +868,9 @@
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item.planStartTime ? item.planStartTime.slice(0,item.planStartTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
 					data['taskType'] = type;
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
@@ -879,7 +890,7 @@
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					data['taskType'] = type;
 					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
-					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : [];
 					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
@@ -887,8 +898,10 @@
 					data['taskType'] = type;
 					data['taskNumber'] = item['taskNumber'];
 					data['taskName'] = item['taskTypeName'];
-					data['taskStart'] = item['startUpTime'];
-					data['taskStarttTime'] = item['startTime'];
+				  data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item['startUpTime'] ? item['startUpTime'].slice(0,item['startUpTime'].lastIndexOf(':')) : '';
+					data['taskStartTime'] = item['startTime'] ? item['startTime'].slice(0,item['startTime'].lastIndexOf(':')) : '';
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
@@ -930,7 +943,6 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent (data,index,type,text) {
-				debugger;
 				submitTaskFeedback(data,type).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
@@ -941,6 +953,9 @@
 							this.stateCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCompleteList[index]['isShowGiveLikeIconStyle'];
 							this.stateCompleteList[index]['isShowFeedBackIconStyle'] = false;
 							this.stateCompleteList[index]['isShowFeedBack'] = false;
+						} else if (text == '反对') {
+							this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
+							this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack'];
 						}
 					} else {
 						this.$refs.uToast.show({
