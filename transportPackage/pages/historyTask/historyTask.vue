@@ -16,13 +16,13 @@
 		</view>
 		<!--任务切换栏-->
 		<view class="container-box">
-			<u-sticky>
+			<u-sticky offset-top="90">
 				<view class="task-switch">
 					<text v-for="(item,index) in taskNameList" :class="{'active-tab-style':taskNameIndex === index}" :key="index" @click="tabSwitchEvent(item,index)">{{item.name}}</text>
 				</view>
 			</u-sticky>	
 			<view class="historyTask-box">
-				<view class="historyTask-list-box historyTask-list-dispatch-box" v-if="taskNameIndex === 0">
+				<view class="historyTask-list-box historyTask-list-dispatch-box" v-show="taskNameIndex == 0">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -38,7 +38,7 @@
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
 						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -120,7 +120,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,1)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -131,7 +131,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -144,7 +144,7 @@
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,1)" :key="innerItem.name">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,1,'反对')">
 												提交反馈
@@ -155,7 +155,7 @@
 							</view>
 						</view>
 						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
@@ -230,7 +230,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-appoint-box" v-if="taskNameIndex === 1">
+				<view class="historyTask-list-box historyTask-list-appoint-box" v-show="taskNameIndex == 1">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -246,7 +246,7 @@
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
 						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -316,7 +316,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,2)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -327,7 +327,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -340,7 +340,7 @@
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,2)" :key="innerIndex">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,2,'反对')">
 												提交反馈
@@ -351,7 +351,7 @@
 							</view>
 						</view>
 						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
@@ -418,7 +418,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-circulation-box" v-if="taskNameIndex === 2">
+				<view class="historyTask-list-box historyTask-list-circulation-box" v-show="taskNameIndex == 2">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -434,7 +434,7 @@
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
 						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -475,7 +475,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,3)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -486,7 +486,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -499,7 +499,7 @@
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,3)" :key="innerIndex">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,3,'反对')">
 												提交反馈
@@ -510,7 +510,7 @@
 							</view>
 						</view>
 						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
@@ -589,7 +589,9 @@
 				guessSpeakList: [],
 				taskNameIndex: 0,
 				list: [{name: '已完成'}, {name: '已取消'}],
-				stateCompleteList: [],
+				stateDispatchCompleteList: [],
+				stateAppointCompleteList: [],
+				stateCircleCompleteList: [],
 				current: 0
 			}
 		},
@@ -766,18 +768,46 @@
 			
 			// 反馈点击事件
 			feedBackEvent(item,index,type) {
-				this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
-				this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack'];
-				if (this.stateCompleteList[index]['isShowFeedBack']) {
-					if (!this.stateCompleteList[index]['deedbackContent']) {
-						this.stateCompleteList[index]['deedbackContent'] == ''
-					};
-					this.inquireFeedback({
-						proId: this.proId,
-						signFlag: 2,
-						typeFlag: '',
-						state: 1
-					})
+				if (type == 1) {
+					this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateDispatchCompleteList[index]['isShowFeedBack'] = !this.stateDispatchCompleteList[index]['isShowFeedBack'];
+					if (this.stateDispatchCompleteList[index]['isShowFeedBack']) {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', '');
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
+				} else if (type == 2) {
+					this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateAppointCompleteList[index]['isShowFeedBack'] = !this.stateAppointCompleteList[index]['isShowFeedBack'];
+					if (this.stateAppointCompleteList[index]['isShowFeedBack']) {
+						if (!this.stateAppointCompleteList[index]['deedbackContent']) {
+							this.$set(this.stateAppointCompleteList[index], 'deedbackContent', '');
+						};
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
+				} else if (type == 3) {
+					this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateCircleCompleteList[index]['isShowFeedBack'] = !this.stateCircleCompleteList[index]['isShowFeedBack'];
+					if (this.stateCircleCompleteList[index]['isShowFeedBack']) {
+						if (!this.stateCircleCompleteList[index]['deedbackContent']) {
+							this.$set(this.stateCircleCompleteList[index], 'deedbackContent', '');
+						};
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
 				}
 			},
 			
@@ -789,7 +819,7 @@
 					feedbackRole : '', //反馈角色，暂定为医务人员的 role 字段
 					depId : this.userInfo.depId  , //反馈科室ID，医务人员depId字段
 					depName:  this.userInfo.depName , //反馈科室名称医务人员depName字段
-					content : this.stateCompleteList[index]['deedbackContent'] , //反馈内容，可以为空，点赞默认为空
+					content : '' , //反馈内容，可以为空，点赞默认为空
 					type : 1, //反馈类型(1-意见反馈，2-赞)
 					terminal : 2, //反馈终端(1-客户端，2-小程序)
 					taskType : '', //任务类型-调度任务(1-调度任务，2-预约任务，3-循环任务)
@@ -809,6 +839,7 @@
 					data['taskStart'] = item.planStartTime ? item.planStartTime.slice(0,item.planStartTime.lastIndexOf(':')) : '';
 					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
 					data['taskType'] = type;
+					data['content'] = this.stateDispatchCompleteList[index]['deedbackContent'];
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					if (this.userInfo.pc == 'template_one') {
@@ -826,6 +857,7 @@
 				} else if (type == 2) {
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					data['taskType'] = type;
+					data['content'] = this.stateAppointCompleteList[index]['deedbackContent'];
 					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
 					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : [];
 					data['taskNumber'] = item['taskNumber'];
@@ -833,6 +865,7 @@
 				} else if (type == 3) {
 					data['taskHasAccess'] = item.hasAccess;
 					data['taskType'] = type;
+					data['content'] = this.stateCircleCompleteList[index]['deedbackContent'];
 					data['taskNumber'] = item['taskNumber'];
 					data['taskName'] = item['taskTypeName'];
 					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
@@ -845,7 +878,13 @@
 			
 			// 点赞事件
 			giveLikeEvent(item,index,type,text) {
-				if (this.stateCompleteList[index]['isShowGiveLikeIconStyle']) {return};
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				} else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				} else if (type == 3) {
+					if (this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				};
 				let data = {
 					feedbackId : this.workerId, // 反馈者ID
 					feedbackName : this.accountName, // 反馈者名称
@@ -906,11 +945,31 @@
 				} 
 			},
 			// 任务猜你想说项点击事件
-			guessSpeakListEvent(index,innerItem,innerIndex) {
-				if (this.stateCompleteList[index]['deedbackContent'].length == 0) {
-					this.stateCompleteList[index]['deedbackContent'] = `${innerItem.name}`
-				} else {
-					this.stateCompleteList[index]['deedbackContent'] = `${this.stateCompleteList[index]['deedbackContent']},${innerItem.name}`
+			guessSpeakListEvent(index,innerItem,innerIndex,type) {
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+						this.$forceUpdate()
+					} else {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${this.stateDispatchCompleteList[index]['deedbackContent']},${innerItem.name}`);
+						this.$forceUpdate()
+					}
+				}	else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+						this.$forceUpdate()
+					} else {
+						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${this.stateAppointCompleteList[index]['deedbackContent']},${innerItem.name}`);
+						this.$forceUpdate()
+					}
+				} else if (type == 2) {
+					if (this.stateCircleCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+						this.$forceUpdate()
+					} else {
+						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${this.stateCircleCompleteList[index]['deedbackContent']},${innerItem.name}`);
+						this.$forceUpdate()
+					}
 				}
 			},
 			
@@ -949,13 +1008,33 @@
 						  title: '意见反馈成功',
 						  type: 'success'
 						});
-						if (text == '点赞') {
-							this.stateCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCompleteList[index]['isShowGiveLikeIconStyle'];
-							this.stateCompleteList[index]['isShowFeedBackIconStyle'] = false;
-							this.stateCompleteList[index]['isShowFeedBack'] = false;
-						} else if (text == '反对') {
-							this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
-							this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack'];
+						if (type == 1) {
+							if (text == '点赞') {
+								this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateDispatchCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateDispatchCompleteList[index]['isShowFeedBack'] = !this.stateDispatchCompleteList[index]['isShowFeedBack'];
+							}
+						}	else if (type == 2) {
+							if (text == '点赞') {
+								this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateAppointCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateAppointCompleteList[index]['isShowFeedBack'] = !this.stateAppointCompleteList[index]['isShowFeedBack'];
+							}
+						} else if (type == 3) {
+							if (text == '点赞') {
+								this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateCircleCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateCircleCompleteList[index]['isShowFeedBack'] = !this.stateCircleCompleteList[index]['isShowFeedBack'];
+							}
 						}
 					} else {
 						this.$refs.uToast.show({
@@ -1147,7 +1226,7 @@
       queryCompleteDispatchTask (data) {
         this.noDataShow = false;
         this.showLoadingHint = true;
-		this.stateCompleteList = [];
+		this.stateDispatchCompleteList = [];
         getDispatchTaskComplete(data).then((res) => {
           this.showLoadingHint = false;
           if (this.isFresh) {
@@ -1158,7 +1237,7 @@
             if (res.data.data.length > 0) {
               this.noDataShow = false;
               for (let item of res.data.data) {
-                this.stateCompleteList.push({
+                this.stateDispatchCompleteList.push({
                   createTime: item.createTime,
                   responseTime: item.responseTime,
                   planStartTime: item.planStartTime,
@@ -1213,7 +1292,7 @@
 			queryCompleteAppointTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
-				this.stateCompleteList = [];
+				this.stateAppointCompleteList = [];
 				queryAppointTaskMessage(data).then((res) => {
 					this.showLoadingHint = false;
 					if (this.isFresh) {
@@ -1225,7 +1304,7 @@
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
-								this.stateCompleteList.push({
+								this.stateAppointCompleteList.push({
 									createTime: item.createTime,
 									planUseTime: item.planUseTime,
 									planStartTime: item.planStartTime,
@@ -1255,7 +1334,7 @@
 									isBack: item.isBack,
 									isSign: item.isSign
 								});
-								this.taskCount = this.stateCompleteList.length;
+								this.taskCount = this.stateAppointCompleteList.length;
 							}
 						} else {
 							this.noDataShow = true
@@ -1279,7 +1358,7 @@
 			queryCompleteCirculationTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
-				this.stateCompleteList = [];
+				this.stateCircleCompleteList = [];
 				queryCirculationTask(data).then((res) => {
 					this.showLoadingHint = false;
 					if (this.isFresh) {
@@ -1291,7 +1370,7 @@
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
-								this.stateCompleteList.push({
+								this.stateCircleCompleteList.push({
 									startTime: item.startTime,
 									startUpTime: item.startUpTime,
 									state: item.state,
@@ -1310,9 +1389,8 @@
 									distName: Object.values(JSON.parse(item.hasAccess)),
 									hasAccess: item.hasAccess
 								});
-								this.taskCount = this.stateCompleteList.length;
+								this.taskCount = this.stateCircleCompleteList.length
 							};
-							console.log('科室列表',this.stateCompleteList);
 						} else {
 							this.noDataShow = true
 						}

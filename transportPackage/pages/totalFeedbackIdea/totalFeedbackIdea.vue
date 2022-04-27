@@ -163,7 +163,7 @@
 					depName:  this.userInfo.depName , //反馈科室名称医务人员depName字段
 					content : this.deedbackContent , //反馈内容，可以为空，点赞默认为空
 					type : 1, //反馈类型(1-意见反馈，2-赞)
-					terminal : 1, //反馈终端(1-客户端，2-小程序)
+					terminal : 2, //反馈终端(1-客户端，2-小程序)
 				}).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
