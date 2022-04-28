@@ -37,8 +37,8 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
+						<view class="task-tail-content" v-if="current == 0 && stateDispatchCompleteList.length > 0">
+							<view class="task-tail-content-item"  v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -139,7 +139,7 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,1)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id" />
 											<view class="guess-speak">
 												猜你想说
 											</view>
@@ -154,7 +154,7 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
+						<view class="task-tail-content" v-if="current == 1 && stateDispatchCompleteList.length > 0">
 							<view class="task-tail-content-item" v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
@@ -245,7 +245,7 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
+						<view class="task-tail-content" v-if="current == 0 && stateAppointCompleteList.length > 0">
 							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
@@ -335,7 +335,7 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,2)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id"/>
 											<view class="guess-speak">
 												猜你想说
 											</view>
@@ -350,7 +350,7 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
+						<view class="task-tail-content" v-if="current == 1 && stateAppointCompleteList.length > 0">
 							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
@@ -433,12 +433,12 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
+						<view class="task-tail-content" v-if="current == 0 && stateCircleCompleteList.length > 0">
 							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
-											<text>编号 : {{item.number}}</text>
+											<text>编号 : {{item.taskNumber}}</text>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -494,7 +494,7 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,3)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id"/>
 											<view class="guess-speak">
 												猜你想说
 											</view>
@@ -509,12 +509,12 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
+						<view class="task-tail-content" v-if="current == 1 && stateCircleCompleteList.length > 0">
 							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
-												<text>编号 : {{item.number}}</text>
+												<text>编号 : {{item.taskNumber}}</text>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
@@ -766,6 +766,17 @@
 				}
 			},
 			
+			// 文本域输入框值改变事件
+			inputChange ($event,item,index,type) {
+				if (type == 1) {
+					this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', $event);
+				} else if (type == 2) {
+					this.$set(this.stateAppointCompleteList[index], 'deedbackContent', $event); 
+				} else if (type == 3) {
+					this.$set(this.stateCircleCompleteList[index], 'deedbackContent', $event); 
+				}
+			},
+			
 			// 反馈点击事件
 			feedBackEvent(item,index,type) {
 				if (type == 1) {
@@ -946,29 +957,24 @@
 			},
 			// 任务猜你想说项点击事件
 			guessSpeakListEvent(index,innerItem,innerIndex,type) {
+				this.$forceUpdate();
 				if (type == 1) {
 					if (this.stateDispatchCompleteList[index]['deedbackContent'].length == 0) {
 						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${innerItem.name}`);
-						this.$forceUpdate()
 					} else {
 						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${this.stateDispatchCompleteList[index]['deedbackContent']},${innerItem.name}`);
-						this.$forceUpdate()
 					}
 				}	else if (type == 2) {
 					if (this.stateAppointCompleteList[index]['deedbackContent'].length == 0) {
 						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${innerItem.name}`);
-						this.$forceUpdate()
 					} else {
 						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${this.stateAppointCompleteList[index]['deedbackContent']},${innerItem.name}`);
-						this.$forceUpdate()
 					}
-				} else if (type == 2) {
+				} else if (type == 3) {
 					if (this.stateCircleCompleteList[index]['deedbackContent'].length == 0) {
 						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${innerItem.name}`);
-						this.$forceUpdate()
 					} else {
 						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${this.stateCircleCompleteList[index]['deedbackContent']},${innerItem.name}`);
-						this.$forceUpdate()
 					}
 				}
 			},
@@ -1226,7 +1232,7 @@
       queryCompleteDispatchTask (data) {
         this.noDataShow = false;
         this.showLoadingHint = true;
-		this.stateDispatchCompleteList = [];
+				this.stateDispatchCompleteList = [];
         getDispatchTaskComplete(data).then((res) => {
           this.showLoadingHint = false;
           if (this.isFresh) {
@@ -1250,17 +1256,17 @@
                   priority: item.priority,
                   id: item.id,
                   number: item.taskNumber,
-				patientInfoList: item.patientInfoList,
+									patientInfoList: item.patientInfoList,
                   distName: item.distName,
-				startTime: item.startTime,
-				workerId: item.workerId,
-				deedbackContent: '',
-				isShowFeedBack: false,
-				isShowFeedBackIconStyle: false,
-				isShowGiveLikeIconStyle: false,
-				destinations: item.destinations,
+									startTime: item.startTime,
+									workerId: item.workerId,
+									deedbackContent: '',
+									isShowFeedBack: false,
+									isShowFeedBackIconStyle: false,
+									isShowGiveLikeIconStyle: false,
+									destinations: item.destinations,
                   patientName: item.patientName,
-				 patientNumber: item.patientNumber,
+									patientNumber: item.patientNumber,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
@@ -1268,7 +1274,8 @@
                   isSign: item.isSign,
                   workerName: item.workerName
                 })
-              }
+              };
+							console.log('调度数据',this.stateDispatchCompleteList);
             } else {
               this.noDataShow = true
             }
