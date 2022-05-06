@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<u-toast ref="uToast"></u-toast>
 		<view>
 			<u-picker mode="time" v-model="startShow" :params="params" @confirm="startDateSure"></u-picker>
 		</view>
@@ -120,7 +121,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,1)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -131,7 +132,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -225,6 +226,15 @@
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
@@ -316,7 +326,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,2)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -327,7 +337,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -413,6 +423,15 @@
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
@@ -475,7 +494,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-if="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,3)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -486,7 +505,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-if="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -543,6 +562,15 @@
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
@@ -824,6 +852,22 @@
 			
 			//提交反馈事件
 			submitTaskFeedBack (item,index,type,text) {
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				} else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				} else if (type == 3) {
+					if (this.stateCircleCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				};
 				let data = {
 					feedbackId : this.workerId, // 反馈者ID
 					feedbackName : this.accountName, // 反馈者名称
@@ -836,6 +880,8 @@
 					taskType : '', //任务类型-调度任务(1-调度任务，2-预约任务，3-循环任务)
 					proId : this.proId, //所属项目ID，医务人员proId字段
 					taskId : item.id, //任务ID
+					isIssueFeedback: item.isIssueFeedback,
+					feedbackFlag : item.feedbackFlag,
 					taskNumber : item.number, //任务编号
 					taskCreate : item.createTime, //调度任务创建时间
 					taskStart : item.startTime, //调度任务开始时间
@@ -904,6 +950,8 @@
 					depName:  this.userInfo.depName , //反馈科室名称医务人员depName字段
 					content : '' , //反馈内容，可以为空，点赞默认为空
 					type : 2, //反馈类型(1-意见反馈，2-赞)
+					isIssueFeedback: item.isIssueFeedback,
+					feedbackFlag : item.feedbackFlag,
 					terminal : 2, //反馈终端(1-客户端，2-小程序)
 					taskType : '', //任务类型-调度任务(1-调度任务，2-预约任务，3-循环任务)
 					proId : this.proId, //所属项目ID，医务人员proId字段
@@ -1008,6 +1056,10 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent (data,index,type,text) {
+				if (data.feedbackFlag == 1 || data.isIssueFeedback) {
+					this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+					return
+				};
 				submitTaskFeedback(data,type).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
@@ -1021,6 +1073,7 @@
 								this.stateDispatchCompleteList[index]['isShowFeedBack'] = false;
 							} else if (text == '反对') {
 								this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateDispatchCompleteList[index]['isIssueFeedback'] = true;
 								this.stateDispatchCompleteList[index]['isShowFeedBack'] = !this.stateDispatchCompleteList[index]['isShowFeedBack'];
 							}
 						}	else if (type == 2) {
@@ -1030,6 +1083,7 @@
 								this.stateAppointCompleteList[index]['isShowFeedBack'] = false;
 							} else if (text == '反对') {
 								this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateAppointCompleteList[index]['isIssueFeedback'] = true;
 								this.stateAppointCompleteList[index]['isShowFeedBack'] = !this.stateAppointCompleteList[index]['isShowFeedBack'];
 							}
 						} else if (type == 3) {
@@ -1039,9 +1093,10 @@
 								this.stateCircleCompleteList[index]['isShowFeedBack'] = false;
 							} else if (text == '反对') {
 								this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateCircleCompleteList[index]['isIssueFeedback'] = true;
 								this.stateCircleCompleteList[index]['isShowFeedBack'] = !this.stateCircleCompleteList[index]['isShowFeedBack'];
 							}
-						}
+						};
 					} else {
 						this.$refs.uToast.show({
 						  title: `${res.data.msg}`,
@@ -1255,6 +1310,7 @@
                   finishTime: item.finishTime,
                   priority: item.priority,
                   id: item.id,
+									feedbackFlag: item.feedbackFlag,
                   number: item.taskNumber,
 									patientInfoList: item.patientInfoList,
                   distName: item.distName,
@@ -1264,6 +1320,7 @@
 									isShowFeedBack: false,
 									isShowFeedBackIconStyle: false,
 									isShowGiveLikeIconStyle: false,
+									isIssueFeedback: false,
 									destinations: item.destinations,
                   patientName: item.patientName,
 									patientNumber: item.patientNumber,
@@ -1321,7 +1378,9 @@
 									destinationName: item.destinationName,
 									taskTypeName: item.taskTypeName,
 									toolName: item.toolName,
+									isIssueFeedback: false,
 									priority: item.priority,
+									feedbackFlag: item.feedbackFlag,
 									patientNumber: item.patientNumber,
 									distDepartments: item.distDepartments,
 									id: item.id,
@@ -1384,8 +1443,10 @@
 									taskNumber: item.taskNumber,
 									taskTypeName: item.taskTypeName,
 									id: item.id,
+									isIssueFeedback: false,
 									workerId: item.workerId,
 									deedbackContent: '',
+									feedbackFlag: item.feedbackFlag,
 									isShowFeedBack: false,
 									isShowFeedBackIconStyle: false,
 									isShowGiveLikeIconStyle: false,

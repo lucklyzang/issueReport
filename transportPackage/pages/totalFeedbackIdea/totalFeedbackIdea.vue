@@ -18,11 +18,16 @@
 				<text>*</text>反馈意见
 			</view>
 			<u-input v-model="deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+			<view class="guess-speak">
+				<text>
+					猜你想说 :
+				</text>
+			</view>
 			<view class="guess-speak-list">
 				<text v-for="(innerItem,innerIndex) in totalGuessSpeakList" @click="totalGuessSpeakListEvent(innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
 			</view>  
 			<view class="feedback-btn" @click="submitFeedBackEvent">
-				意见反馈
+				提交反馈
 			</view>
 		</view>
 		<view class="bottom-bar">
@@ -147,9 +152,9 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent () {
-				if (this.opinionTypeIndex === null) {
+				if (this.opinionTypeIndex === null || this.deedbackContent == '') {
 					this.$refs.uToast.show({
-					  title: '请选择意见类型',
+					  title: '请选择/填写反馈意见',
 					  type: 'warning'
 					})
 					return
@@ -261,11 +266,17 @@
 					color: red;
 				}
 			};
+			.guess-speak {
+				font-size: 12px;
+				color: #a59f9f;
+				height: 40px;
+				line-height: 40px
+			};
 			.guess-speak-list {
 					display: flex;
 					flex-flow: row wrap;
 					justify-content: flex-start;
-					margin: 20px 0;
+					margin: 0 0 20px 0;
 					min-height: 80px;
 					overflow: auto;
 					text {

@@ -46,7 +46,7 @@
         "setting" : {
             "urlCheck" : true,
             "minified" : true,
-            "postcss" : false,
+            "postcss" : true,
             "es6" : true
         },
         // 开启分包优化
