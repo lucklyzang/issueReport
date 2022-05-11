@@ -73,7 +73,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '2.3.1',
+				versionNumber: '2.3.2',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
