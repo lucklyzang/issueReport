@@ -90,7 +90,7 @@
 										</view>
 										<view class="transport-people" v-else-if="templateType === 'template_two'">
 											<text>住院号 :</text>
-											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['patientNumber']:'无'}}</text>
+											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -201,9 +201,13 @@
 											</view>
 										</view>
 										<view class="item-top-three">
-											<view class="transport-people">
+											<view class="transport-people" v-if="templateType === 'template_one'">
 												<text>住院号 :</text>
 												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+											</view>
+											<view class="transport-people" v-else-if="templateType === 'template_two'">
+												<text>住院号 :</text>
+												<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -900,7 +904,7 @@
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					if (this.userInfo.pc == 'template_one') {
-						data['taskTransType'] = `${item.parentTypeName}-${item.taskTypeName}`;
+						data['taskTransType'] = `${item.parentTypeName ? item.parentTypeName : ''}-${item.taskTypeName ? item.taskTypeName : ''}`;
 					} else {
 						if (item.patientInfoList.length > 0 && item.patientInfoList[0].typeList.length > 0) {
 							let typeList = this.extractTransportTypeSmallClass(item.patientInfoList).join('、');
@@ -973,7 +977,7 @@
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					if (this.userInfo.pc == 'template_one') {
-						data['taskTransType'] = `${item.parentTypeName}-${item.taskTypeName}`;
+						data['taskTransType'] = `${item.parentTypeName ? item.parentTypeName : ''}-${item.taskTypeName ? item.taskTypeName : ''}`;
 					} else {
 						if (item.patientInfoList.length > 0 && item.patientInfoList[0].typeList.length > 0) {
 							let typeList = this.extractTransportTypeSmallClass(item.patientInfoList).join('、');
@@ -1310,6 +1314,7 @@
                   finishTime: item.finishTime,
                   priority: item.priority,
                   id: item.id,
+									parentTypeName: item.parentTypeName,
 									feedbackFlag: item.feedbackFlag,
                   number: item.taskNumber,
 									patientInfoList: item.patientInfoList,
@@ -1323,7 +1328,7 @@
 									isIssueFeedback: false,
 									destinations: item.destinations,
                   patientName: item.patientName,
-									patientNumber: item.patientNumber,
+									patientNumber: item.number,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
@@ -1381,7 +1386,7 @@
 									isIssueFeedback: false,
 									priority: item.priority,
 									feedbackFlag: item.feedbackFlag,
-									patientNumber: item.patientNumber,
+									patientNumber: item.hospitalNo,
 									distDepartments: item.distDepartments,
 									id: item.id,
 									distName: item.distName,
