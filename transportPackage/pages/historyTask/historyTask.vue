@@ -52,7 +52,7 @@
 									<view class="task-type-name">
 										<view class="destination-point" v-if="templateType == 'template_one'">
 											<text>运送类型 :</text>
-											<text>{{item.taskTypeName}}</text>
+											<text>{{item.taskTypeName ? item.taskTypeName : '无'}}</text>
 										</view>
 										<view class="destination-point" v-else-if="templateType === 'template_two'">
 											<text>运送类型 :</text>
@@ -169,7 +169,7 @@
 										<view class="task-type-name">
 											<view class="destination-point" v-if="templateType == 'template_one'">
 												<text>运送类型 :</text>
-												<text>{{item.taskTypeName}}</text>
+												<text>{{item.taskTypeName ? item.taskTypeName : '无'}}</text>
 											</view>
 											<view class="destination-point" v-else-if="templateType === 'template_two'">
 												<text>运送类型 :</text>
