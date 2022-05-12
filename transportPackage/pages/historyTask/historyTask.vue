@@ -1950,15 +1950,28 @@
 										align-items: center;
 										height: 60px;
 										.left {
-											width: 160px;
+											flex: 1;
+											height: 50px;
+											line-height: 20px;
+											word-break: break-all;
+											display: flex;
+											flex-flow: row nowrap;
+											align-items: center;
 											text {
 												color: black;
+												display: inline-block;
 												&:nth-child(2) {
 													font-size: 16px;
 													margin: 0 2px;
 												};
 												&:nth-child(3) {
 													font-size: 14px;
+													height: 50px;
+													display: flex;
+													flex-flow: row nowrap;
+													align-items: center;
+													overflow: auto;
+													flex: 1;
 												}
 											}
 										};
@@ -2001,7 +2014,6 @@
 											justify-content: space-between;
 											align-items: center;
 											height: 50px;
-											width: 160px;
 											padding: 0 8px;
 											box-sizing: border-box;
 											color: orange;
