@@ -272,8 +272,8 @@
 									</view>
 									<view class="task-type-name">
 										<view class="destination-point">
-											<text>运送类型 :</text>
-											<text>{{item.taskTypeName}}</text>
+											<text>检查类型 :	</text>
+											<text>{{item.taskTypeName.length > 0 ? item.taskTypeName.join(";") : '无'}}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -317,7 +317,8 @@
 									<view class="item-top-four">
 										<view class="bed-number">
 											<text>目的地: </text>
-											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+											<text></text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{item.distName.length > 0 ? innerItem : '无'}}</text>
 										</view>
 									</view>
 								</view>
@@ -377,8 +378,8 @@
 										</view>
 										<view class="task-type-name">
 											<view class="destination-point">
-												<text>运送类型 :</text>
-												<text>{{item.taskTypeName}}</text>
+												<text>检查类型 : </text>
+												<text>{{item.taskTypeName.length > 0 ? item.taskTypeName.join(";") : '无'}}</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -422,7 +423,7 @@
 										<view class="item-top-four">
 											<view class="bed-number">
 												<text>目的地: </text>
-												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{item.distName.length > 0 ? innerItem : '无'}}</text>
 											</view>
 										</view>
 								</view>
@@ -590,7 +591,7 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { getDate } from '@/common/js/utils'
+	import { getDate, checkEmptyArray } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
 	import {getDispatchTaskComplete,queryAppointTaskMessage,queryCirculationTask,queryFeedback,submitTaskFeedback} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
@@ -807,6 +808,28 @@
 				} else if (type == 3) {
 					this.$set(this.stateCircleCompleteList[index], 'deedbackContent', $event); 
 				}
+			},
+			
+			//提取预约任务检查类型
+			extractAppointTaskCheckType (checkItems) {
+				let AppointTypeList = [];
+				if (checkItems.length > 0) {
+					for (let item of checkItems) {
+						AppointTypeList.push(item.checkTypeName)
+					}
+				};
+				return AppointTypeList
+			},
+
+			//提取预约任务目的地
+			extractAppointTaskDist (checkItems) {
+				let AppointDistList = [];
+				if (checkItems.length > 0) {
+					for (let item of checkItems) {
+						AppointDistList.push(item.depName)
+					}
+				};
+				return checkEmptyArray(AppointDistList)
 			},
 			
 			// 反馈点击事件
@@ -1381,7 +1404,7 @@
 									setOutPlaceName: item.setOutPlaceName,
 									taskNumber: item.taskNumber,
 									destinationName: item.destinationName,
-									taskTypeName: item.taskTypeName,
+									taskTypeName: this.extractAppointTaskCheckType(item.checkItems),
 									toolName: item.toolName,
 									isIssueFeedback: false,
 									priority: item.priority,
@@ -1389,7 +1412,7 @@
 									patientNumber: item.hospitalNo,
 									distDepartments: item.distDepartments,
 									id: item.id,
-									distName: item.distName,
+									distName: this.extractAppointTaskDist(item.checkItems),
 									deedbackContent: '',
 									isShowFeedBack: false,
 									isShowFeedBackIconStyle: false,
@@ -1713,7 +1736,6 @@
 								background: #FFFFFF;
 								width: 98%;
 								margin: 0 auto;
-								margin-top: 6px;
 								border-radius: 4px;
 								padding-bottom: 10px;
 								box-sizing: border-box;
@@ -1738,27 +1760,36 @@
 									};
 									.item-top-one {
 										height:40px;
-										padding: 0 12px;
 										background: #f9f9f9;
+										display: flex;
+										padding: 0;
+										flex-flow: row nowrap;
+										justify-content: space-between;
+										align-items: center;
 										> view {
 											height: 20px;
 											line-height: 20px;
-											margin-top: 10px;
 											word-break: break-all;
 											font-size: 13px;
 											text {
 												color: #333;
 											};
 											&:first-child {
-												width: 60%;
+												flex: 1;
+												height: 40px;
+												display: flex;
+												justify-content: flex-start;
+												align-items: center;
 												-webkit-overflow-scrolling: touch;
 												overflow: auto;
 											};
 											&:last-child {
-												width: 40%;
+												width: 60px;
+												height: 40px;
+												display: flex;
+												justify-content: center;
+												align-items: center;
 												-webkit-overflow-scrolling: touch;
-												overflow: auto;
-												text-align: right;
 												> text {
 													&:first-child {
 														color: black
@@ -1776,14 +1807,20 @@
 										}
 									};
 									.task-type-name {
-										height: 40px;
 										padding: 0 12px;
-										line-height: 40px;
+										margin-top: 6px;
+										line-height: 20px;
+										text-align: justify;
 										>view {
 											width: 100% !important;
 											font-size: 17px;
 											font-weight: bold;
 											overflow: auto;
+											>text {
+												&:first-child {
+													margin-right: 4px
+												}
+											}
 										}
 									};
 									.item-top-two {

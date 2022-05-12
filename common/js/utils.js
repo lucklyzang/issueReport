@@ -120,6 +120,20 @@ export const getStringLength = (str) => {
 	return realLength
 }
 
+/*
+  * 数组去重
+  * @param{Array} currentArr
+*/
+export const checkEmptyArray = (currentArr) => {
+	const newArr = []
+	currentArr.forEach(item => {
+		if (newArr.indexOf(item) === -1) {
+			newArr.push(item)
+		}
+	})
+	return newArr
+}
+
 export const removeAllLocalStorage = () => {
   // removeStore('userName');
   // removeStore('userPassword');
