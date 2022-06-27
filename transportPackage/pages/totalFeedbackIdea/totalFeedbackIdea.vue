@@ -152,7 +152,7 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent () {
-				if (this.opinionTypeIndex === null && this.deedbackContent == '') {
+				if (this.opinionTypeIndex === null || this.deedbackContent == '') {
 					this.$refs.uToast.show({
 					  title: '请选择/填写反馈意见',
 					  type: 'warning'
