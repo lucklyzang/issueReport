@@ -151,7 +151,13 @@
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
-				} 
+				} else if (item.text == "意见反馈") {
+					uni.redirectTo({
+						url: '/projectPackage/pages/totalFeedbackIdea/totalFeedbackIdea'
+					});
+					this.changeBottomBarIndex(3);
+					this.changeIsToCallTaskPage(true)
+				}
 			}
 		}
 	}

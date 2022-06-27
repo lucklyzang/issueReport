@@ -67,6 +67,14 @@
 					}
 				},
 				{
+					"path": "pages/totalFeedbackIdea/totalFeedbackIdea",
+					"style": {
+						"navigationBarTitleText": "任务反馈",
+						"navigationBarBackgroundColor": "#000000",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
 					"path": "pages/medicRepairs/medicRepairs",
 					"style": {
 						"navigationBarTitleText": "创建自主任务",

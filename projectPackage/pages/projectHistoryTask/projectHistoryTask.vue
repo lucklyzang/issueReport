@@ -141,7 +141,7 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { setCache, getCache, getDate } from '@/common/js/utils'
+	import { getDate } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
 	import {getMaintainTask} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
@@ -460,7 +460,13 @@
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
-				} 
+				} else if (item.text == "意见反馈") {
+					uni.redirectTo({
+						url: '/projectPackage/pages/totalFeedbackIdea/totalFeedbackIdea'
+					});
+					this.changeBottomBarIndex(3);
+					this.changeIsToCallTaskPage(true)
+				}
 			}
 		}
 	}

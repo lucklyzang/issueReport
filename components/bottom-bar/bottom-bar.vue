@@ -34,7 +34,8 @@
 		computed: {
       ...mapGetters([
         'bottomBarIndex',
-				'templateType'
+				'templateType',
+				'isProjectTask'
       ])
 		},
 		mounted () {
@@ -49,7 +50,7 @@
 			
 			//模板二时不展示意见反馈
 			isShowFeedbackEvent () {
-				if (this.templateType == 'template_two') {
+				if (this.templateType == 'template_two' || this.isProjectTask) {
 				  this.barList = this.barList.filter((item) => {return item.text != '意见反馈'})
 				}
 			}
