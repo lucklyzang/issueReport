@@ -160,6 +160,7 @@
 					return
 				};
 				submitFeedback({
+					proId: this.proId,
 					feedbackId : this.workerId, // 反馈者ID
 					typeFlag: this.opinionTypeIndex + 1, //意见类型
 					feedbackName : this.accountName, // 反馈者名称
