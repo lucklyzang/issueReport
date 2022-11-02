@@ -1,8 +1,12 @@
 import axios from 'axios-miniprogram'
 import store from '@/store'
 import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
+// 开发环境： https://blink.blinktech.cn
+// 测试环境：https://show.blinktech.cn
+// 准生产环境：https://ver.blinktech.cn
+// 生产环境：https://blinktech.cn
 const instance = axios.create({
-  baseURL: 'https://blink.blinktech.cn/project',
+  baseURL: 'https://show.blinktech.cn/project',
   headers: {
     // common: {
     //   'Accept': 'application/json, test/plain,'
@@ -15,7 +19,7 @@ const instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  config.baseURL = store.state.transport.isProjectTask ? 'https://blink.blinktech.cn/project' : 'https://blink.blinktech.cn/trans';
+  config.baseURL = store.state.transport.isProjectTask ? 'https://show.blinktech.cn/project' : 'https://show.blinktech.cn/trans';
 	if (config['url'] == 'project/queryAll') {
 		config.headers['HTTP_REQUEST_TYPE'] = 1
 	};
