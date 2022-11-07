@@ -1512,7 +1512,7 @@
 					display: flex;
 					font-size: 15px;
 					color: $color-text-right;
-					width: 100%;
+					width: 0;
 					flex-direction: row;
 					flex-wrap: wrap;
 					justify-content: space-between;
@@ -1532,7 +1532,12 @@
 						text-align: center;
 						line-height: 35px;
 						background:: #f9f9f9;
-						border-radius: 16px
+						border-radius: 16px;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						white-space: nowrap;
+						padding: 0 6px;
+						box-sizing: border-box;
 					}
 				}
 			};
@@ -1800,7 +1805,7 @@
 						.creat-transport-type-content {
 							flex: 1;
 							display: flex;
-							width: 100%;
+							width: 0;
 							flex-direction: row;
 							flex-wrap: wrap;
 							justify-content: space-between;

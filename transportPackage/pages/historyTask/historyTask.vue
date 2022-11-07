@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<u-toast ref="uToast"></u-toast>
 		<view>
 			<u-picker mode="time" v-model="startShow" :params="params" @confirm="startDateSure"></u-picker>
 		</view>
@@ -16,13 +17,13 @@
 		</view>
 		<!--任务切换栏-->
 		<view class="container-box">
-			<u-sticky>
+			<u-sticky offset-top="90">
 				<view class="task-switch">
 					<text v-for="(item,index) in taskNameList" :class="{'active-tab-style':taskNameIndex === index}" :key="index" @click="tabSwitchEvent(item,index)">{{item.name}}</text>
 				</view>
 			</u-sticky>	
 			<view class="historyTask-box">
-				<view class="historyTask-list-box historyTask-list-dispatch-box" v-if="taskNameIndex === 0">
+				<view class="historyTask-list-box historyTask-list-dispatch-box" v-show="taskNameIndex == 0">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -37,8 +38,8 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 0 && stateDispatchCompleteList.length > 0">
+							<view class="task-tail-content-item"  v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -51,7 +52,7 @@
 									<view class="task-type-name">
 										<view class="destination-point" v-if="templateType == 'template_one'">
 											<text>运送类型 :</text>
-											<text>{{item.taskTypeName}}</text>
+											<text>{{item.taskTypeName ? item.taskTypeName : '无'}}</text>
 										</view>
 										<view class="destination-point" v-else-if="templateType === 'template_two'">
 											<text>运送类型 :</text>
@@ -75,7 +76,7 @@
 										</view>
 										<view class="bed-number" v-if="templateType === 'template_one'">
 											<text>床号: </text>
-											<text>{{item.bedNumber}}</text>
+											<text>{{item.bedNumber ? item.bedNumber : '无'}}</text>
 										</view>
 										<view class="bed-number" v-else-if="templateType === 'template_two'">
 											<text>床号 :</text>
@@ -89,7 +90,7 @@
 										</view>
 										<view class="transport-people" v-else-if="templateType === 'template_two'">
 											<text>住院号 :</text>
-											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['patientNumber']:'无'}}</text>
+											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -120,7 +121,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,1)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -131,7 +132,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -139,12 +140,12 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,1)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id" />
 											<view class="guess-speak">
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,1)" :key="innerItem.name">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,1,'反对')">
 												提交反馈
@@ -154,8 +155,8 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 1 && stateDispatchCompleteList.length > 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateDispatchCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
@@ -168,7 +169,7 @@
 										<view class="task-type-name">
 											<view class="destination-point" v-if="templateType == 'template_one'">
 												<text>运送类型 :</text>
-												<text>{{item.taskTypeName}}</text>
+												<text>{{item.taskTypeName ? item.taskTypeName : '无'}}</text>
 											</view>
 											<view class="destination-point" v-else-if="templateType === 'template_two'">
 												<text>运送类型 :</text>
@@ -192,7 +193,7 @@
 											</view>
 											<view class="bed-number" v-if="templateType === 'template_one'">
 												<text>床号: </text>
-												<text>{{item.bedNumber}}</text>
+												<text>{{item.bedNumber ? item.bedNumber : '无'}}</text>
 											</view>
 											<view class="bed-number" v-else-if="templateType === 'template_two'">
 												<text>床号 :</text>
@@ -200,9 +201,13 @@
 											</view>
 										</view>
 										<view class="item-top-three">
-											<view class="transport-people">
+											<view class="transport-people" v-if="templateType === 'template_one'">
 												<text>住院号 :</text>
 												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+											</view>
+											<view class="transport-people" v-else-if="templateType === 'template_two'">
+												<text>住院号 :</text>
+												<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -225,12 +230,21 @@
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-appoint-box" v-if="taskNameIndex === 1">
+				<view class="historyTask-list-box historyTask-list-appoint-box" v-show="taskNameIndex == 1">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -245,8 +259,8 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 0 && stateAppointCompleteList.length > 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
@@ -258,8 +272,8 @@
 									</view>
 									<view class="task-type-name">
 										<view class="destination-point">
-											<text>运送类型 :</text>
-											<text>{{item.taskTypeName}}</text>
+											<text>检查类型 :	</text>
+											<text>{{item.taskTypeName.length > 0 ? item.taskTypeName.join(";") : '无'}}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -303,7 +317,8 @@
 									<view class="item-top-four">
 										<view class="bed-number">
 											<text>目的地: </text>
-											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+											<text></text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{item.distName.length > 0 ? innerItem : '无'}}</text>
 										</view>
 									</view>
 								</view>
@@ -316,7 +331,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,2)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -327,7 +342,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -335,12 +350,12 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,2)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id"/>
 											<view class="guess-speak">
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,2)" :key="innerIndex">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,2,'反对')">
 												提交反馈
@@ -350,8 +365,8 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 1 && stateAppointCompleteList.length > 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateAppointCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
@@ -363,8 +378,8 @@
 										</view>
 										<view class="task-type-name">
 											<view class="destination-point">
-												<text>运送类型 :</text>
-												<text>{{item.taskTypeName}}</text>
+												<text>检查类型 : </text>
+												<text>{{item.taskTypeName.length > 0 ? item.taskTypeName.join(";") : '无'}}</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -408,17 +423,26 @@
 										<view class="item-top-four">
 											<view class="bed-number">
 												<text>目的地: </text>
-												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{item.distName.length > 0 ? innerItem : '无'}}</text>
 											</view>
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<view class="historyTask-list-box historyTask-list-circulation-box" v-if="taskNameIndex === 2">
+				<view class="historyTask-list-box historyTask-list-circulation-box" v-show="taskNameIndex == 2">
 					<view class="time-change-box">
 						<view class="time-change-text">至</view>
 						<view class="time-change-left">
@@ -433,12 +457,12 @@
 					</view> -->
 					<view class="task-tail-content-box">
 						<u-tabs :list="list" :is-scroll="false" font-size="35" bar-width="150" active-color="#2c9af1" inactive-color="#7d7d7d" :current="current" @change="tabChange"></u-tabs>
-						<view class="task-tail-content" v-show="current == 0">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 0 && stateCircleCompleteList.length > 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 										<view class="number">
-											<text>编号 : {{item.number}}</text>
+											<text>编号 : {{item.taskNumber}}</text>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -475,7 +499,7 @@
 												<text>运送人:</text>
 												<text>{{item.workerName}}</text>
 											</view>
-											<view class="right" v-show="!item.isShowGiveLikeIconStyle">
+											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,3)">
 													<u-icon name="arrow-down-fill" size="40" :color="item.isShowFeedBackIconStyle ? 'orange' : '#a59f9f'" />
 												</view>
@@ -486,7 +510,7 @@
 													</text>
 												</view>
 											</view>
-											<view class="thank-feedback" v-show="item.isShowGiveLikeIconStyle">
+											<view class="thank-feedback" v-if="(item.isShowGiveLikeIconStyle || item.isIssueFeedback || item.feedbackFlag == 1) && templateType === 'template_one'">
 												感谢您的反馈!
 											</view>
 										</view>
@@ -494,12 +518,12 @@
 											<view class="idea-feedback">
 												请输入你的反馈意见
 											</view>
-											<u-input v-model="item.deedbackContent" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200"/>
+											<u-input :value="item.deedbackContent" @input="inputChange($event,item,index,3)" maxlength="2000" border placeholder="请输入你的反馈意见" type="textarea" height="200" :key="item.id"/>
 											<view class="guess-speak">
 												猜你想说
 											</view>
 											<view class="guess-speak-list">
-												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex)" :key="innerIndex">{{innerItem.name}}</text>
+												<text v-for="(innerItem,innerIndex) in guessSpeakList" @click="guessSpeakListEvent(index,innerItem,innerIndex,3)" :key="innerIndex">{{innerItem.name}}</text>
 											</view>  
 											<view class="submit-feedback" @click="submitTaskFeedBack(item,index,3,'反对')">
 												提交反馈
@@ -509,12 +533,12 @@
 								</view>
 							</view>
 						</view>
-						<view class="task-tail-content" v-show="current == 1">
-							<view class="task-tail-content-item" v-for="(item,index) in stateCompleteList" :key="index">
+						<view class="task-tail-content" v-if="current == 1 && stateCircleCompleteList.length > 0">
+							<view class="task-tail-content-item" v-for="(item,index) in stateCircleCompleteList" :key="item.id">
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
-												<text>编号 : {{item.number}}</text>
+												<text>编号 : {{item.taskNumber}}</text>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
@@ -543,6 +567,15 @@
 										</view>
 								</view>
 								<view class="item-bottom">
+									<view class="feedback-area">
+										<view class="feedback-top">
+											<view class="left">
+												<u-icon name="account-fill" size="50" />
+												<text>运送人:</text>
+												<text>{{item.workerName}}</text>
+											</view>
+										</view>	
+									</view>	
 								</view>
 							</view>
 						</view>
@@ -558,7 +591,7 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import { getDate } from '@/common/js/utils'
+	import { getDate, checkEmptyArray } from '@/common/js/utils'
 	import SOtime from '@/common/js/utils/SOtime.js'
 	import {getDispatchTaskComplete,queryAppointTaskMessage,queryCirculationTask,queryFeedback,submitTaskFeedback} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
@@ -589,7 +622,9 @@
 				guessSpeakList: [],
 				taskNameIndex: 0,
 				list: [{name: '已完成'}, {name: '已取消'}],
-				stateCompleteList: [],
+				stateDispatchCompleteList: [],
+				stateAppointCompleteList: [],
+				stateCircleCompleteList: [],
 				current: 0
 			}
 		},
@@ -764,34 +799,116 @@
 				}
 			},
 			
+			// 文本域输入框值改变事件
+			inputChange ($event,item,index,type) {
+				if (type == 1) {
+					this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', $event);
+				} else if (type == 2) {
+					this.$set(this.stateAppointCompleteList[index], 'deedbackContent', $event); 
+				} else if (type == 3) {
+					this.$set(this.stateCircleCompleteList[index], 'deedbackContent', $event); 
+				}
+			},
+			
+			//提取预约任务检查类型
+			extractAppointTaskCheckType (checkItems) {
+				let AppointTypeList = [];
+				if (checkItems.length > 0) {
+					for (let item of checkItems) {
+						AppointTypeList.push(item.checkTypeName)
+					}
+				};
+				return AppointTypeList
+			},
+
+			//提取预约任务目的地
+			extractAppointTaskDist (checkItems) {
+				let AppointDistList = [];
+				if (checkItems.length > 0) {
+					for (let item of checkItems) {
+						AppointDistList.push(item.depName)
+					}
+				};
+				return checkEmptyArray(AppointDistList)
+			},
+			
 			// 反馈点击事件
 			feedBackEvent(item,index,type) {
-				this.stateCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCompleteList[index]['isShowFeedBackIconStyle'];
-				this.stateCompleteList[index]['isShowFeedBack'] = !this.stateCompleteList[index]['isShowFeedBack'];
-				if (this.stateCompleteList[index]['isShowFeedBack']) {
-					this.inquireFeedback({
-						proId: this.proId,
-						signFlag: 2,
-						typeFlag: '',
-						state: 1
-					})
+				if (type == 1) {
+					this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateDispatchCompleteList[index]['isShowFeedBack'] = !this.stateDispatchCompleteList[index]['isShowFeedBack'];
+					if (this.stateDispatchCompleteList[index]['isShowFeedBack']) {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', '');
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
+				} else if (type == 2) {
+					this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateAppointCompleteList[index]['isShowFeedBack'] = !this.stateAppointCompleteList[index]['isShowFeedBack'];
+					if (this.stateAppointCompleteList[index]['isShowFeedBack']) {
+						if (!this.stateAppointCompleteList[index]['deedbackContent']) {
+							this.$set(this.stateAppointCompleteList[index], 'deedbackContent', '');
+						};
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
+				} else if (type == 3) {
+					this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'];
+					this.stateCircleCompleteList[index]['isShowFeedBack'] = !this.stateCircleCompleteList[index]['isShowFeedBack'];
+					if (this.stateCircleCompleteList[index]['isShowFeedBack']) {
+						if (!this.stateCircleCompleteList[index]['deedbackContent']) {
+							this.$set(this.stateCircleCompleteList[index], 'deedbackContent', '');
+						};
+						this.inquireFeedback({
+							proId: this.proId,
+							signFlag: 2,
+							typeFlag: '',
+							state: 1
+						})
+					}
 				}
 			},
 			
 			//提交反馈事件
 			submitTaskFeedBack (item,index,type,text) {
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				} else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				} else if (type == 3) {
+					if (this.stateCircleCompleteList[index]['isIssueFeedback']) {
+						this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+						return
+					}
+				};
 				let data = {
 					feedbackId : this.workerId, // 反馈者ID
 					feedbackName : this.accountName, // 反馈者名称
 					feedbackRole : '', //反馈角色，暂定为医务人员的 role 字段
 					depId : this.userInfo.depId  , //反馈科室ID，医务人员depId字段
 					depName:  this.userInfo.depName , //反馈科室名称医务人员depName字段
-					content : this.stateCompleteList[index]['deedbackContent'] , //反馈内容，可以为空，点赞默认为空
+					content : '' , //反馈内容，可以为空，点赞默认为空
 					type : 1, //反馈类型(1-意见反馈，2-赞)
 					terminal : 2, //反馈终端(1-客户端，2-小程序)
 					taskType : '', //任务类型-调度任务(1-调度任务，2-预约任务，3-循环任务)
 					proId : this.proId, //所属项目ID，医务人员proId字段
 					taskId : item.id, //任务ID
+					isIssueFeedback: item.isIssueFeedback,
+					feedbackFlag : item.feedbackFlag,
 					taskNumber : item.number, //任务编号
 					taskCreate : item.createTime, //调度任务创建时间
 					taskStart : item.startTime, //调度任务开始时间
@@ -802,11 +919,15 @@
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item.planStartTime ? item.planStartTime.slice(0,item.planStartTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
 					data['taskType'] = type;
+					data['content'] = this.stateDispatchCompleteList[index]['deedbackContent'];
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					if (this.userInfo.pc == 'template_one') {
-						data['taskTransType'] = `${item.parentTypeName}-${item.taskTypeName}`;
+						data['taskTransType'] = `${item.parentTypeName ? item.parentTypeName : ''}-${item.taskTypeName ? item.taskTypeName : ''}`;
 					} else {
 						if (item.patientInfoList.length > 0 && item.patientInfoList[0].typeList.length > 0) {
 							let typeList = this.extractTransportTypeSmallClass(item.patientInfoList).join('、');
@@ -820,24 +941,34 @@
 				} else if (type == 2) {
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					data['taskType'] = type;
+					data['content'] = this.stateAppointCompleteList[index]['deedbackContent'];
 					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
-					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : [];
 					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
 					data['taskHasAccess'] = item.hasAccess;
 					data['taskType'] = type;
+					data['content'] = this.stateCircleCompleteList[index]['deedbackContent'];
 					data['taskNumber'] = item['taskNumber'];
 					data['taskName'] = item['taskTypeName'];
-					data['taskStart'] = item['startUpTime'];
-					data['taskStarttTime'] = item['startTime'];
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item['startUpTime'] ? item['startUpTime'].slice(0,item['startUpTime'].lastIndexOf(':')) : '';
+					data['taskStartTime'] = item['startTime'] ? item['startTime'].slice(0,item['startTime'].lastIndexOf(':')) : '';
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
 			
 			// 点赞事件
 			giveLikeEvent(item,index,type,text) {
-				if (this.stateCompleteList[index]['isShowGiveLikeIconStyle']) {return};
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				} else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				} else if (type == 3) {
+					if (this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle']) {return}
+				};
 				let data = {
 					feedbackId : this.workerId, // 反馈者ID
 					feedbackName : this.accountName, // 反馈者名称
@@ -846,6 +977,8 @@
 					depName:  this.userInfo.depName , //反馈科室名称医务人员depName字段
 					content : '' , //反馈内容，可以为空，点赞默认为空
 					type : 2, //反馈类型(1-意见反馈，2-赞)
+					isIssueFeedback: item.isIssueFeedback,
+					feedbackFlag : item.feedbackFlag,
 					terminal : 2, //反馈终端(1-客户端，2-小程序)
 					taskType : '', //任务类型-调度任务(1-调度任务，2-预约任务，3-循环任务)
 					proId : this.proId, //所属项目ID，医务人员proId字段
@@ -860,11 +993,14 @@
 					taskWorkerName : item.workerName //运送员姓名
 				};
 				if (type == 1) {
+					data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item.planStartTime ? item.planStartTime.slice(0,item.planStartTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
 					data['taskType'] = type;
 					data['taskStartDep'] = '';
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					if (this.userInfo.pc == 'template_one') {
-						data['taskTransType'] = `${item.parentTypeName}-${item.taskTypeName}`;
+						data['taskTransType'] = `${item.parentTypeName ? item.parentTypeName : ''}-${item.taskTypeName ? item.taskTypeName : ''}`;
 					} else {
 						if (item.patientInfoList.length > 0 && item.patientInfoList[0].typeList.length > 0) {
 							let typeList = this.extractTransportTypeSmallClass(item.patientInfoList).join('、');
@@ -879,7 +1015,7 @@
 					data['taskCreateDep'] = item['setOutPlaceName'];
 					data['taskType'] = type;
 					data['taskHospitalNo'] = item['patientNumber'] ? item['patientNumber'] : '';
-					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : '';
+					data['taskDistDepartments'] = item['distDepartments'] ? item['distDepartments'] : [];
 					data['taskNumber'] = item['taskNumber'];
 					this.submitFeedBackEvent(data,index,type,text)
 				} else if (type == 3) {
@@ -887,17 +1023,34 @@
 					data['taskType'] = type;
 					data['taskNumber'] = item['taskNumber'];
 					data['taskName'] = item['taskTypeName'];
-					data['taskStart'] = item['startUpTime'];
-					data['taskStarttTime'] = item['startTime'];
+				  data['taskCreate'] = item.createTime ? item.createTime.slice(0,item.createTime.lastIndexOf(':')) : '';
+					data['taskFinish'] = item.finishTime ? item.finishTime.slice(0,item.finishTime.lastIndexOf(':')) : '';
+					data['taskStart'] = item['startUpTime'] ? item['startUpTime'].slice(0,item['startUpTime'].lastIndexOf(':')) : '';
+					data['taskStartTime'] = item['startTime'] ? item['startTime'].slice(0,item['startTime'].lastIndexOf(':')) : '';
 					this.submitFeedBackEvent(data,index,type,text)
 				} 
 			},
 			// 任务猜你想说项点击事件
-			guessSpeakListEvent(index,innerItem,innerIndex) {
-				if (this.stateCompleteList[index]['deedbackContent'].length == 0) {
-					this.stateCompleteList[index]['deedbackContent'] = `${innerItem.name}`
-				} else {
-					this.stateCompleteList[index]['deedbackContent'] = `${this.stateCompleteList[index]['deedbackContent']},${innerItem.name}`
+			guessSpeakListEvent(index,innerItem,innerIndex,type) {
+				this.$forceUpdate();
+				if (type == 1) {
+					if (this.stateDispatchCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+					} else {
+						this.$set(this.stateDispatchCompleteList[index], 'deedbackContent', `${this.stateDispatchCompleteList[index]['deedbackContent']},${innerItem.name}`);
+					}
+				}	else if (type == 2) {
+					if (this.stateAppointCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+					} else {
+						this.$set(this.stateAppointCompleteList[index], 'deedbackContent', `${this.stateAppointCompleteList[index]['deedbackContent']},${innerItem.name}`);
+					}
+				} else if (type == 3) {
+					if (this.stateCircleCompleteList[index]['deedbackContent'].length == 0) {
+						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${innerItem.name}`);
+					} else {
+						this.$set(this.stateCircleCompleteList[index], 'deedbackContent', `${this.stateCircleCompleteList[index]['deedbackContent']},${innerItem.name}`);
+					}
 				}
 			},
 			
@@ -930,17 +1083,47 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent (data,index,type,text) {
+				if (data.feedbackFlag == 1 || data.isIssueFeedback) {
+					this.$refs.uToast.show({title:'该任务已反馈过',type:'waring'})
+					return
+				};
 				submitTaskFeedback(data,type).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
 						  title: '意见反馈成功',
 						  type: 'success'
 						});
-						if (text == '点赞') {
-							this.stateCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCompleteList[index]['isShowGiveLikeIconStyle'];
-							this.stateCompleteList[index]['isShowFeedBackIconStyle'] = false;
-							this.stateCompleteList[index]['isShowFeedBack'] = false;
-						}
+						if (type == 1) {
+							if (text == '点赞') {
+								this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateDispatchCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateDispatchCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateDispatchCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateDispatchCompleteList[index]['isIssueFeedback'] = true;
+								this.stateDispatchCompleteList[index]['isShowFeedBack'] = !this.stateDispatchCompleteList[index]['isShowFeedBack'];
+							}
+						}	else if (type == 2) {
+							if (text == '点赞') {
+								this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateAppointCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateAppointCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateAppointCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateAppointCompleteList[index]['isIssueFeedback'] = true;
+								this.stateAppointCompleteList[index]['isShowFeedBack'] = !this.stateAppointCompleteList[index]['isShowFeedBack'];
+							}
+						} else if (type == 3) {
+							if (text == '点赞') {
+								this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle'] = !this.stateCircleCompleteList[index]['isShowGiveLikeIconStyle'];
+								this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = false;
+								this.stateCircleCompleteList[index]['isShowFeedBack'] = false;
+							} else if (text == '反对') {
+								this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'] = !this.stateCircleCompleteList[index]['isShowFeedBackIconStyle'];
+								this.stateCircleCompleteList[index]['isIssueFeedback'] = true;
+								this.stateCircleCompleteList[index]['isShowFeedBack'] = !this.stateCircleCompleteList[index]['isShowFeedBack'];
+							}
+						};
 					} else {
 						this.$refs.uToast.show({
 						  title: `${res.data.msg}`,
@@ -1131,7 +1314,7 @@
       queryCompleteDispatchTask (data) {
         this.noDataShow = false;
         this.showLoadingHint = true;
-		this.stateCompleteList = [];
+				this.stateDispatchCompleteList = [];
         getDispatchTaskComplete(data).then((res) => {
           this.showLoadingHint = false;
           if (this.isFresh) {
@@ -1142,7 +1325,7 @@
             if (res.data.data.length > 0) {
               this.noDataShow = false;
               for (let item of res.data.data) {
-                this.stateCompleteList.push({
+                this.stateDispatchCompleteList.push({
                   createTime: item.createTime,
                   responseTime: item.responseTime,
                   planStartTime: item.planStartTime,
@@ -1154,18 +1337,21 @@
                   finishTime: item.finishTime,
                   priority: item.priority,
                   id: item.id,
+									parentTypeName: item.parentTypeName,
+									feedbackFlag: item.feedbackFlag,
                   number: item.taskNumber,
-				patientInfoList: item.patientInfoList,
+									patientInfoList: item.patientInfoList,
                   distName: item.distName,
-				startTime: item.startTime,
-				workerId: item.workerId,
-				deedbackContent: '',
-				isShowFeedBack: false,
-				isShowFeedBackIconStyle: false,
-				isShowGiveLikeIconStyle: false,
-				destinations: item.destinations,
+									startTime: item.startTime,
+									workerId: item.workerId,
+									deedbackContent: '',
+									isShowFeedBack: false,
+									isShowFeedBackIconStyle: false,
+									isShowGiveLikeIconStyle: false,
+									isIssueFeedback: false,
+									destinations: item.destinations,
                   patientName: item.patientName,
-				 patientNumber: item.patientNumber,
+									patientNumber: item.number,
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
@@ -1173,7 +1359,8 @@
                   isSign: item.isSign,
                   workerName: item.workerName
                 })
-              }
+              };
+							console.log('调度数据',this.stateDispatchCompleteList);
             } else {
               this.noDataShow = true
             }
@@ -1202,7 +1389,7 @@
 			queryCompleteAppointTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
-				this.stateCompleteList = [];
+				this.stateAppointCompleteList = [];
 				queryAppointTaskMessage(data).then((res) => {
 					this.showLoadingHint = false;
 					if (this.isFresh) {
@@ -1214,7 +1401,7 @@
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
-								this.stateCompleteList.push({
+								this.stateAppointCompleteList.push({
 									createTime: item.createTime,
 									planUseTime: item.planUseTime,
 									planStartTime: item.planStartTime,
@@ -1222,13 +1409,15 @@
 									setOutPlaceName: item.setOutPlaceName,
 									taskNumber: item.taskNumber,
 									destinationName: item.destinationName,
-									taskTypeName: item.taskTypeName,
+									taskTypeName: this.extractAppointTaskCheckType(item.checkItems),
 									toolName: item.toolName,
+									isIssueFeedback: false,
 									priority: item.priority,
-									patientNumber: item.patientNumber,
+									feedbackFlag: item.feedbackFlag,
+									patientNumber: item.hospitalNo,
 									distDepartments: item.distDepartments,
 									id: item.id,
-									distName: item.distName,
+									distName: this.extractAppointTaskDist(item.checkItems),
 									deedbackContent: '',
 									isShowFeedBack: false,
 									isShowFeedBackIconStyle: false,
@@ -1244,7 +1433,7 @@
 									isBack: item.isBack,
 									isSign: item.isSign
 								});
-								this.taskCount = this.stateCompleteList.length;
+								this.taskCount = this.stateAppointCompleteList.length;
 							}
 						} else {
 							this.noDataShow = true
@@ -1273,7 +1462,7 @@
 			queryCompleteCirculationTask (data) {
 				this.noDataShow = false;
 				this.showLoadingHint = true;
-				this.stateCompleteList = [];
+				this.stateCircleCompleteList = [];
 				queryCirculationTask(data).then((res) => {
 					this.showLoadingHint = false;
 					if (this.isFresh) {
@@ -1285,15 +1474,17 @@
 						if (res.data.data.length > 0) {
 							this.noDataShow = false;
 							for (let item of res.data.data) {
-								this.stateCompleteList.push({
+								this.stateCircleCompleteList.push({
 									startTime: item.startTime,
 									startUpTime: item.startUpTime,
 									state: item.state,
 									taskNumber: item.taskNumber,
 									taskTypeName: item.taskTypeName,
 									id: item.id,
+									isIssueFeedback: false,
 									workerId: item.workerId,
 									deedbackContent: '',
+									feedbackFlag: item.feedbackFlag,
 									isShowFeedBack: false,
 									isShowFeedBackIconStyle: false,
 									isShowGiveLikeIconStyle: false,
@@ -1304,9 +1495,8 @@
 									distName: Object.values(JSON.parse(item.hasAccess)),
 									hasAccess: item.hasAccess
 								});
-								this.taskCount = this.stateCompleteList.length;
+								this.taskCount = this.stateCircleCompleteList.length
 							};
-							console.log('科室列表',this.stateCompleteList);
 						} else {
 							this.noDataShow = true
 						}
@@ -1561,7 +1751,6 @@
 								background: #FFFFFF;
 								width: 98%;
 								margin: 0 auto;
-								margin-top: 6px;
 								border-radius: 4px;
 								padding-bottom: 10px;
 								box-sizing: border-box;
@@ -1586,27 +1775,36 @@
 									};
 									.item-top-one {
 										height:40px;
-										padding: 0 12px;
 										background: #f9f9f9;
+										display: flex;
+										padding: 0;
+										flex-flow: row nowrap;
+										justify-content: space-between;
+										align-items: center;
 										> view {
 											height: 20px;
 											line-height: 20px;
-											margin-top: 10px;
 											word-break: break-all;
 											font-size: 13px;
 											text {
 												color: #333;
 											};
 											&:first-child {
-												width: 60%;
+												flex: 1;
+												height: 40px;
+												display: flex;
+												justify-content: flex-start;
+												align-items: center;
 												-webkit-overflow-scrolling: touch;
 												overflow: auto;
 											};
 											&:last-child {
-												width: 40%;
+												width: 60px;
+												height: 40px;
+												display: flex;
+												justify-content: center;
+												align-items: center;
 												-webkit-overflow-scrolling: touch;
-												overflow: auto;
-												text-align: right;
 												> text {
 													&:first-child {
 														color: black
@@ -1624,14 +1822,20 @@
 										}
 									};
 									.task-type-name {
-										height: 40px;
 										padding: 0 12px;
-										line-height: 40px;
+										margin-top: 6px;
+										line-height: 20px;
+										text-align: justify;
 										>view {
 											width: 100% !important;
 											font-size: 17px;
 											font-weight: bold;
 											overflow: auto;
+											>text {
+												&:first-child {
+													margin-right: 4px
+												}
+											}
 										}
 									};
 									.item-top-two {
@@ -1761,15 +1965,28 @@
 										align-items: center;
 										height: 60px;
 										.left {
-											width: 160px;
+											flex: 1;
+											height: 50px;
+											line-height: 20px;
+											word-break: break-all;
+											display: flex;
+											flex-flow: row nowrap;
+											align-items: center;
 											text {
 												color: black;
+												display: inline-block;
 												&:nth-child(2) {
 													font-size: 16px;
 													margin: 0 2px;
 												};
 												&:nth-child(3) {
 													font-size: 14px;
+													height: 50px;
+													display: flex;
+													flex-flow: row nowrap;
+													align-items: center;
+													overflow: auto;
+													flex: 1;
 												}
 											}
 										};
@@ -1812,7 +2029,6 @@
 											justify-content: space-between;
 											align-items: center;
 											height: 50px;
-											width: 160px;
 											padding: 0 8px;
 											box-sizing: border-box;
 											color: orange;

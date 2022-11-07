@@ -33,16 +33,26 @@
 		},
 		computed: {
       ...mapGetters([
-        'bottomBarIndex'
+        'bottomBarIndex',
+				'templateType',
+				'isProjectTask'
       ])
 		},
 		mounted () {
-			this.listIndex = this.itemIndex
+			this.listIndex = this.itemIndex;
+			this.isShowFeedbackEvent()
 		},
 		methods: {
 			listEvent (item,index) {
 				this.listIndex = index;
 				this.$emit('itemEvent',item)
+			},
+			
+			//模板二时不展示意见反馈
+			isShowFeedbackEvent () {
+				if (this.templateType == 'template_two' || this.isProjectTask) {
+				  this.barList = this.barList.filter((item) => {return item.text != '意见反馈'})
+				}
 			}
 		}
 	}
@@ -64,7 +74,7 @@
 		z-index: 1000;
 		background: #fff;
 		.bar-list {
-			width: 25%;
+			flex: 1;
 			height: 50px;
 			text-align: center;
 			line-height: 65px;

@@ -94,7 +94,7 @@
 			// 返回上一页
 			backTo() {
 				uni.redirectTo({
-				    url: '/transportPackage/pages/centerTransport/index/index'
+				    url: '/projectPackage/pages/projectManagement/index/index'
 				});
 				this.changeBottomBarIndex(0);
 				this.changeIsToCallTaskPage(false)
@@ -194,7 +194,7 @@
 			clickEvent (item) {
 				if (item.text == "任务跟踪") {
 					uni.redirectTo({
-						url: '/transportPackage/pages/task-tail/task-tail'
+						url: '/projectPackage/pages/projectTaskTail/projectTaskTail'
 					});
 					this.changeBottomBarIndex(1);
 					this.changeIsToCallTaskPage(true)
@@ -203,24 +203,24 @@
 						this.backTo()
 					} else {
 						uni.redirectTo({
-							url: '/transportPackage/pages/callTask/callTask'
+							url: '/projectPackage/pages/projectRepairs/projectRepairs'
 						});
 						this.changeBottomBarIndex(0);
 						this.changeIsToCallTaskPage(true)
 					}
 				} else if (item.text == "历史任务") {
 					uni.redirectTo({
-						url: '/transportPackage/pages/historyTask/historyTask'
+						url: '/projectPackage/pages/projectHistoryTask/projectHistoryTask'
 					});
 					this.changeBottomBarIndex(2);
 					this.changeIsToCallTaskPage(true)
 				} else if (item.text == "意见反馈") {
 					uni.redirectTo({
-						url: '/transportPackage/pages/totalFeedbackIdea/totalFeedbackIdea'
+						url: '/projectPackage/pages/totalFeedbackIdea/totalFeedbackIdea'
 					});
 					this.changeBottomBarIndex(3);
 					this.changeIsToCallTaskPage(true)
-				} 
+				}
 			}
 		}
 	}
