@@ -930,7 +930,6 @@
 						
 			// 提交意见反馈
 			submitFeedBackEvent (data,index,type,text) {
-				debugger;
 				submitTaskFeedback(data,type).then((res) => {
 					if (res && res.data.code == 200) {
 						this.$refs.uToast.show({
@@ -1178,7 +1177,12 @@
             } else {
               this.noDataShow = true
             }
-          }
+          } else {
+			this.$refs.uToast.show({
+			   title: `${res.data.msg}`,
+			   type: 'warning'
+			}) 
+		  }
         })
         .catch((err) => {
           this.$refs.uToast.show({
@@ -1245,6 +1249,11 @@
 						} else {
 							this.noDataShow = true
 						}
+					} else {
+						this.$refs.uToast.show({
+						   title: `${res.data.msg}`,
+						   type: 'warning'
+						}) 
 					}
 				})
 				.catch((err) => {
@@ -1301,6 +1310,11 @@
 						} else {
 							this.noDataShow = true
 						}
+					} else {
+						this.$refs.uToast.show({
+						   title: `${res.data.msg}`,
+						   type: 'warning'
+						}) 
 					}
 				})
 				.catch((err) => {
