@@ -997,7 +997,8 @@
 						proId: this.proId, //项目ID
 						proName: this.proName, //项目名称
 						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
-						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+						createType: 2 ,//创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+						startTerminal: 2 // 发起客户端类型 1-安卓APP，2-微信小程序
 					};
 					// 创建调度任务
 					this.postGenerateDispatchTask(taskMessage)
@@ -1024,7 +1025,8 @@
 						proId: this.proId, //项目ID
 						proName: this.proName, //项目名称
 						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
-						createType: 2 //创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+						createType: 2 ,//创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
+						startTerminal: 2 // 发起客户端类型 1-安卓APP，2-微信小程序
 					};
 					// 获取目的地列表数据
 					// if (this.hospitalListTwovalue.length > 0) {
