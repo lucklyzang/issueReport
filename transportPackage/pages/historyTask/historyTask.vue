@@ -1364,7 +1364,12 @@
             } else {
               this.noDataShow = true
             }
-          }
+          } else {
+			this.$refs.uToast.show({
+			   title: `${res.data.msg}`,
+			   type: 'warning'
+			}) 
+		  }
         })
         .catch((err) => {
           this.$refs.uToast.show({
@@ -1433,6 +1438,11 @@
 						} else {
 							this.noDataShow = true
 						}
+					} else {
+						this.$refs.uToast.show({
+						   title: `${res.data.msg}`,
+						   type: 'warning'
+						}) 
 					}
 				})
 				.catch((err) => {
@@ -1490,6 +1500,11 @@
 						} else {
 							this.noDataShow = true
 						}
+					} else {
+						this.$refs.uToast.show({
+						   title: `${res.data.msg}`,
+						   type: 'warning'
+						}) 
 					}
 				})
 				.catch((err) => {
