@@ -91,6 +91,17 @@
 					</u-field>
 				</view>
 			</view>
+			<view class="field-four">
+				<view class="contact-isolation-box">
+					<view>接触隔离</view>
+					<view>
+						<u-radio-group v-model="isContactisolationValue" active-color="#3B9DF9">
+							<u-radio name="1">是</u-radio>
+							<u-radio name="0">否</u-radio>
+						</u-radio-group>
+					</view>
+				</view>
+			</view>
 			<view class="tool-box">
 				<view class="creat-priority-title">转运工具</view>
 				<view class="creat-priority-content">
@@ -191,6 +202,14 @@
 						<fa-icon type="trash-o" v-show="index > 0" @click="deletetMessage(index)"></fa-icon>
 					</view>
 					<view class="creat-form">
+						<view class="field-four">
+							<view class="contact-isolation-box">
+								<view>接触隔离:</view>
+								<view>
+									{{ item.isContactisolationValue == 1 ? '是' : item.isContactisolationValue === null ? '' : '否' }}
+								</view>
+							</view>
+						</view>
 						<view class="creat-form-top">
 							<view class="creat-form-field">
 								<u-field v-model="templateTwoMessage[index].bedNumber" label="床号" disabled :clearable="false">
@@ -236,7 +255,7 @@
 		</view>
 		<view class="btn-box">
 			<view class="btn-sure">
-				<button class="sureBtn" type="primary" @click="sure">确认</button>
+				<button class="sureBtn" type="primary" @click="getTransConfig">确认</button>
 			</view>
 			<view class="btn-cancel">
 				<button class="cancelBtn" type="primary" @click="cancel">取消</button>
@@ -249,6 +268,20 @@
 			@cancel="patienModalCancel"
 			>
 			<scroll-view  scroll-y="true" class="scroll-Y slot-content">
+				<view class="field-four">
+					<view class="contact-isolation-box">
+						<view>
+							<text>*</text>
+							<text>接触隔离</text>
+						</view>
+						<view>
+							<u-radio-group v-model="patienModalMessage.isContactisolationValue" active-color="#3B9DF9">
+								<u-radio name="1">是</u-radio>
+								<u-radio name="0">否</u-radio>
+							</u-radio-group>
+						</view>
+					</view>
+				</view>
 				<view class="bedNumberBox scroll-view-item">
 					<view>床号</view>
 					<view>
@@ -327,7 +360,8 @@
 		queryTransportType,
 		queryAllDestination,
 		generateDispatchTask,
-		generateDispatchTaskMany
+		generateDispatchTaskMany,
+		queryTransConfig
 	} from '@/api/task.js'
 	import navBar from "@/components/zhouWei-navBar"
 	import ldSelect from '@/components/ld-select/ld-select.vue'
@@ -351,6 +385,7 @@
 				typeValue: '',
 				taskTotal: '',
 				typeIndex: null,
+				isContactisolationValue: null,
 				priorityValue: 1,
 				transportList: [],
 				hospitalList: [],
@@ -374,6 +409,7 @@
 					bedNumber: '',
 					patientName: '',
 					patientNumber: '',
+					isContactisolationValue: null,
 					actualData: 0,
 					transportList: [],
 					genderValue: '未知',
@@ -387,6 +423,7 @@
 					patientNumber: '',
 					actualData: 0,
 					genderValue: '0',
+					isContactisolationValue: null,
 					transportList: [],
 					sampleList: [],
 					sampleValue: '',
@@ -876,6 +913,7 @@
 					patientNumber: '',
 					genderValue: '0',
 					actualData: 0,
+					isContactisolationValue: null,
 					transportList: this.transportTypeChild,
 					sampleList: this.transportTypeParent,
 					sampleValue: this.titleText.value,
@@ -958,10 +996,57 @@
 						this.$refs.uToast.show({
 							title: `${err.message}`,
 							type: 'error'
-						})
+						});
 						this.showLoadingHint = false;
 					})
 			},
+			
+			// 查询是否配置接触隔离选项0-没配置1-配置
+			getTransConfig () {
+				this.showLoadingHint = true;
+				queryTransConfig(this.proId,'TRANS_QUARANTINE').then((res) => {
+					if (res && res.data.code == 200) {
+						if (JSON.parse(res.data.data)[0]['value'] == 1) {
+							if (this.templateType === 'template_one') {
+								if (this.isContactisolationValue === null) {
+									this.$refs.uToast.show({
+										title: '请确认病人是否需要接触隔离!',
+										type: 'warning'
+									}).then(() => {})
+								} else {
+									this.sure()
+								}
+							} else if (this.templateType === 'template_two') {
+								let temporaryFlag = this.templateTwoMessage.some((item) => { return item.isContactisolationValue === null });
+								if (temporaryFlag) {
+									this.$refs.uToast.show({
+										title: '请确认病人是否需要接触隔离!',
+										type: 'warning'
+									}).then(() => {})
+								} else {
+									this.sure()
+								}
+							}  
+						} else {
+							this.sure()
+						}
+					} else {
+						this.$refs.uToast.show({
+							title: `${res.data.msg}`,
+							type: 'error'
+						})
+					};
+					this.showLoadingHint = false;
+				})
+				.catch((err) => {
+					this.$refs.uToast.show({
+						title: `${err.message}`,
+						type: 'error'
+					});
+					this.showLoadingHint = false;
+				})
+			},
+			
 			// 运送类型信息确认事件
 			dispatchTaskSure() {
 				if (this.templateType === 'template_one') {
@@ -1153,6 +1238,45 @@
 										border-bottom: 1px solid #f9f9f9;
 										.u-input__input {
 											min-height: 59px !important;
+										}
+									}
+								}
+							}
+						};
+						.field-four {
+							height: 50px;
+							display: flex;
+							align-items: center;
+							.contact-isolation-box {
+								width: 100%;
+								line-height: 20px;
+								display: flex;
+								align-items: center;
+								>view {
+									font-size: 16px;
+									display: inline-block;
+									height: 100%;
+									&:first-child {
+										width: 30%;
+										margin-right: 10px;
+										vertical-align: top;
+										>text {
+											&:first-child {
+												color: red
+											};
+											&:last-child {
+												color: #101010
+											}
+										}
+									};
+									&:last-child {
+										flex: 1;
+										::v-deep .u-radio-group {
+											.u-radio {
+												&:nth-child(1) {
+													margin-right: 14px !important
+												}
+											}
 										}
 									}
 								}
@@ -1568,6 +1692,50 @@
 					}
 				}
 			};
+			.field-four {
+				padding-left: 4px;
+				box-sizing: border-box;
+				border-bottom: 12px solid #f6f6f6;
+				.contact-isolation-box {
+					width: 100%;
+					display: flex;
+					>view {
+						font-size: 14px;
+						display: inline-block;
+						height: 100%;
+						&:first-child {
+							height: 60px;
+							display: flex;
+							align-items: center;
+							color: #7d7d7d;
+							margin-right: 10px;
+							vertical-align: top;
+						};
+						&:last-child {
+							flex: 1;
+							height: 60px;
+							display: flex;
+							align-items: center;
+							::v-deep .u-radio-group {
+								width: 100%;
+								.u-radio {
+									&:nth-child(1) {
+										margin-right: 14px !important
+									}
+								}
+							};
+							::v-deep u-radio-group {
+								width: 100%;
+								.u-radio {
+									&:nth-child(1) {
+										margin-right: 14px !important
+									}
+								}
+							}
+						}
+					}
+				}
+			};
 			.creat-is-back {
 				.creat-priority-title {
 					display: inline-block;
@@ -1753,6 +1921,38 @@
 									.fild-body {
 										.uni-input-input {
 											color: $color-text-right !important
+										}
+									}
+								}
+							}
+						}
+					};
+					.field-four {
+						padding: 4px 0 0 2px;
+						box-sizing: border-box;
+						background: #f9f9f9;
+						border: none !important;
+						.contact-isolation-box {
+							width: 100%;
+							line-height: 20px;
+							display: flex;
+							align-items: center;
+							>view {
+								font-size: 14px;
+								display: inline-block;
+								height: 100%;
+								&:first-child {
+									color: #7d7d7d;
+									margin-right: 10px;
+									vertical-align: top;
+								};
+								&:last-child {
+									flex: 1;
+									::v-deep .u-radio-group {
+										.u-radio {
+											&:nth-child(1) {
+												margin-right: 14px !important
+											}
 										}
 									}
 								}

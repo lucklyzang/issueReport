@@ -80,7 +80,7 @@
 										</view>
 										<view class="bed-number" v-else-if="templateType === 'template_two'">
 											<text>床号 :</text>
-											<text>{{item.patientInfoList[0].bedNumber}}</text>
+											<text>{{ extractBedNumber(item.patientInfoList) }}</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -91,6 +91,12 @@
 										<view class="transport-people" v-else-if="templateType === 'template_two'">
 											<text>住院号 :</text>
 											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>接触隔离 :</text>
+											<text>无</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -197,7 +203,7 @@
 											</view>
 											<view class="bed-number" v-else-if="templateType === 'template_two'">
 												<text>床号 :</text>
-												<text>{{item.patientInfoList[0].bedNumber}}</text>
+												<text>{{ extractBedNumber(item.patientInfoList) }}</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -208,6 +214,12 @@
 											<view class="transport-people" v-else-if="templateType === 'template_two'">
 												<text>住院号 :</text>
 												<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>接触隔离 :</text>
+												<text>无</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -300,6 +312,12 @@
 										<view class="transport-people">
 											<text>住院号 :</text>
 											<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+										</view>
+									</view>
+									<view class="item-top-three">
+										<view class="transport-people">
+											<text>接触隔离 :</text>
+											<text>无</text>
 										</view>
 									</view>
 									<view class="item-top-three">
@@ -406,6 +424,12 @@
 											<view class="transport-people">
 												<text>住院号 :</text>
 												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
+											</view>
+										</view>
+										<view class="item-top-three">
+											<view class="transport-people">
+												<text>接触隔离 :</text>
+												<text>无</text>
 											</view>
 										</view>
 										<view class="item-top-three">
@@ -810,6 +834,16 @@
 				}
 			},
 			
+			// 提取床号
+			extractBedNumber (patientInfoList) {
+				if (patientInfoList.length == 0) { return "无"};
+				let temporaryArr = [];
+				for (let item of patientInfoList) {
+					temporaryArr.push(item.bedNumber)
+				};
+				return temporaryArr.join("、")
+			},
+
 			//提取预约任务检查类型
 			extractAppointTaskCheckType (checkItems) {
 				let AppointTypeList = [];

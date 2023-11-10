@@ -223,3 +223,11 @@ export function projectTaskCancelReason(data) {
     params: data
   })
 }
+
+// 查询创建调度任务时是否配置接触隔离选项
+export function queryTransConfig (proId, key) {
+  return request({
+    url: `paramConfig/queryByKey?proId=${proId}&key=${key}`,
+    method: 'get'
+  })
+};
