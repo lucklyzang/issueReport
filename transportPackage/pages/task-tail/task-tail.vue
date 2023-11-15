@@ -27,6 +27,9 @@
 							<view class="number">
 								<text>编号 : {{item.number}}</text>
 							</view>
+							<view class="contact-isolation">
+								<image :src="contactIsolationPng"></image>
+							</view>
 						  <view class="priority">
 						  	<text>{{stateTransfer(item.state)}}</text>
 						  </view>
@@ -99,6 +102,9 @@
 						<view class="item-top-one">
 							<view class="number">
 								<text>编号 : {{item.number}}</text>
+							</view>
+							<view class="contact-isolation">
+								<image :src="contactIsolationPng"></image>
 							</view>
 						  <view class="priority">
 						  	<text>{{stateTransfer(item.state)}}</text>
@@ -195,7 +201,8 @@
 				current: 0,
 				cancelReasonLlist: [],
 				taskCancelReason: '',
-				taskId: ''
+				taskId: '',
+				contactIsolationPng: require("@/static/img/contact-isolation.png")
 			}
 		},
 		
@@ -659,11 +666,23 @@
 									-webkit-overflow-scrolling: touch;
 									overflow: auto;
 					      };
+								&:nth-child(2) {
+									width: 60px;
+									height: 40px;
+									display: flex;
+									align-items: center;
+									>image {
+										width: 22px;
+										height: 22px
+									}
+								};
 					      &:last-child {
-					        width: 40%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
-					        text-align: right;
+					        width: 60px;
+					        height: 40px;
+					        display: flex;
+					        justify-content: center;
+					        align-items: center;
+					        -webkit-overflow-scrolling: touch;
 					        > text {
 					          &:first-child {
 					            color: black

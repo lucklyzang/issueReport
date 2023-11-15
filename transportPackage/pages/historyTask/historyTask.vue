@@ -45,6 +45,9 @@
 										<view class="number">
 											<text>编号 : {{item.number}}</text>
 										</view>
+										<view class="contact-isolation">
+											<image :src="contactIsolationPng"></image>
+										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
 										</view>
@@ -93,12 +96,12 @@
 											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 										</view>
 									</view>
-									<view class="item-top-three">
+									<!-- <view class="item-top-three">
 										<view class="transport-people">
 											<text>接触隔离 :</text>
 											<text>无</text>
 										</view>
-									</view>
+									</view> -->
 									<view class="item-top-three">
 										<view class="transport-people">
 											<text>订单创建时间 :</text>
@@ -168,6 +171,9 @@
 											<view class="number">
 												<text>编号 : {{item.number}}</text>
 											</view>
+											<view class="contact-isolation">
+												<image :src="contactIsolationPng"></image>
+											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
 											</view>
@@ -216,12 +222,12 @@
 												<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
 											</view>
 										</view>
-										<view class="item-top-three">
+									<!-- 	<view class="item-top-three">
 											<view class="transport-people">
 												<text>接触隔离 :</text>
 												<text>无</text>
 											</view>
-										</view>
+										</view> -->
 										<view class="item-top-three">
 											<view class="transport-people">
 												<text>订单创建时间 :</text>
@@ -278,6 +284,9 @@
 										<view class="number">
 											<text>编号 : {{item.taskNumber}}</text>
 										</view>
+										<view class="contact-isolation">
+											<image :src="contactIsolationPng"></image>
+										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
 										</view>
@@ -314,12 +323,12 @@
 											<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
 										</view>
 									</view>
-									<view class="item-top-three">
+								<!-- 	<view class="item-top-three">
 										<view class="transport-people">
 											<text>接触隔离 :</text>
 											<text>无</text>
 										</view>
-									</view>
+									</view> -->
 									<view class="item-top-three">
 										<view class="transport-people">
 											<text>任务开始时间 :</text>
@@ -390,6 +399,9 @@
 											<view class="number">
 												<text>编号 : {{item.number}}</text>
 											</view>
+											<view class="contact-isolation">
+												<image :src="contactIsolationPng"></image>
+											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
 											</view>
@@ -426,12 +438,12 @@
 												<text>{{!item.patientNumber ? '无' : item.patientNumber}}</text>
 											</view>
 										</view>
-										<view class="item-top-three">
+									<!-- 	<view class="item-top-three">
 											<view class="transport-people">
 												<text>接触隔离 :</text>
 												<text>无</text>
 											</view>
-										</view>
+										</view> -->
 										<view class="item-top-three">
 											<view class="transport-people">
 												<text>任务开始时间 :</text>
@@ -487,6 +499,9 @@
 									<view class="item-top-one">
 										<view class="number">
 											<text>编号 : {{item.taskNumber}}</text>
+										</view>
+										<view class="contact-isolation">
+											<image :src="contactIsolationPng"></image>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -563,6 +578,9 @@
 									<view class="item-top-one">
 											<view class="number">
 												<text>编号 : {{item.taskNumber}}</text>
+											</view>
+											<view class="contact-isolation">
+												<image :src="contactIsolationPng"></image>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
@@ -649,7 +667,8 @@
 				stateDispatchCompleteList: [],
 				stateAppointCompleteList: [],
 				stateCircleCompleteList: [],
-				current: 0
+				current: 0,
+				contactIsolationPng: require("@/static/img/contact-isolation.png")
 			}
 		},
 		onLoad (options) {
@@ -1831,6 +1850,16 @@
 												align-items: center;
 												-webkit-overflow-scrolling: touch;
 												overflow: auto;
+											};
+											&:nth-child(2) {
+												width: 60px;
+												height: 40px;
+												display: flex;
+												align-items: center;
+												>image {
+													width: 22px;
+													height: 22px
+												}
 											};
 											&:last-child {
 												width: 60px;
