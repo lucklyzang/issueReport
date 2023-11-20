@@ -652,19 +652,17 @@
 							height:40px;
 							padding: 0 12px;
 							background: #f9f9f9;
+							display: flex;
 					    > view {
-								height: 20px;
-								line-height: 20px;
-								margin-top: 10px;
 					      word-break: break-all;
 					      font-size: 13px;
 					      text {
 					        color: #333;
 					      };
 					      &:first-child {
-					        width: 60%;
-									-webkit-overflow-scrolling: touch;
-									overflow: auto;
+					        flex: 1;
+									display: flex;
+									align-items: center
 					      };
 								&:nth-child(2) {
 									width: 60px;
@@ -680,7 +678,7 @@
 					        width: 60px;
 					        height: 40px;
 					        display: flex;
-					        justify-content: center;
+					        justify-content: flex-end;
 					        align-items: center;
 					        -webkit-overflow-scrolling: touch;
 					        > text {
@@ -690,7 +688,7 @@
 					          &:last-child {
 					            color: red;
 											display: inline-block;
-											width: 80px;
+											width: 60px;
 											text-align: center;
 											background: #fff;
 											border-radius: 4px;

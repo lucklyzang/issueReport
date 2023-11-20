@@ -1893,7 +1893,7 @@
 											width: 100% !important;
 											font-size: 17px;
 											font-weight: bold;
-											overflow: auto;
+											word-break: break-all;
 											>text {
 												&:first-child {
 													margin-right: 4px

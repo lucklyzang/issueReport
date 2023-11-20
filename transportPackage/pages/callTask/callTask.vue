@@ -1014,7 +1014,7 @@
 										type: 'warning'
 									}).then(() => {})
 								} else {
-									this.sure()
+									this.sure(true)
 								}
 							} else if (this.templateType === 'template_two') {
 								let temporaryFlag = this.templateTwoMessage.some((item) => { return item.isContactisolationValue === null });
@@ -1024,11 +1024,11 @@
 										type: 'warning'
 									}).then(() => {})
 								} else {
-									this.sure()
+									this.sure(true)
 								}
 							}  
 						} else {
-							this.sure()
+							this.sure(false)
 						}
 					} else {
 						this.$refs.uToast.show({
@@ -1048,7 +1048,7 @@
 			},
 			
 			// 运送类型信息确认事件
-			dispatchTaskSure() {
+			dispatchTaskSure(flag) {
 				if (this.templateType === 'template_one') {
 					// if (!this.hospitalListValue) {
 					// 	this.$refs.uToast.show({
@@ -1172,8 +1172,8 @@
 				}
 			},
 			// 调度任务生成
-			sure() {
-				this.dispatchTaskSure()
+			sure(flag) {
+				this.dispatchTaskSure(flag)
 			},
 			// 调度任务取消
 			cancel() {
