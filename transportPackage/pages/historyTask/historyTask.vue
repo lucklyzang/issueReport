@@ -46,7 +46,8 @@
 											<text>编号 : {{item.number}}</text>
 										</view>
 										<view class="contact-isolation">
-											<image :src="contactIsolationPng"></image>
+											<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
+											<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -172,7 +173,8 @@
 												<text>编号 : {{item.number}}</text>
 											</view>
 											<view class="contact-isolation">
-												<image :src="contactIsolationPng"></image>
+												<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
+												<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
@@ -284,7 +286,7 @@
 										<view class="number">
 											<text>编号 : {{item.taskNumber}}</text>
 										</view>
-										<view class="contact-isolation">
+										<view class="contact-isolation" v-if="item.quarantine == 1">
 											<image :src="contactIsolationPng"></image>
 										</view>
 										<view class="priority" style="color:'#94e178'">
@@ -399,7 +401,7 @@
 											<view class="number">
 												<text>编号 : {{item.number}}</text>
 											</view>
-											<view class="contact-isolation">
+											<view class="contact-isolation" v-if="item.quarantine == 1">
 												<image :src="contactIsolationPng"></image>
 											</view>
 											<view class="priority">
@@ -500,9 +502,6 @@
 										<view class="number">
 											<text>编号 : {{item.taskNumber}}</text>
 										</view>
-										<view class="contact-isolation">
-											<image :src="contactIsolationPng"></image>
-										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
 										</view>
@@ -578,9 +577,6 @@
 									<view class="item-top-one">
 											<view class="number">
 												<text>编号 : {{item.taskNumber}}</text>
-											</view>
-											<view class="contact-isolation">
-												<image :src="contactIsolationPng"></image>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
