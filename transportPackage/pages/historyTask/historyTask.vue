@@ -47,7 +47,7 @@
 										</view>
 										<view class="contact-isolation">
 											<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
-											<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
+											<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { return el.quarantine == 1})"></image>
 										</view>
 										<view class="priority" style="color:'#94e178'">
 											<text>{{stateTransfer(item.state)}}</text>
@@ -174,7 +174,7 @@
 											</view>
 											<view class="contact-isolation">
 												<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
-												<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
+												<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { return el.quarantine == 1})"></image>
 											</view>
 											<view class="priority">
 												<text>{{stateTransfer(item.state)}}</text>
@@ -1404,6 +1404,7 @@
                   bedNumber: item.bedNumber,
                   startPhoto: item.startPhoto,
                   endPhoto: item.endPhoto,
+									quarantine: item.quarantine,
                   isBack: item.isBack,
                   isSign: item.isSign,
                   workerName: item.workerName
@@ -1466,6 +1467,7 @@
 									patientNumber: item.hospitalNo,
 									distDepartments: item.distDepartments,
 									id: item.id,
+									quarantine: item.quarantine,
 									distName: this.extractAppointTaskDist(item.checkItems),
 									deedbackContent: '',
 									isShowFeedBack: false,

@@ -29,7 +29,7 @@
 							</view>
 							<view class="contact-isolation">
 								<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
-								<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
+								<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { return el.quarantine == 1})"></image>
 							</view>
 						  <view class="priority">
 						  	<text>{{stateTransfer(item.state)}}</text>
@@ -106,7 +106,7 @@
 							</view>
 							<view class="contact-isolation">
 								<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
-								<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { el.quarantine == 1})"></image>
+								<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { return el.quarantine == 1})"></image>
 							</view>
 						  <view class="priority">
 						  	<text>{{stateTransfer(item.state)}}</text>
@@ -456,6 +456,7 @@
 						  priority: item.priority,
 						  number: item.taskNumber,
 						  id: item.id,
+							quarantine: item.quarantine,
 						  distName: item.distName,
 							destinations: item.destinations,
 						  patientName: item.patientName,

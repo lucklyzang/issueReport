@@ -1012,7 +1012,7 @@
 									this.$refs.uToast.show({
 										title: '请确认病人是否需要接触隔离!',
 										type: 'warning'
-									}).then(() => {})
+									})
 								} else {
 									this.sure(true)
 								}
@@ -1022,7 +1022,7 @@
 									this.$refs.uToast.show({
 										title: '请确认病人是否需要接触隔离!',
 										type: 'warning'
-									}).then(() => {})
+									})
 								} else {
 									this.sure(true)
 								}
