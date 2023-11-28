@@ -1008,23 +1008,31 @@
 					if (res && res.data.code == 200) {
 						if (JSON.parse(res.data.data)[0]['value'] == 1) {
 							if (this.templateType === 'template_one') {
-								if (this.isContactisolationValue === null) {
-									this.$refs.uToast.show({
-										title: '请确认病人是否需要接触隔离!',
-										type: 'warning'
-									})
-								} else {
-									this.sure(true)
+								if (this.titleText.value == '检查') {
+									if (this.isContactisolationValue === null) {
+										this.$refs.uToast.show({
+											title: '请确认病人是否需要接触隔离!',
+											type: 'warning'
+										})
+									} else {
+										this.sure(true)
+									}
+								}	else {
+									this.sure(false)
 								}
 							} else if (this.templateType === 'template_two') {
-								let temporaryFlag = this.templateTwoMessage.some((item) => { return item.isContactisolationValue === null });
-								if (temporaryFlag) {
-									this.$refs.uToast.show({
-										title: '请确认病人是否需要接触隔离!',
-										type: 'warning'
-									})
-								} else {
-									this.sure(true)
+								if (this.patienModalMessage.sampleValue == '检查') {
+									let temporaryFlag = this.templateTwoMessage.some((item) => { return item.isContactisolationValue === null });
+									if (temporaryFlag) {
+										this.$refs.uToast.show({
+											title: '请确认病人是否需要接触隔离!',
+											type: 'warning'
+										})
+									} else {
+										this.sure(true)
+									}
+								}	else {
+									this.sure(false)
 								}
 							}  
 						} else {
