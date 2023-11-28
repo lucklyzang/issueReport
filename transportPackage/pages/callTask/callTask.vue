@@ -271,7 +271,6 @@
 				<view class="field-four">
 					<view class="contact-isolation-box">
 						<view>
-							<text>*</text>
 							<text>接触隔离</text>
 						</view>
 						<view>
@@ -1272,9 +1271,6 @@
 										vertical-align: top;
 										>text {
 											&:first-child {
-												color: red
-											};
-											&:last-child {
 												color: #101010
 											}
 										}
