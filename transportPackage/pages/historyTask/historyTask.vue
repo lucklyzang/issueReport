@@ -94,7 +94,7 @@
 										</view>
 										<view class="transport-people" v-else-if="templateType === 'template_two'">
 											<text>住院号 :</text>
-											<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
+											<text>{{ extractAdmissionNumber(item.patientInfoList) }}</text>
 										</view>
 									</view>
 									<!-- <view class="item-top-three">
@@ -221,7 +221,7 @@
 											</view>
 											<view class="transport-people" v-else-if="templateType === 'template_two'">
 												<text>住院号 :</text>
-												<text>{{item.patientInfoList.length > 0 ? item.patientInfoList[0]['number']:'无'}}</text>
+												<text>{{ extractAdmissionNumber(item.patientInfoList) }}</text>
 											</view>
 										</view>
 									<!-- 	<view class="item-top-three">
@@ -855,6 +855,16 @@
 				let temporaryArr = [];
 				for (let item of patientInfoList) {
 					temporaryArr.push(item.bedNumber)
+				};
+				return temporaryArr.join("、")
+			},
+			
+			// 提取住院号
+			extractAdmissionNumber (patientInfoList) {
+				if (patientInfoList.length == 0) { return "无"};
+				let temporaryArr = [];
+				for (let item of patientInfoList) {
+					temporaryArr.push(item.number)
 				};
 				return temporaryArr.join("、")
 			},

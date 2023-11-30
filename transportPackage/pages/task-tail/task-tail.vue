@@ -70,7 +70,7 @@
 							</view>
 							<view class="bed-number" v-else-if="templateType === 'template_two'">
 								<text>床号 :</text>
-								<text>{{item.patientInfoList[0].bedNumber}}</text>
+								<text>{{ extractBedNumber(item.patientInfoList) }}</text>
 							</view>
 						</view>
 						<view class="item-top-four">
@@ -147,7 +147,7 @@
 							</view>
 							<view class="bed-number" v-else-if="templateType === 'template_two'">
 								<text>床号 :</text>
-								<text>{{item.patientInfoList[0].bedNumber}}</text>
+								<text>{{ extractBedNumber(item.patientInfoList) }}</text>
 							</view>
 						</view>
 						<view class="item-top-four">
@@ -324,6 +324,16 @@
 					break;
 				}
 			},
+			
+			// 提取床号
+			extractBedNumber (patientInfoList) {
+				if (patientInfoList.length == 0) { return "无"};
+				let temporaryArr = [];
+				for (let item of patientInfoList) {
+					temporaryArr.push(item.bedNumber)
+				};
+				return temporaryArr.join("、")
+			},
 		  
 			// 获取取消原因列表
 		    getDispatchTaskCancelReason (data) {
@@ -440,41 +450,46 @@
 				};
 				if (res && res.data.code == 200) {
 				  this.stateCompleteList = [];
+					let temporaryDataList = [];
 				  if (res.data.data.length > 0) {
-					if (text == '待办') {
-						let temporaryDataList = res.data.data.filter((item) => { return item.state == 0 || item.state == 1 || item.state == 2});
-					} else {
-						let temporaryDataList = res.data.data
-					};
-					this.noDataShow = false;
-					for (let item of temporaryDataList) {
-						this.stateCompleteList.push({
-						  createTime: item.createTime,
-						  planUseTime: item.planUseTime,
-						  planStartTime: item.planStartTime,
-							patientInfoList: item.patientInfoList,
-						  state: item.state,
-						  setOutPlaceName: item.setOutPlaceName,
-						  destinationName: item.destinationName,
-						  taskTypeName: item.taskTypeName,
-						  toolName: item.toolName,
-						  priority: item.priority,
-						  number: item.taskNumber,
-						  id: item.id,
-							quarantine: item.quarantine,
-						  distName: item.distName,
-							destinations: item.destinations,
-						  patientName: item.patientName,
-						  bedNumber: item.bedNumber,
-						  startPhoto: item.startPhoto,
-						  endPhoto: item.endPhoto,
-						  isBack: item.isBack,
-						  isSign: item.isSign,
-						  workerName: item.workerName
-						})
-					}
+						if (text == '待办') {
+							temporaryDataList = res.data.data.filter((item) => { return item.state == 0 || item.state == 1 || item.state == 2});
+						} else {
+							temporaryDataList = res.data.data
+						};
+						if (temporaryDataList.length > 0) {
+							this.noDataShow = false;
+						} else {
+							this.noDataShow = true;
+						};
+						for (let item of temporaryDataList) {
+							this.stateCompleteList.push({
+								createTime: item.createTime,
+								planUseTime: item.planUseTime,
+								planStartTime: item.planStartTime,
+								patientInfoList: item.patientInfoList,
+								state: item.state,
+								setOutPlaceName: item.setOutPlaceName,
+								destinationName: item.destinationName,
+								taskTypeName: item.taskTypeName,
+								toolName: item.toolName,
+								priority: item.priority,
+								number: item.taskNumber,
+								id: item.id,
+								quarantine: item.quarantine,
+								distName: item.distName,
+								destinations: item.destinations,
+								patientName: item.patientName,
+								bedNumber: item.bedNumber,
+								startPhoto: item.startPhoto,
+								endPhoto: item.endPhoto,
+								isBack: item.isBack,
+								isSign: item.isSign,
+								workerName: item.workerName
+							})
+						}
 				  } else {
-					this.noDataShow = true
+						this.noDataShow = true
 				  }
 				}
 			  })
