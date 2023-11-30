@@ -49,8 +49,8 @@
 											<image :src="contactIsolationPng" v-if="templateType == 'template_one' && item.quarantine == 1"></image>
 											<image :src="contactIsolationPng" v-if="templateType == 'template_two' && item['patientInfoList'].some((el) => { return el.quarantine == 1})"></image>
 										</view>
-										<view class="priority" style="color:'#94e178'">
-											<text>{{stateTransfer(item.state)}}</text>
+										<view class="priority">
+											<text style="color:#94e178">{{stateTransfer(item.state)}}</text>
 										</view>
 									</view>
 									<view class="task-type-name">
@@ -118,7 +118,7 @@
 									<view class="item-top-four">
 										<view class="bed-number">
 											<text>目的地: </text>
-											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
 										</view>
 									</view>
 								</view>
@@ -245,7 +245,7 @@
 										<view class="item-top-four">
 											<view class="bed-number">
 												<text>目的地: </text>
-												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
 											</view>
 										</view>
 								</view>
@@ -289,8 +289,8 @@
 										<view class="contact-isolation" v-if="item.quarantine == 1">
 											<image :src="contactIsolationPng"></image>
 										</view>
-										<view class="priority" style="color:'#94e178'">
-											<text>{{stateTransfer(item.state)}}</text>
+										<view class="priority">
+											<text style="color:#94e178">{{stateTransfer(item.state)}}</text>
 										</view>
 									</view>
 									<view class="task-type-name">
@@ -786,16 +786,16 @@
 			// 任务优先级转换
 		  priorityTransfer (index) {
         switch(index) {
-          case 0 :
+          case 1 :
           return '正常'
           break;
-          case 1 :
+          case 2 :
           return '重要'
           break;
-          case 2 :
+          case 3 :
           return '紧急'
           break;
-          case 3 :
+          case 4 :
           return '紧急重要'
           break;
         }

@@ -76,7 +76,7 @@
 						<view class="item-top-four">
 						  <view class="bed-number">
 								<text>目的地 :</text>
-								<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+								<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
 						  </view>
 						</view>
 					</view>
@@ -153,7 +153,7 @@
 						<view class="item-top-four">
 						  <view class="bed-number">
 								<text>目的地 :</text>
-								<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{innerItem.destinationName}}</text>
+								<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
 						  </view>
 						</view>
 					</view>
@@ -219,14 +219,14 @@
 				{
 				   proId:this.proId, workerId:'',state: -1,
 				   departmentId: this.userInfo.depId
-				}
+				},'待办'
 			  )
 			} else {
 			  this.queryCompleteDispatchTask(
 				{
 				   proId:this.proId, workerId:'',state: 3,
 				   departmentId: this.userInfo.depId
-				}
+				},'进行中'
 			  )
 			}
 		},
@@ -259,7 +259,7 @@
 				{
 				   proId:this.proId, workerId:'',state: -1,
 				   departmentId: this.userInfo.depId
-				}
+				},'待办'
 			)
 		},
 		methods: {
@@ -368,7 +368,7 @@
 					{
 					   proId:this.proId, workerId:'',state: -1,
 					   departmentId: this.userInfo.depId
-					}
+					},'待办'
 				  )
 				} else {
 				 this.$refs.uToast.show({
@@ -416,20 +416,20 @@
 					{
 					   proId:this.proId, workerId:'',state: -1,
 					   departmentId: this.userInfo.depId
-					}
+					},'待办'
 				  )
 				} else {
 				  this.queryCompleteDispatchTask(
 					{
 					   proId:this.proId, workerId:'',state: 3,
 					   departmentId: this.userInfo.depId
-					}
+					},'进行中'
 				  )
 				}
 			},
 			
 			// 查询调度任务
-			queryCompleteDispatchTask (data) {
+			queryCompleteDispatchTask (data,text) {
 			  this.noDataShow = false;
 			  this.showLoadingHint = true;
 			  getDispatchTaskComplete(data).then((res) => {
@@ -441,8 +441,13 @@
 				if (res && res.data.code == 200) {
 				  this.stateCompleteList = [];
 				  if (res.data.data.length > 0) {
+					if (text == '待办') {
+						let temporaryDataList = res.data.data.filter((item) => { return item.state == 0 || item.state == 1 || item.state == 2});
+					} else {
+						let temporaryDataList = res.data.data
+					};
 					this.noDataShow = false;
-					for (let item of res.data.data) {
+					for (let item of temporaryDataList) {
 						this.stateCompleteList.push({
 						  createTime: item.createTime,
 						  planUseTime: item.planUseTime,

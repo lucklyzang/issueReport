@@ -1081,7 +1081,7 @@
 						patientName: this.patientName, //病人姓名
 						sex: 0, //病人性别  0-未指定,1-男, 2-女
 						age: "", //年龄
-						quarantine: flag ? this.isContactisolationValue : -1,// 接触隔离
+						quarantine: this.isContactisolationValue === null ? -1 : this.isContactisolationValue, // 接触隔离
 						number: this.patientNumber, //住院号
 						bedNumber: this.bedNumber, //床号
 						taskRemark: this.taskDescribe, //备注
@@ -1136,7 +1136,7 @@
 							bedNumber: patientItem['bedNumber'],
 							patientName: patientItem['patientName'],
 							number: patientItem['patientNumber'],
-							quarantine: flag ? patientItem['isContactisolationValue'] : -1, // 接触隔离
+							quarantine: patientItem['isContactisolationValue'] === null ? -1 : patientItem['isContactisolationValue'], // 接触隔离
 							sex:  patientItem['genderValue'] === '男' ? 1 : patientItem['genderValue'] === '女' ? 2 : 0,
 							quantity: patientItem['actualData'],
 							typeList: []
