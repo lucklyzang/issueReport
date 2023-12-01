@@ -74,9 +74,13 @@
 							</view>
 						</view>
 						<view class="item-top-four">
-						  <view class="bed-number">
-								<text>目的地 :</text>
-								<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
+						  <view class="bed-number" v-if="templateType === 'template_one'">
+						  	<text>目的地: </text>
+						  	<text class="destina-list">{{ !item.destinationName  ? '无' : item.destinationName }}</text>
+						  </view>
+						  <view class="bed-number" v-if="templateType === 'template_two'">
+						  	<text>目的地: </text>
+						  	<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{ item.destinations.length > 0 ? innerItem.destinationName : '无' }}</text>
 						  </view>
 						</view>
 					</view>
@@ -151,9 +155,13 @@
 							</view>
 						</view>
 						<view class="item-top-four">
-						  <view class="bed-number">
-								<text>目的地 :</text>
-								<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
+						  <view class="bed-number" v-if="templateType === 'template_one'">
+						  	<text>目的地: </text>
+						  	<text class="destina-list">{{ !item.destinationName  ? '无' : item.destinationName }}</text>
+						  </view>
+						  <view class="bed-number" v-if="templateType === 'template_two'">
+						  	<text>目的地: </text>
+						  	<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{ item.destinations.length > 0 ? innerItem.destinationName : '无' }}</text>
 						  </view>
 						</view>
 					</view>

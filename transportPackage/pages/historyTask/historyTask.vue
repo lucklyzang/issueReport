@@ -116,9 +116,13 @@
 										</view>
 									</view>
 									<view class="item-top-four">
-										<view class="bed-number">
+										<view class="bed-number" v-if="templateType === 'template_one'">
 											<text>目的地: </text>
-											<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
+											<text class="destina-list">{{ !item.destinationName  ? '无' : item.destinationName }}</text>
+										</view>
+										<view class="bed-number" v-if="templateType === 'template_two'">
+											<text>目的地: </text>
+											<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{ item.destinations.length > 0 ? innerItem.destinationName : '无' }}</text>
 										</view>
 									</view>
 								</view>
@@ -129,7 +133,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,1)">
@@ -243,9 +247,13 @@
 											</view>
 										</view>
 										<view class="item-top-four">
-											<view class="bed-number">
+											<view class="bed-number" v-if="templateType === 'template_one'">
 												<text>目的地: </text>
-												<text class="destina-list" v-for="(innerItem,innerIndex) in item.distName" :key="innerIndex">{{ item.distName.length > 0 ? innerItem : '无' }}</text>
+												<text class="destina-list">{{ !item.destinationName  ? '无' : item.destinationName }}</text>
+											</view>
+											<view class="bed-number" v-if="templateType === 'template_two'">
+												<text>目的地: </text>
+												<text class="destina-list" v-for="(innerItem,innerIndex) in item.destinations" :key="innerIndex">{{ item.destinations.length > 0 ? innerItem.destinationName : '无' }}</text>
 											</view>
 										</view>
 								</view>
@@ -255,7 +263,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 										</view>	
 									</view>	
@@ -358,7 +366,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,2)">
@@ -471,7 +479,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 										</view>	
 									</view>	
@@ -535,7 +543,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 											<view class="right" v-if="!item.isShowGiveLikeIconStyle && !item.isIssueFeedback && templateType === 'template_one' && item.feedbackFlag == 0">
 												<view class="left-feedback-icon"  @click="feedBackEvent(item,index,3)">
@@ -610,7 +618,7 @@
 											<view class="left">
 												<u-icon name="account-fill" size="50" />
 												<text>运送人:</text>
-												<text>{{item.workerName}}</text>
+												<text>{{ !item.workerName ? '' : item.workerName }}</text>
 											</view>
 										</view>	
 									</view>	
