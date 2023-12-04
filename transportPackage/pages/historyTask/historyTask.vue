@@ -407,7 +407,7 @@
 								<view class="item-top">
 									<view class="item-top-one">
 											<view class="number">
-												<text>编号 : {{item.number}}</text>
+												<text>编号 : {{ item.taskNumber }}</text>
 											</view>
 											<view class="contact-isolation" v-if="item.quarantine == 1">
 												<image :src="contactIsolationPng"></image>
@@ -893,10 +893,12 @@
 				let AppointDistList = [];
 				if (checkItems.length > 0) {
 					for (let item of checkItems) {
-						AppointDistList.push(item.depName)
-					}
-				};
-				return checkEmptyArray(AppointDistList)
+						AppointDistList.push(!item.depName ? '' : item.depName)
+					};
+					return checkEmptyArray(AppointDistList)
+				} else {
+					return []
+				}
 			},
 			
 			// 反馈点击事件
