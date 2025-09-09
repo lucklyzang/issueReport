@@ -221,11 +221,6 @@
 				});
 				this.changeIsToCallTaskPage(false)
 			},
-			// 预设内容点击事件
-			preinstallEvent(item, index) {
-				this.preinstallIndex = index;
-				this.taskDescribe = item
-			},
 			// 弹框确定按钮
 			sureCancel() {
 				this.imgArr.splice(this.imgIndex, 1)
