@@ -18,8 +18,11 @@
 					</u-radio-group>
 				</view>
 			</view>
-      <view class="creat-chooseHospital">
-        <view>科室选择</view>
+      <view class="creat-chooseHospital creat-chooseHospital-required">
+        <view>
+					<text>*</text>
+					<text>科室选择</text>
+				</view>
         <view class="creat-chooseHospital-content-two">
           <!-- <xfl-select 
               :list="hospitalList"
@@ -82,6 +85,7 @@
       </view>
 			<view class="creat-transport-type">
 				<view class="creat-transport-type-title">
+					<text>*</text>
 					<text>任务类型</text>
 				</view>
 				<view class="creat-transport-type-content">
@@ -336,9 +340,14 @@
 				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
 			},
 			
-			// 根据协助人员id获取科室名称
+			// 根据协助人员id获取协助人员姓名
 			getHelpWorkerNameById(id) {
 				return this.helpWorkerList.filter((item) => {return item['id'] == id})[0]['value']
+			},
+			
+			// 根据房间id获取房间名称
+			getDestinationNameById(id) {
+				return this.destinationList.filter((item) => {return item['id'] == id})[0]['value']
 			},
       
       // 目的地选择列表变化时
@@ -613,7 +622,8 @@
           depId: this.departmentValue,      //科室ID   必输
           typeName: this.typeText,
           typeId: this.typeValue,
-          space: this.hospitalListValue,      //当前地点
+					spaceId: this.hospitalListValue, //目的房间id
+					space: this.getDestinationNameById(this.hospitalListValue), //目的房间名称
           taskDesc: this.taskDescribe,  //  问题描述  必填
           taskRemark: '',   //问题详情  非必输
           workerId: this.workerId,   //创建者ID  当前登录者
@@ -624,12 +634,26 @@
           flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
           present: this.helpWorkerValue === '' ? [] : [{id: this.helpWorkerValue, name: this.getHelpWorkerNameById(this.helpWorkerValue)}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
         };
-        // 创建调度任务
+        // 创建任务
         this.postTask(taskMessage)
 		  },
 			
       // 调度任务生成
       sure () {
+				if (this.departmentValue === '') {
+					this.$refs.uToast.show({
+						title: '请选择科室',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.typeText === '') {
+					this.$refs.uToast.show({
+						title: '请选择任务类型',
+						type: 'warning'
+					});
+					return
+				};
         this.taskSure()
       },
 		
@@ -714,7 +738,7 @@
 				>view {
 					&:first-child {
 						float: left;
-						width: 20%;
+						width: 21%;
 						height: 60px;
 						line-height: 60px;
 						padding-left: 4px;
@@ -726,7 +750,7 @@
 						float: right;
 						position: relative;
 						height: 60px;
-						width: 80%;
+						width: 79%;
 						.show-box {
 							color: $color-text-right;
 							position: absolute;
@@ -775,7 +799,19 @@
 					}
 				}
 			};
-			
+			.creat-chooseHospital-required {
+				>view {
+					&:first-child {
+						padding-left: 4px !important;
+						>text {
+							&:first-child {
+								color: red;
+								margin-right: 2px;
+							}
+						}
+					}
+				}	
+			};
 			.help-worker {
 				height: 72px;
 				border-bottom: 12px solid #f6f6f6;
@@ -836,16 +872,15 @@
 					line-height: 35px;
 					vertical-align: top;
 					color: $color-text-left;
+					padding-left: 4px;
+					box-sizing: border-box;
 					text {
 						&:nth-child(1) {
-							padding-left: 4px;
-							box-sizing: border-box;
-							margin-right: 8px
-						};
-					
+							color: red;
+							margin-right: 2px;
+						}
 						&:nth-child(2) {
 							font-size: 14px;
-							color: red
 						}
 					}
 				};

@@ -370,6 +370,7 @@
 			queryProjectTask (data) {
 			  this.noDataShow = false;
 			  this.showLoadingHint = true;
+				this.stateCompleteList = [];
 			  getMaintainTask(data).then((res) => {
 				this.showLoadingHint = false;
 				if (this.isFresh) {
@@ -377,7 +378,6 @@
 					this.isFresh = false
 				};
 				if (res && res.data.code == 200) {
-				  this.stateCompleteList = [];
 				  if (res.data.data.length > 0) {
 					this.noDataShow = false;
 					for (let item of res.data.data) {

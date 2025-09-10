@@ -22,8 +22,11 @@
 					</u-radio-group>
 				</view>
 			</view>
-			<view class="creat-chooseHospital">
-				<view>科室选择</view>
+			<view class="creat-chooseHospital creat-chooseHospital-required">
+				<view>
+					<text>*</text>
+					<text>科室选择</text>
+				</view>
 				<view class="creat-chooseHospital-content-two">
 				<!-- 	<xfl-select :list="hospitalList" :clearable="false" :showItemNum="5" :isCanInput="true" :showList="controlListShow"
 					 :style_Container="'height: 50px; font-size: 15px;'" :initValue="depName" @change="listChangeEvent" @input="inputEvent"
@@ -233,6 +236,11 @@
 				this.sureCancelShow = true;
 				this.imgIndex = index
 			},
+			// 预设内容点击事件
+			preinstallEvent (item,index) {
+			  this.preinstallIndex = index;
+			  this.taskDescribe = item
+			},
 			// 选择图片方法
 			getImg() {
 				var that = this
@@ -318,6 +326,7 @@
 			},
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
+				console.log('val',val);
 				this.hospitalListValue = val;
 				// this.destinationId = val.orignItem.id;
 				// this.destinationName = val.orignItem.value;
@@ -349,6 +358,10 @@
 			// 根据科室id获取科室名称
 			getDepartmentNameById(id) {
 				return this.hospitalList.filter((item) => {return item['id'] == id})[0]['value']
+			},
+			// 根据房间id获取房间名称
+			getDestinationNameById(id) {
+				return this.destinationList.filter((item) => {return item['id'] == id})[0]['value']
 			},
 			// 运送类型点击事件
 			typeEvent(item, index) {
@@ -532,30 +545,37 @@
 					depId: this.departmentValue, //科室ID   必输
 					typeName: this.typeText,
 					typeId: this.typeValue,
-					space: this.hospitalListValue, //当前地点
+					spaceId: this.hospitalListValue, //目的房间id
+					space: this.getDestinationNameById(this.hospitalListValue), //目的房间名称
 					taskDesc: this.taskDescribe, //  问题描述  必填
 					taskRemark: '', //问题详情  非必输
 					workerId: this.workerId, //创建者ID  当前登录者
 					workerName: this.userName, //创建者名称  当前登陆者
 					proId: this.proId, //项目ID
 					images: this.imgArr, // 问题图片信息 非必输
-					spaceId: this.destinationId, // 选择的空间ID
 					flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
 					present: [] // id 为选择协助人员的Id，name 为选择的协助人员的Id
 				};
-				// 创建工程维修任务
+				// 创建任务
 				this.postTask(taskMessage)
 			},
 			// 工程维修任务生成
 			sure() {
-				if (this.taskDescribe == '' && this.imgArr.length == 0) {
+				if (this.departmentValue === '') {
+					this.$refs.uToast.show({
+						title: '请选择科室',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.taskDescribe === '' && this.imgArr.length == 0) {
 					this.$refs.uToast.show({
 						title: '任务描述和问题照片至少一项不能为空',
 						type: 'warning'
-					})
-				} else {
-					this.takaskSure()
-				}
+					});
+					return
+				};
+				this.takaskSure()
 			},
 			// 调度任务取消
 			cancel() {
@@ -646,7 +666,7 @@
 				>view {
 					&:first-child {
 						float: left;
-						width: 20%;
+						width: 21%;
 						height: 60px;
 						line-height: 60px;
 						padding-left: 4px;
@@ -658,7 +678,7 @@
 						float: right;
 						position: relative;
 						height: 60px;
-						width: 80%;
+						width: 79%;
 						.show-box {
 							color: #333;
 							position: absolute;
@@ -706,6 +726,19 @@
 							}
 						}
 					}
+			};
+			.creat-chooseHospital-required {
+				>view {
+					&:first-child {
+						padding-left: 4px !important;
+						>text {
+							&:first-child {
+								color: red;
+								margin-right: 2px;
+							}
+						}
+					}
+				}	
 			};
 			.view-photoList {
 				background: #fff;
