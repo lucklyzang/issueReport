@@ -623,7 +623,7 @@
           typeName: this.typeText,
           typeId: this.typeValue,
 					spaceId: this.hospitalListValue, //目的房间id
-					space: this.getDestinationNameById(this.hospitalListValue), //目的房间名称
+					space: this.hospitalListValue === '' ? '' : this.getDestinationNameById(this.hospitalListValue), //目的房间名称
           taskDesc: this.taskDescribe,  //  问题描述  必填
           taskRemark: '',   //问题详情  非必输
           workerId: this.workerId,   //创建者ID  当前登录者

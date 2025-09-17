@@ -165,14 +165,14 @@
 			if (this.current == 0) {
 			  this.queryProjectTask(
 				{
-				   proId:this.proId, workerId:'',state: 3,
+				   proId:this.proId, createId:this.workerId,state: 3,
 				   startDate: '', endDate: ''
 				}
 			  )
 			} else {
 			  this.queryProjectTask(
 				{
-				   proId:this.proId, workerId:'',state: 5,
+				   proId:this.proId, createId:this.workerId,state: 5,
 				   startDate: '', endDate: ''
 				}
 			  )
@@ -204,7 +204,7 @@
 		mounted () {
 			this.queryProjectTask(
 				{
-				   proId:this.proId, workerId:'',state: 3,
+				   proId:this.proId, createId:this.workerId,state: 3,
 				   startDate: '', endDate: ''
 				}
 			)
@@ -304,7 +304,7 @@
 				  });
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, workerId:'',state: 3,
+					   proId:this.proId, createId:this.workerId,state: 3,
 					   startDate: '', endDate: ''
 					}
 				  )
@@ -352,14 +352,14 @@
 				if (index == 0) {
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, workerId:'',state: 3,
+					   proId:this.proId, createId:this.workerId,state: 3,
 					   startDate: '', endDate: ''
 					}
 				  )
 				} else {
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, workerId:'',state: 5,
+					   proId:this.proId, createId:this.workerId,state: 5,
 					   startDate: '', endDate: ''
 					}
 				  )

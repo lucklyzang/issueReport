@@ -41,9 +41,10 @@
         }
     },
     "quickapp" : {},
+		// wxe7ea58a8f75b0816
 		// wx243da7c1b1e812a8
     "mp-weixin" : {
-        "appid" : "wxe7ea58a8f75b0816",
+        "appid" : "wx243da7c1b1e812a8",
         "setting" : {
             "urlCheck" : true,
             "minified" : true,

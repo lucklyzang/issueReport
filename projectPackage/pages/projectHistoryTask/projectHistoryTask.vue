@@ -181,14 +181,14 @@
 			if (this.current === 0) {
 			  this.queryProjectTask(
           {
-            proId:this.proId, workerId:this.workerId,state:5,
+            proId:this.proId, createId:this.workerId,state:5,
             startDate: this.dateStart, endDate: this.dateEnd
           }
 			  )
 			} else {
 			  this.queryProjectTask(
           {
-            proId:this.proId, workerId:this.workerId,state:6,
+            proId:this.proId, createId:this.workerId,state:6,
             startDate: this.dateStart, endDate: this.dateEnd
           }
 			  )
@@ -221,7 +221,7 @@
 			this.initDate();
 			this.queryProjectTask(
 				{
-				  proId:this.proId, workerId:this.workerId,state:5,
+				  proId:this.proId, createId:this.workerId,state:5,
 				  startDate: this.dateStart, endDate: this.dateEnd,
 			
 				}
@@ -313,14 +313,14 @@
 				if (index === 0) {
 				  this.queryProjectTask(
             {
-              proId:this.proId, workerId:this.workerId,state:5,
+              proId:this.proId, createId:this.workerId,state:5,
               startDate: this.dateStart, endDate: this.dateEnd
             }
 				  )
 				} else {
 				  this.queryProjectTask(
             {
-              proId:this.proId, workerId:this.workerId,state:6,
+              proId:this.proId, createId:this.workerId,state:6,
               startDate: this.dateStart, endDate: this.dateEnd
             }
 				  )
@@ -332,14 +332,14 @@
         if (this.current === 0) {
           this.queryProjectTask(
             {
-              proId:this.proId, workerId:this.workerId,state:5,
+              proId:this.proId, createId:this.workerId,state:5,
               startDate: this.dateStart, endDate: this.dateEnd
             }
           )
         } else {
           this.queryProjectTask(
             {
-              proId:this.proId, workerId:this.workerId,state:6,
+              proId:this.proId, createId:this.workerId,state:6,
               startDate: this.dateStart, endDate: this.dateEnd
             }
           )
