@@ -286,8 +286,17 @@
 						depId: this.departmentValue //科室ID
 					});
 				} else {
-					this.destinationList = [];
-					this.departmentShow = true
+					// 登陆人员为医务人员时，根据默认科室id查询母的房间列表
+					if (this.isMedicalMan) {
+						this.queryRoomByDepartment({
+							proId: this.proId, //项目ID 必输
+							state: 0, // 状态默认传 0 即可
+							depId: this.depId //科室ID
+						})
+					} else {
+						this.destinationList = [];
+						this.departmentShow = true
+					} 
 				}
 				// this.startPointId = val.orignItem.id;
 				// this.startPointName = val.orignItem.value;
@@ -334,7 +343,6 @@
 			},
 			// 目的地选择列表变化时
 			destinationListChangeEvent(val) {
-				console.log('val',val);
 				this.hospitalListValue = val;
 				// this.destinationId = val.orignItem.id;
 				// this.destinationName = val.orignItem.value;

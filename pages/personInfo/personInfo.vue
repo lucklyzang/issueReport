@@ -85,7 +85,7 @@
 				'weixinInfo'
 			]),
 			userName() {
-				return this.userInfo.name
+				return this.userInfo.extendData.userName
 			},
 			proId() {
 				return this.userInfo.extendData.proId
@@ -94,7 +94,7 @@
 				return this.userInfo.extendData.proName
 			},
 			workerId() {
-				return this.userInfo.userName
+				return this.userInfo.extendData.userId
 			},
 			depName() {
 				return this.userInfo.depName == null ? '无' : this.userInfo.depName
