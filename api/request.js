@@ -6,7 +6,7 @@ import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
 // 准生产环境：https://ver.blinktech.cn
 // 生产环境：https://blinktech.cn
 const instance = axios.create({
-  baseURL: 'https://blink.blinktech.cn',
+  baseURL: 'https://blink.blink.blinktech.cn',
   headers: {
     // common: { 
     //   'Accept': 'application/json, test/plain,'

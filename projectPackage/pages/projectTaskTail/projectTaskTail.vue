@@ -64,7 +64,7 @@
 								<text>{{item.createTime}}</text>
 							</view>
 						</view>
-						<view class="item-bottom-right">
+						<view class="item-bottom-right" v-if="item.state == 0 || item.state == 1 || item.state == 2">
 							<view class="left">
 								<button @click="reminder(item)">催单</button>
 							</view>
@@ -113,11 +113,18 @@
 						  </view>
 						</view>
 					</view>
-					<view class="item-bottom-complete">
+					<view class="item-bottom">
 						<view class="item-bottom-left">
 							<view class="time">
-								<text>开始-完成时间 :</text>
-								<text>{{item.createTime}}-{{item.finishTime}}</text>
+								<text>{{item.createTime}}</text>
+							</view>
+						</view>
+						<view class="item-bottom-right">
+							<view class="left">
+								<button @click="reminder(item)">催单</button>
+							</view>
+							<view class="right">
+								<button @click="cancel(item)">取消</button>
 							</view>
 						</view>
 					</view>
@@ -147,7 +154,7 @@
 				noDataShow: false,
 				idFresh : false,
 				cancelIndex: null,
-				list: [{name: '进行中'}, {name: '已完成'}],
+				list: [{name: '待办任务'},{name: '进行中'}],
 				stateCompleteList: [],
 				current: 0,
 				cancelReasonLlist: [],
@@ -165,14 +172,14 @@
 			if (this.current == 0) {
 			  this.queryProjectTask(
 				{
-				   proId:this.proId, createId:this.workerId,state: 3,
+				   proId:this.proId, createId:this.workerId,state: -5,
 				   startDate: '', endDate: ''
 				}
 			  )
 			} else {
 			  this.queryProjectTask(
 				{
-				   proId:this.proId, createId:this.workerId,state: 5,
+				   proId:this.proId, createId:this.workerId,state: 3,
 				   startDate: '', endDate: ''
 				}
 			  )
@@ -204,7 +211,7 @@
 		mounted () {
 			this.queryProjectTask(
 				{
-				   proId:this.proId, createId:this.workerId,state: 3,
+				   proId:this.proId, createId:this.workerId,state: -5,
 				   startDate: '', endDate: ''
 				}
 			)
@@ -304,7 +311,7 @@
 				  });
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, createId:this.workerId,state: 3,
+					   proId:this.proId, createId:this.workerId,state: -5,
 					   startDate: '', endDate: ''
 					}
 				  )
@@ -352,14 +359,14 @@
 				if (index == 0) {
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, createId:this.workerId,state: 3,
+					   proId:this.proId, createId:this.workerId,state: -5,
 					   startDate: '', endDate: ''
 					}
 				  )
 				} else {
 				  this.queryProjectTask(
 					{
-					   proId:this.proId, createId:this.workerId,state: 5,
+					   proId:this.proId, createId:this.workerId,state: 3,
 					   startDate: '', endDate: ''
 					}
 				  )
