@@ -2,10 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import login from './login.js';
 import transport from './transport.js';
+import common from './common.js';
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules:{
     login,
-	transport
+		transport,
+		common
   }
 });

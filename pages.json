@@ -30,6 +30,15 @@
 			}
 		},
 		{
+			"path": "pages/modificationPassword/modificationPassword",
+			"style": { 
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#75b0f0",
+				"navigationBarTextStyle": "black",
+				"navigationStyle" : "custom"
+			}
+		},
+		{
 			"path": "pages/weixinLogin/weixinLogin",
 			"style": {
 				"navigationBarTitleText": "",

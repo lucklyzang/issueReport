@@ -40,6 +40,10 @@
 					{{userType}}
 				</text>
 			</view>
+			<view class="modification-password-area" @click="modificationPasswordEvent">
+				<text>修改密码</text>
+				<u-icon name="arrow-right" color="#101010" size="34"></u-icon>
+			</view>
 		</view>
 		<view class="content-bottom">
 			<view class="app-version">
@@ -135,6 +139,14 @@
 			isLoginOut() {
 				this.sureCancelShow = true
 			},
+			
+			// 修改密码事件
+			modificationPasswordEvent () {
+				uni.navigateTo({
+					url: '/pages/modificationPassword/modificationPassword'
+				})
+			},
+			
 			// 弹框确定事件
 			sureCancel() {
 				this.showLoadingHint = true;
@@ -256,6 +268,18 @@
 						right: 10px;
 						top: 0
 					}
+				}
+			};
+			.modification-password-area {
+				height: 45px;
+				display: flex;
+				align-items: center;
+				padding: 0 10px;
+				box-sizing: border-box;
+				justify-content: space-between;
+				@include bottom-border-1px($color-underline);
+				>text {
+					color: #7d7d7d;
 				}
 			}
 		}

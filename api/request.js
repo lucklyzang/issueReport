@@ -6,7 +6,7 @@ import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
 // 准生产环境：https://ver.blinktech.cn
 // 生产环境：https://blinktech.cn
 const instance = axios.create({
-  baseURL: 'https://blink.blink.blinktech.cn',
+  baseURL: 'https://blinktech.cn',
   headers: {
     // common: { 
     //   'Accept': 'application/json, test/plain,'
@@ -19,7 +19,7 @@ const instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  config.baseURL = store.state.transport.isProjectTask ? 'https://blink.blinktech.cn/project' : 'https://blink.blinktech.cn/trans';
+  config.baseURL = store.state.transport.isProjectTask ? 'https://blinktech.cn/project' : 'https://blinktech.cn/trans';
 	if (config['url'] == 'project/queryAll') {
 		config.headers['HTTP_REQUEST_TYPE'] = 1
 	};
