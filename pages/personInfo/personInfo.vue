@@ -42,7 +42,7 @@
 			</view>
 			<view class="modification-password-area" @click="modificationPasswordEvent">
 				<text>修改密码</text>
-				<u-icon name="arrow-right" color="#101010" size="34"></u-icon>
+				<u-icon name="arrow-right" color="#101010" size="36"></u-icon>
 			</view>
 		</view>
 		<view class="content-bottom">
@@ -77,7 +77,7 @@
 		data() {
 			return {
 				content: '',
-				versionNumber: '2.3.8',
+				versionNumber: '4.1.7',
 				sureCancelShow: false,
 				showLoadingHint: false
 			}
@@ -306,10 +306,11 @@
 				>text {
 					position: absolute;
 					display: inline-block;
-
+					
 					&:first-child {
 						left: 0;
 						top: 0;
+						font-size: 14px;
 						color: $color-text-left;
 						padding-left: 10px;
 					}

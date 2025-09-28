@@ -1,8 +1,9 @@
 <template>
 	<view class="content-box">
-		<u-loading :show="showLoadingHint" size="18">{{ infoText }}</u-loading>
+		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="提交中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="top-background-area" :style="{ 'height': statusBarHeight + navigationBarHeight + 5 + 'px' }"></view>
 		<u-toast ref="uToast" />
+		<light-hint type="success" :isShow="showLightHint" :type="hintType" @hide="hideEvent" :message="hintMsg"></light-hint>
 		<view class="nav">
 			<nav-bar :home="false" :isShowBackText="true" backState='3000' fontColor="#FFF" bgColor="none" title="修改密码" @backClick="backTo">
 			</nav-bar> 
@@ -70,17 +71,21 @@
 		setCache,
 		removeAllLocalStorage,
 	} from '@/common/js/utils'
-	import store from '@/store'
 	import { modificationPassword } from '@/api/login.js'
 	import navBar from "@/components/zhouWei-navBar"
+	import LightHint from "@/components/light-hint/light-hint.vue"
 	export default {
 		components: {
-			navBar
+			navBar,
+			LightHint
 		},
 		data() {
 			return {
 				infoText: '加载中···',
-				showLoadingHint: true,
+				hintMsg: '',
+				hintType: '',
+				showLightHint: false,
+				showLoadingHint: false,
 				formerPasswordValue: '',
 				newPasswordValue: '',
 				surePasswordValue: ''
@@ -93,22 +98,26 @@
 				'statusBarHeight',
 				'navigationBarHeight'
 			]),
-			// userName() {
-			// 	return this.userInfo.userName
-			// },
-			// proName () {
-			//   return this.userInfo.worker['hospitalList'][0]['hospitalName']
-			// },
-			// proId() {
-			// 	return this.userInfo.worker['hospitalList'][0]['hospitalId']
-			// },
-			// workerId() {
-			// 	return this.userInfo.worker.id
-			// },
-			// depId() {
-			// 	return this.userInfo.worker['departments'][0]['id']
-			// },
+			userName() {
+				return this.userInfo.extendData.userName
+			},
+			proId() {
+				return this.userInfo.extendData.proId
+			},
+			proName() {
+				return this.userInfo.extendData.proName
+			},
+			workerId() {
+				return this.userInfo.extendData.userId
+			},
+			depName() {
+				return this.userInfo.depName == null ? '无' : this.userInfo.depName
+			},
 			accountName() {
+				return this.userInfo.name
+			},
+			userType() {
+				return this.userInfo.extendData.userType
 			}
 		},
 		onShow() {
@@ -122,8 +131,14 @@
 				uni.navigateBack()
 			},
 			
+			// 隐藏事件
+			hideEvent () {
+				this.showLightHint = false
+			},
+			
 			// 提交修改事件
 			submitModificationEvent () {
+				this.showLightHint = true;
 				// 旧密码不能为空
 				if (this.formerPasswordValue == '') {
 					this.$refs.uToast.show({
@@ -137,6 +152,24 @@
 				if (this.newPasswordValue == '') {
 					this.$refs.uToast.show({
 						title: '请输入新密码',
+						position: 'center',
+						type: 'warning'
+					});
+					return
+				};
+				// 新旧码不能一样
+				if (this.newPasswordValue == this.formerPasswordValue) {
+					this.$refs.uToast.show({
+						title: '新旧密码不能相同',
+						position: 'center',
+						type: 'warning'
+					});
+					return
+				};
+				// 确认新密码不能为空
+				if (this.surePasswordValue == '') {
+					this.$refs.uToast.show({
+						title: '请确认新密码',
 						position: 'center',
 						type: 'warning'
 					});
@@ -164,16 +197,13 @@
 						});
 						// 清空store和localStorage
 						removeAllLocalStorage();
-						store.dispatch('resetLoginState');
-				    this.$refs.uToast.show({
-				      title: `${res.data.data}`,
-				      type: 'success'
-				    })
+						this.hintType = 'success';
+						this.showLightHint = true;
+						this.hintMsg = '修改成功!';
 				  } else {
-				    this.$refs.uToast.show({
-				      title: `${res.data.msg}`,
-				      type: 'warning'
-				    })
+						this.hintType = 'error';
+						this.showLightHint = true;
+						this.hintMsg = '修改失败!';
 				  }
 				})
 				.catch((err) => {
@@ -226,7 +256,7 @@
 		.content {
 			 flex: 1;
 			 overflow: auto;
-			 padding: 20px;
+			 padding:20px;
 			 box-sizing: border-box;
 			 position: relative;
 			 background: #F8F8F8;

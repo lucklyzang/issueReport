@@ -309,12 +309,21 @@
 				  	title: `${res.data.msg}`,
 				  	type: 'success'
 				  });
-				  this.queryProjectTask(
-					{
-					   proId:this.proId, createId:this.workerId,state: -5,
-					   startDate: '', endDate: ''
+					if (this.current == 0) {
+					  this.queryProjectTask(
+							{
+								 proId:this.proId, createId:this.workerId,state: -5,
+								 startDate: '', endDate: ''
+							}
+					  )
+					} else {
+					  this.queryProjectTask(
+							{
+								 proId:this.proId, createId:this.workerId,state: 3,
+								 startDate: '', endDate: ''
+							}
+					  )
 					}
-				  )
 				} else {
 				 this.$refs.uToast.show({
 				 	title: `${res.data.msg}`,

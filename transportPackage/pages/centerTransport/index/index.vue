@@ -137,7 +137,7 @@
 							this.noDataShow = false;
 							let [item1] = res;
 							if (item1) {
-								this.transPortTypeList = [];
+								this.transTypeList = [];
 								for (let item of item1) {
 									this.transTypeList.push({
 										id: item.id,

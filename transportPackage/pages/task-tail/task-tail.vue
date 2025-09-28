@@ -382,12 +382,21 @@
 				  	title: `${res.data.msg}`,
 				  	type: 'success'
 				  });
-				  this.queryCompleteDispatchTask(
-					{
-					   proId:this.proId, workerId:'',state: -1,
-					   departmentId: this.userInfo.depId
-					},'待办'
-				  )
+					if (this.current == 0) {
+					  this.queryCompleteDispatchTask(
+							{
+								 proId:this.proId, workerId:'',state: -1,
+								 departmentId: this.userInfo.depId
+							},'待办'
+					  )
+					} else {
+					  this.queryCompleteDispatchTask(
+							{
+								 proId:this.proId, workerId:'',state: 3,
+								 departmentId: this.userInfo.depId
+							},'进行中'
+					  )
+					}
 				} else {
 				 this.$refs.uToast.show({
 				 	title: `${res.data.msg}`,
@@ -431,17 +440,17 @@
 				this.current = index;
 				if (index == 0) {
 				  this.queryCompleteDispatchTask(
-					{
-					   proId:this.proId, workerId:'',state: -1,
-					   departmentId: this.userInfo.depId
-					},'待办'
+						{
+							 proId:this.proId, workerId:'',state: -1,
+							 departmentId: this.userInfo.depId
+						},'待办'
 				  )
 				} else {
 				  this.queryCompleteDispatchTask(
-					{
-					   proId:this.proId, workerId:'',state: 3,
-					   departmentId: this.userInfo.depId
-					},'进行中'
+						{
+							 proId:this.proId, workerId:'',state: 3,
+							 departmentId: this.userInfo.depId
+						},'进行中'
 				  )
 				}
 			},
