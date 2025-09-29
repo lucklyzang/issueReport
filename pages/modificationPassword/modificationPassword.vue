@@ -3,7 +3,7 @@
 		<ourLoading isFullScreen :active="showLoadingHint" :translateY="50" text="提交中···" color="#fff" textColor="#fff" background-color="rgb(143 143 143)"/>
 		<view class="top-background-area" :style="{ 'height': statusBarHeight + navigationBarHeight + 5 + 'px' }"></view>
 		<u-toast ref="uToast" />
-		<light-hint type="success" :isShow="showLightHint" :type="hintType" @hide="hideEvent" :message="hintMsg"></light-hint>
+		<light-hint ref="alertToast"></light-hint>
 		<view class="nav">
 			<nav-bar :home="false" :isShowBackText="true" backState='3000' fontColor="#FFF" bgColor="none" title="修改密码" @backClick="backTo">
 			</nav-bar> 
@@ -82,9 +82,6 @@
 		data() {
 			return {
 				infoText: '加载中···',
-				hintMsg: '',
-				hintType: '',
-				showLightHint: false,
 				showLoadingHint: false,
 				formerPasswordValue: '',
 				newPasswordValue: '',
@@ -131,14 +128,8 @@
 				uni.navigateBack()
 			},
 			
-			// 隐藏事件
-			hideEvent () {
-				this.showLightHint = false
-			},
-			
 			// 提交修改事件
 			submitModificationEvent () {
-				this.showLightHint = true;
 				// 旧密码不能为空
 				if (this.formerPasswordValue == '') {
 					this.$refs.uToast.show({
@@ -157,10 +148,10 @@
 					});
 					return
 				};
-				// 新旧码不能一样
+				// 新旧密码不能相同
 				if (this.newPasswordValue == this.formerPasswordValue) {
 					this.$refs.uToast.show({
-						title: '新旧密码不能相同',
+						title: '修改失败！旧密码与新密码一致，请重新输入',
 						position: 'center',
 						type: 'warning'
 					});
@@ -184,6 +175,24 @@
 					});
 					return
 				};
+				// 新密码不能少于8位
+				if (this.newPasswordValue.length < 8) {
+					this.$refs.uToast.show({
+						title: '修改失败，新密码不得少于8位!',
+						position: 'center',
+						type: 'warning'
+					});
+					return
+				};
+				// 新密码只能包含数字和字母
+				if (!(/^[a-zA-Z0-9]+$/.test(this.newPasswordValue))) {
+					this.$refs.uToast.show({
+						title: '修改失败，新密码只能包含数字和字母',
+						position: 'center',
+						type: 'warning'
+					});
+					return
+				};
 				this.showLoadingHint = true;
 				modificationPassword({
 					username: this.userName,
@@ -192,26 +201,33 @@
 				}).then((res) => {
 					this.showLoadingHint = false;
 				  if (res && res.data.code == 200) {
-						uni.redirectTo({
-							url: '/pages/login/login'
-						});
-						// 清空store和localStorage
+						setTimeout(() => {
+						  uni.redirectTo({
+						   url: '/pages/login/login'
+						  })
+						},2000);
+						// 清空localStorage
 						removeAllLocalStorage();
-						this.hintType = 'success';
-						this.showLightHint = true;
-						this.hintMsg = '修改成功!';
+						this.$refs.alertToast.show({
+							type: 'success',
+							message: '修改成功!',
+							isShow: true
+						});
 				  } else {
-						this.hintType = 'error';
-						this.showLightHint = true;
-						this.hintMsg = '修改失败!';
+						this.$refs.alertToast.show({
+							type: 'error',
+							message: res.data.msg,
+							isShow: true
+						})
 				  }
 				})
 				.catch((err) => {
 					this.showLoadingHint = false;
-				  this.$refs.uToast.show({
-				    title: `${err.message}`,
-				    type: 'error'
-				  })
+					this.$refs.alertToast.show({
+						type: 'error',
+						message: err.message,
+						isShow: true
+					})
 				})
 			}
 		}

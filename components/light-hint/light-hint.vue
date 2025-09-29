@@ -1,46 +1,47 @@
 <template>
-    <view class="light-hint" v-if="isShow">
-			<image :src="type == 'success' ? passedPng : exclamationPointPng" alt=""></image>
-			<text>{{message}}</text>
+    <view class="light-hint" v-if="params.isShow">
+			<image :src="params.type == 'success' ? passedPng : exclamationPointPng" alt=""></image>
+			<text>{{params.message}}</text>
     </view>
 </template>
  
 <script>
 export default {
   name: 'LightHint',
-  props: {
-    type: {
-      type: String,
-      default: "success"
-    },
-    message: {
-      type: String,
-      default: ""
-    },
-    duration: {
-      type: Number,
-      default: 3000000 //默认3000毫秒消失
-    },
-		isShow: {
-			type: Boolean,
-			default: false
-		}
-  },
   data() {
     return {
+			params: {
+				type: 'success',
+				message: '',
+				duration: '2000',
+				isShow: false
+			},
+			defaultParams: {
+				type: 'success',
+				message: '',
+				duration: '2000',
+				isShow: false
+			},
       exclamationPointPng: require("@/static/img/exclamation-point.png"),
       passedPng: require("@/static/img/passed.png")
     }
   },
-	mounted () {
-		this.show()
-	},
+	mounted () {},
   methods: {
-    show() {
-      setTimeout(this.hide, this.duration);//设置时间自动消失
+    show(parameter={}) {
+			Object.keys(this.params).forEach((key) => {
+				if (!parameter.hasOwnProperty(key)) {
+					this.params[key] = this.defaultParams[key]
+				} else if (parameter[key] == '') {
+					this.params[key] = this.defaultParams[key]
+				} else {
+					this.params[key] = parameter[key]
+				}
+			});
+      setTimeout(this.hide, this.params.duration);//设置时间自动消失
     },
     hide() {
-			this.$emit('hide')
+			this.params['isShow'] = false
     }
   }
 };

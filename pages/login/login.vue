@@ -4,6 +4,7 @@
 		<u-modal v-model="modalShow" :content="modalContent"
 		 :show-cancel-button="true" @confirm="sureCancel" @cancel="cancelSure">
 		</u-modal>
+		<u-toast ref="uToast" />
 		<view class="container-content">
 			<view class="title">
         <text>BLINK</text>
@@ -103,6 +104,31 @@
           
 			// 账号密码事件
 			sure () {
+				// 账号密码不能为空
+				if (this.form.username == '') {
+					this.$refs.uToast.show({
+						title: '请输入账号',
+						position: 'bottom',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.form.password == '') {
+					this.$refs.uToast.show({
+						title: '请输入密码',
+						position: 'bottom',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.form.username == '' && this.form.password == '') {
+					this.$refs.uToast.show({
+						title: '请输入账号密码',
+						position: 'bottom',
+						type: 'warning'
+					});
+					return
+				};
 				let loginMessage = {
 				  username: this.form.username,
 				  password: this.form.password
