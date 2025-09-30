@@ -26,7 +26,6 @@ export default {
       passedPng: require("@/static/img/passed.png")
     }
   },
-	mounted () {},
   methods: {
     show(parameter={}) {
 			Object.keys(this.params).forEach((key) => {
