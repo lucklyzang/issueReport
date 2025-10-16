@@ -51,24 +51,27 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 216px;
-    height: 48px;
+    min-width: 180px;
+    min-height: 48px;
+    padding: 4px 10px; 
+ 		box-sizing: border-box;
     position: fixed;
     z-index: 1000;
     bottom: 200px;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
-    line-height: 30px;
     font-weight: bold;
     color: #101010;
     font-size: 14px;
-		box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.4);
+ 		box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.4);
     text {
       vertical-align: middle;
-      margin-left: 10px
+      margin-left: 10px;
+ 			text-align: left;
+ 			word-break: break-all;
     };
     image {
+ 			flex-shrink: 0;
       vertical-align: middle;
       width: 24px;
       height: 24px
