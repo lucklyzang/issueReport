@@ -36,12 +36,12 @@
 			<view class="form-btn">
 				<button type="primary" @click="sure">登 录</button>
 			</view>
-      <view class="weixin-login">
+     <!-- <view class="weixin-login">
         <u-divider border-color="#6d6d6d" color="#333">微信授权登陆</u-divider>
         <view class="image-wrapper" @click="weixinLoginEvent">
           <image src="/static/img/weixin.png">
         </view>
-      </view>
+      </view> -->
       <view class="bottom-character">
         <text>内部系统,仅限医护进行下单使用</text>
       </view>
