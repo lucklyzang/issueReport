@@ -127,6 +127,17 @@
 					</u-radio-group>
 				</view>
 			</view>
+			<view class="concat-box">
+				<view class="concat-box-left">
+					<text>联系人(电话)</text>
+				</view>
+				<view class="concat-box-right">
+					<u-input
+					    placeholder="请输入联系方式"
+					    v-model="contact"
+					></u-input>
+				</view>
+			</view>
 			<view class="task-describe task-describe-one">
 				<u-field
 					v-model="taskDescribe"
@@ -246,6 +257,17 @@
 				<view class="addpatient-message-btn" @click="addMessageEvent">
 						<fa-icon type="plus" color="#44c3f3"></fa-icon>
 						<text>添加病人信息</text>
+				</view>
+			</view>
+			<view class="concat-box">
+				<view class="concat-box-left">
+					<text>联系人(电话)</text>
+				</view>
+				<view class="concat-box-right">
+					<u-input
+					    placeholder="请输入联系方式"
+					    v-model="contact"
+					></u-input>
 				</view>
 			</view>
 			<view class="task-describe">
@@ -431,7 +453,8 @@
 				transportTypeParent: [],
 				transportTypeChild: [],
 				patienModalShow: false,
-				isPressEdit: false
+				isPressEdit: false,
+				contact: '',
 			}
 		},
 		onLoad(options) {
@@ -1091,7 +1114,8 @@
 						proName: this.proName, //项目名称
 						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
 						createType: 2 ,//创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
-						startTerminal: 2 // 发起客户端类型 1-安卓APP，2-微信小程序
+						startTerminal: 2, // 发起客户端类型 1-安卓APP，2-微信小程序
+						contact: this.contact // 联系方式
 					};
 					// 创建调度任务
 					this.postGenerateDispatchTask(taskMessage)
@@ -1119,7 +1143,8 @@
 						proName: this.proName, //项目名称
 						isBack: this.isBackValue, //是否返回出发地  0-不返回，1-返回
 						createType: 2 ,//创建类型   0-调度员,1-医务人员(平板创建),2-医务人员(小程序)
-						startTerminal: 2 // 发起客户端类型 1-安卓APP，2-微信小程序
+						startTerminal: 2, // 发起客户端类型 1-安卓APP，2-微信小程序
+						contact: this.contact // 联系方式
 					};
 					// 获取目的地列表数据
 					// if (this.hospitalListTwovalue.length > 0) {
@@ -1766,10 +1791,35 @@
 					}
 				}
 			};
+			.concat-box {
+				width: 100%;
+				padding: 8px 6px;
+				box-sizing: border-box;
+				background: #fff;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 14px;
+				margin-top: 6px;
+				.concat-box-left {
+					width: 105px;
+					>text {
+						color: #7d7d7d;
+						padding-right: 6px;
+						box-sizing: border-box
+					}
+				};
+				.concat-box-right {
+					flex: 1;
+					/deep/ .u-input {
+						padding: 4px 6px !important;
+						background: #F9F9F9
+					}
+				}
+			};
 			.task-describe {
 				height: 112px;
 				border-bottom: 12px solid #f6f6f6;
-					
 				/deep/ .u-field {
 					padding:10px 0 10px 4px;
 					color: $color-text-left;

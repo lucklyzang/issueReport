@@ -134,6 +134,17 @@
 					</ld-select>
         </view>
       </view>
+			<view class="concat-box">
+				<view class="concat-box-left">
+					<text>联系人(电话)</text>
+				</view>
+				<view class="concat-box-right">
+					<u-input
+					    placeholder="请输入联系方式"
+					    v-model="contact"
+					></u-input>
+				</view>
+			</view>
 			<view class="task-describe">
 				<u-field
 					v-model="taskDescribe"
@@ -210,7 +221,8 @@
         startPointId: '',
         startPointName: '',
         helpWorkerId: '',
-        helpWorkerName: ''
+        helpWorkerName: '',
+				contact: ''
 			}
 		},
 		onLoad (options) {
@@ -632,7 +644,8 @@
           images: []  ,// 问题图片信息 非必输
           spaceId: this.destinationId,    // 选择的空间ID
           flag: this.isMedicalMan ? 1 : 0, // 上报人类型，0-维修人员，1-医护人员		
-          present: this.helpWorkerValue === '' ? [] : [{id: this.helpWorkerValue, name: this.getHelpWorkerNameById(this.helpWorkerValue)}] // id 为选择协助人员的Id，name 为选择的协助人员的Id
+          present: this.helpWorkerValue === '' ? [] : [{id: this.helpWorkerValue, name: this.getHelpWorkerNameById(this.helpWorkerValue)}], // id 为选择协助人员的Id，name 为选择的协助人员的Id
+					contact: this.contact
         };
         // 创建任务
         this.postTask(taskMessage)
@@ -967,7 +980,32 @@
 					border: 1px solid #4cc5f2;
 				}
 			};
-	
+			.concat-box {
+				width: 100%;
+				padding: 8px 6px;
+				box-sizing: border-box;
+				background: #fff;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 14px;
+				margin-top: 6px;
+				.concat-box-left {
+					width: 105px;
+					>text {
+						color: #7d7d7d;
+						padding-right: 6px;
+						box-sizing: border-box
+					}
+				};
+				.concat-box-right {
+					flex: 1;
+					/deep/ .u-input {
+						padding: 4px 6px !important;
+						background: #F9F9F9
+					}
+				}
+			};
 			.task-describe {
 				height: 112px;
 				border-bottom: 12px solid #f6f6f6;
