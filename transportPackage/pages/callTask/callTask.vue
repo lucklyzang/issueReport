@@ -133,7 +133,7 @@
 				</view>
 				<view class="concat-box-right">
 					<u-input
-					    placeholder="请输入联系方式"
+					    placeholder="请输入联系人及联系方式"
 					    v-model="contact"
 					></u-input>
 				</view>
@@ -265,7 +265,7 @@
 				</view>
 				<view class="concat-box-right">
 					<u-input
-					    placeholder="请输入联系方式"
+					    placeholder="请输入联系人及联系方式"
 					    v-model="contact"
 					></u-input>
 				</view>
