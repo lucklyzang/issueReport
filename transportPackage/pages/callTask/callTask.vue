@@ -19,7 +19,7 @@
 				</view>
 			</view>
 			<view class="creat-chooseHospital creat-chooseHospital-one">
-				<view class="creat-chooseHospital-title">科室选择</view>
+				<view class="creat-chooseHospital-title">起点科室</view>
 				<view class="creat-chooseHospital-content creat-chooseHospital-content-two">
 					<ld-select :list="hospitalList"
 						@ldShow="ldSelectShow"
@@ -32,6 +32,36 @@
 						bgColor="#f9f9f9"
 						v-model="hospitalListValue"
 						@change="listChangeEvent">
+					</ld-select>
+				  <!-- <xfl-select 
+					  :list="hospitalList"
+					  :clearable="false"
+					  :showItemNum="5" 
+					  :isCanInput="true"
+					  :showList="controlListShow"
+					  :style_Container="'height: 50px; font-size: 16px;'"
+					  :initValue="depName"
+					  @change="listChangeEvent"
+					  @input="inputEvent"
+					  @visible-change="visibleChange"
+				  >
+				  </xfl-select> -->
+				</view>
+			</view>
+			<view class="creat-chooseHospital creat-chooseHospital-one">
+				<view class="creat-chooseHospital-title">终点科室</view>
+				<view class="creat-chooseHospital-content creat-chooseHospital-content-two">
+					<ld-select :list="hospitalList"
+						@ldShow="endLdSelectShow"
+						@ldHide="endLdSelectHide"
+						label-key="value" value-key="id"
+						clearable
+						placeholder="请选择"
+						color="#333"
+						selectColor="#43c3f3"
+						bgColor="#f9f9f9"
+						v-model="endHospitalListValue"
+						@change="endListChangeEvent">
 					</ld-select>
 				  <!-- <xfl-select 
 					  :list="hospitalList"
@@ -412,6 +442,7 @@
 				hospitalList: [],
 				hospitalListTwovalue: '',
 				hospitalListValue: '',
+				endHospitalListValue: '',
 				temporaryHospitalList: [],
 				bedNumber: '',
 				patientName: '',
@@ -504,7 +535,6 @@
 			}
 		},
 		mounted() {
-			console.log('1',this.templateType);
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
 			this.parallelFunction()
@@ -533,19 +563,34 @@
 				this.changeIsToCallTaskPage(false)
 			},
 			
-			// 科室选择组件显示事件
+			// 起点科室选择组件显示事件
 			ldSelectShow(val) {
 				this.isShowModal = val
 			},
 			
-			// 科室选择组件隐藏事件
+			// 起点科室选择组件隐藏事件
 			ldSelectHide(val) {
 				this.isShowModal = val
 			},
 			
-			// 科室选择列表变化时
+			// 起点科室选择列表变化时
 			listChangeEvent(val) {
 				this.hospitalListValue = val;
+			},
+			
+			// 终点科室选择组件显示事件
+			endLdSelectShow(val) {
+				this.isShowModal = val
+			},
+			
+			// 终点科室选择组件隐藏事件
+			endLdSelectHide(val) {
+				this.isShowModal = val
+			},
+			
+			// 终点科室选择列表变化时
+			endListChangeEvent(val) {
+				this.endHospitalListValue = val;
 			},
 			
 			// 模板二科室选择列表变化时
@@ -1080,19 +1125,19 @@
 			// 运送类型信息确认事件
 			dispatchTaskSure(flag) {
 				if (this.templateType === 'template_one') {
-					// if (!this.hospitalListValue) {
-					// 	this.$refs.uToast.show({
-					// 		title: '科室不能为空',
-					// 		type: 'warning'
-					// 	});
-					// 	return 
-					// };
+					if (this.hospitalListValue == this.endHospitalListValue && (this.hospitalListValue !== '' || this.endHospitalListValue !== '')) {
+						this.$refs.uToast.show({
+							title: '起点科室不能与终点科室相同',
+							type: 'warning'
+						});
+						return 
+					};
 					// 获取选中的运送工具信息
 					let taskMessage = {
 						setOutPlaceId: this.hospitalListValue == '' ? this.startPointId : this.hospitalListValue, //出发地ID
 						setOutPlaceName: this.hospitalListValue == '' ? this.startPointName : this.getDepartmentNameById(this.hospitalListValue),//出发地名称
-						// destinationId: this.hospitalListValue, //目的地ID
-						// destinationName: this.hospitalListValue == '' ? '' : this.getDepartmentNameById(this.hospitalListValue), //目的地名称
+						destinationId: this.endHospitalListValue == '' ? '' : this.endHospitalListValue, //目的地ID
+						destinationName: this.endHospitalListValue == '' ? '' : this.getDepartmentNameById(this.endHospitalListValue), //目的地名称
 						parentTypeId: this.titleText.id, //运送父类型Id
 						parentTypeName: this.titleText.value, //运送父类型名称
 						taskTypeId: this.typeValue, //运送类型 ID

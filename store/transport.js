@@ -3,7 +3,7 @@ export default {
     titleText: '',
     bottomBarIndex: 0,
     isToCallTaskPage: false,
-    isMedicalMan: true,
+    isMedicalMan: false,
     isProjectTask: false,
     isCompleteRepairsWorkOrderPhotoList: []
   },
