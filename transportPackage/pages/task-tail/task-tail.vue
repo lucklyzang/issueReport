@@ -529,7 +529,7 @@
 				this.sureCancelShow = true;
 				this.cancelIndex = null;
 				this.taskCancelReason = '';
-				this.getDispatchTaskCancelReason({proId: this.proId, state: 0});
+				this.getDispatchTaskCancelReason({proId: this.proId, state: 0, type: 1});
 				this.taskId = item.id
 			},
 			

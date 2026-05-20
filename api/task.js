@@ -65,7 +65,7 @@ export function getDispatchTaskComplete(data) {
 // 取消原因查询
 export function queryDispatchTaskCancelReason(data) {
   return request({
-    url: 'cancel/queryAll',
+    url: 'trans/cancel/queryAll',
     method: 'get',
     params: data
   })
