@@ -1,9 +1,10 @@
+import { setCache, getCache } from '@/common/js/utils'
 export default {
   state:{
     titleText: '',
     bottomBarIndex: 0,
     isToCallTaskPage: false,
-    isMedicalMan: false,
+    isMedicalMan: true,
     isProjectTask: false,
     isCompleteRepairsWorkOrderPhotoList: []
   },
@@ -11,7 +12,10 @@ export default {
     titleText: state => state.titleText,
     bottomBarIndex: state => state.bottomBarIndex,
     isToCallTaskPage: state => state.isToCallTaskPage,
-    isMedicalMan: state => state.isMedicalMan,
+		isMedicalMan:(state) => {
+			state.isMedicalMan = getCache('isMedicalMan') ? getCache('isMedicalMan') === 'false' ? false : true : true;
+			return state.isMedicalMan
+		},
     isCompleteRepairsWorkOrderPhotoList: state => state.isCompleteRepairsWorkOrderPhotoList,
     isProjectTask: state => state.isProjectTask
   },
@@ -26,6 +30,7 @@ export default {
       state.isToCallTaskPage = playLoad
     },
     changeIsMedicalMan (state, playLoad) {
+			setCache('isMedicalMan', playLoad);
       state.isMedicalMan = playLoad
     },
     changeIsProjectTask (state, playLoad) {

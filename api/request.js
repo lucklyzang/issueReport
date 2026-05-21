@@ -42,13 +42,16 @@ instance.interceptors.response.use(function (response) {
  if (response['headers']['Status'] != '2003' && response['config']['url'] != 'project/queryAll') {
      if (response.headers['token']) {
        store.commit('changeToken', response.headers['token']);
-       setCache('questToken', response.headers['token']);
+       setCache('token', response.headers['token']);
      };
 		 if (!response.headers.hasOwnProperty('token')) {
 		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆` || response.data.msg == `当前登陆用户[${getCache('userName')}]不存在`) {
 				return response
 		   };
-		   removeAllLocalStorage();
+				removeAllLocalStorage();
+				store.commit('changeIsProjectTask', false);
+				store.commit('changeIsLogin', false);
+				store.commit('changeWeixinInfo', false);
 		   if (!store.getters.overDueWay) {
         uni.showToast({
           title: 'token已过期,请重新登录',

@@ -89,7 +89,8 @@
 				'storeUserInfo',
 				'changeOverDueWay',
         'changeIsMedicalMan',
-				'changeTemplateType'
+				'changeTemplateType',
+				'changeIsLogin'
 			]),
       
       // 选中某个复选框时，由checkbox时触发
@@ -149,7 +150,7 @@
                 removeCache('userPassword', this.form.password);
               };
 							setCache('userInfo', res.data.data);
-							setCache('isLogin', true);
+							this.changeIsLogin(true);
 							this.storeUserInfo(res.data.data);
               if (res.data.data['extendData']['user_type_id'] == 1) {
                 this.changeIsMedicalMan(true)

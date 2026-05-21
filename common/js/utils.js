@@ -140,8 +140,9 @@ export const removeAllLocalStorage = () => {
   removeCache('userInfo');
 	removeCache('templateType');
   removeCache('isLogin');
-  removeCache('questToken');
+  removeCache('token');
   removeCache('storeOverDueWay');
   removeCache('weixinInfo');
-	removeCache('isProjectTask')
+	removeCache('isProjectTask');
+	removeCache('isMedicalMan')
 }

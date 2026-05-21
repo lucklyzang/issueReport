@@ -117,7 +117,8 @@
 			...mapMutations([
 				'changeOverDueWay',
 				'changeWeixinInfo',
-				'changeIsProjectTask'
+				'changeIsProjectTask',
+				'changeIsLogin'
 			]),
 
 			// 返回上一页
@@ -156,6 +157,7 @@
 					if (res && res.data.code == 200) {
 						removeAllLocalStorage();
 						this.changeIsProjectTask(false);
+						this.changeIsLogin(false);
 						this.changeWeixinInfo(null)
 					} else {
 						this.$refs.uToast.show({

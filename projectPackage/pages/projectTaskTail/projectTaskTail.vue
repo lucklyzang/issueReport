@@ -532,7 +532,10 @@
 					border-radius: 4px;
 					text-align: center;
 					line-height: 40px;
-					margin-bottom: 4%
+					margin-bottom: 4%;
+					padding: 0 4px;
+					box-sizing: border-box;
+					@include no-wrap
 				};
 				 .spanStyle {
 					background: #d6f4ff;
