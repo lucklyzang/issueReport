@@ -55,7 +55,12 @@
         "optimization" : {
             "subPackages" : true
         },
-        "permission" : {}
+				"__usePrivacyCheck__": true,
+				"permission": {
+					"scope.userPhone": {
+						"desc": "用于快捷注册/登录账号"
+					}
+				}
     },
     "h5" : {
         "devServer" : {

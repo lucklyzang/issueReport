@@ -51,6 +51,15 @@ export function boundNotExist(proId,code) {
 	})
 }
 
+// 手机号一键登录(根据phone code获取手机号)
+export function getPhoneNumberByPhoneCode(code) {
+	return request({
+	    url: `login/wx/${code}?type=wxPhone`,
+	    method: 'get'
+	})
+}
+
+
 // 修改密码
 export function modificationPassword(data) {
   return request({

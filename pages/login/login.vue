@@ -42,6 +42,19 @@
           <image src="/static/img/weixin.png">
         </view>
       </view> -->
+			<!-- 隐私弹窗组件：会自动判断是否需要弹出 -->
+			<privacy-agreement
+				v-if="showPrivacy"
+				@agree="onPrivacyAgree"
+				@disagree="onPrivacyDisagree"
+			/>
+			<button
+				class="phone-btn"
+				open-type="getPhoneNumber"
+				@getphonenumber="onGetPhoneNumber"
+			>
+				手机号一键登录
+			</button>
       <view class="bottom-character">
         <text>内部系统,仅限医护进行下单使用</text>
       </view>
@@ -51,7 +64,7 @@
 
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
-	import {logIn} from '@/api/login.js'
+	import { logIn, getPhoneNumberByPhoneCode } from '@/api/login.js'
 	import { setCache, getCache, removeCache } from '@/common/js/utils'
 	export default {
 	components: {
@@ -102,6 +115,56 @@
       checkboxGroupChange(e) {
         // console.log(e);
       },
+			
+			// 手机号一键登录
+			async onGetPhoneNumber(e) {
+				// 用户拒绝授权
+				if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+					uni.showToast({ title:  e.detail.errMsg || '未知错误', icon: 'none' });
+					return;
+				};
+				// 获取到 code（注意：是 e.detail.code，不是 encryptedData）
+				const code = e.detail.code;
+				if (!code) {
+					uni.showToast({ title: '获取手机号失败，请重试', icon: 'none' });
+					return;
+				};
+				try {
+					const res = await this.getPhoneNumberByPhoneCodeEvent(code);
+					this.modalShow = true;
+					this.modalContent = `${res}`;
+				} catch (err) {
+					this.modalShow = true;
+					this.modalContent = `${err}`
+				} finally {
+					this.showLoadingHint = false;
+				}
+			},
+			
+			// 根据phone code 获取手机号码
+			getPhoneNumberByPhoneCodeEvent (code) {
+				return new Promise((resolve,reject) => {
+					this.showLoadingHint = true;
+					getPhoneNumberByPhoneCode(code)
+					.then((res) => {
+						this.showLoadingHint = false;
+						if (res && res.data.code == 200) {
+							resolve(res.data.data);
+						} else {
+							reject(res.data.msg);
+							this.showLoadingHint = false;
+							this.modalShow = true;
+							this.modalContent = `${res.data.msg}`
+						}
+					})
+					.catch((err) => {
+						reject(err.message)
+						this.showLoadingHint = false;
+						this.modalShow = true;
+						this.modalContent = `${err.message}`
+					})
+				})
+			},
           
 			// 账号密码事件
 			sure () {
@@ -258,7 +321,18 @@
           background-image: linear-gradient(to right, #37d5fc , #429afe);
           border-radius: 20px;
 				}
-			}
+			};
+			.phone-btn {
+			  width: 80%;
+				margin-top: 30px;
+			  height: 45px;
+			  line-height: 45px;
+			  background-color: #07c160;
+			  color: #fff;
+			  border-radius: 20px;
+			  font-size: 18px;
+			  border: none;
+			};
       .weixin-login {
         width: 100%;
         margin: 0 auto;
