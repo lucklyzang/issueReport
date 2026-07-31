@@ -84,7 +84,8 @@
         ],
 				modalShow: false,
 				modalContent: '',
-				showLoadingHint: false
+				showLoadingHint: false,
+				showPrivacy: false
 			}
 		},
 		onReady () {
@@ -93,9 +94,16 @@
 			...mapGetters([
 			])
 		},
-		mounted () {
-			 this.form.username = getCache('userName') ? getCache('userName') : '';
-			 this.form.password = getCache('userPassword') ? getCache('userPassword') : '';
+		onLoad () {
+			if (wx.getPrivacySetting) {
+			 wx.getPrivacySetting({
+				 success: (res) => {
+					 this.showPrivacy = res.needAuthorization
+				 }
+			 })
+			};
+			this.form.username = getCache('userName') ? getCache('userName') : '';
+			this.form.password = getCache('userPassword') ? getCache('userPassword') : '';
 		},
 		methods: {
 			...mapMutations([
@@ -105,6 +113,15 @@
 				'changeTemplateType',
 				'changeIsLogin'
 			]),
+			
+			onAgree() {
+				this.showPrivacy = false;
+			},
+			
+			onDisagree() {
+				this.showPrivacy = false;
+				uni.showToast({ title: '需同意隐私协议才能登录', icon: 'none' });
+			},
       
       // 选中某个复选框时，由checkbox时触发
       checkboxChange(e) {
@@ -119,8 +136,15 @@
 			// 手机号一键登录
 			async onGetPhoneNumber(e) {
 				// 用户拒绝授权
-				if (e.detail.errMsg !== 'getPhoneNumber:ok') {
-					uni.showToast({ title:  e.detail.errMsg || '未知错误', icon: 'none' });
+				if (detail.errMsg && detail.errMsg.includes('no permission')) {
+					this.showPrivacy = true;
+					uni.showToast({ title: '请先同意隐私协议', icon: 'none' });
+					return;
+				};
+				// 用户授权失败
+				if (e.detail.errMsg && e.detail.errMsg !== 'getPhoneNumber:ok') {
+					this.modalShow = true;
+					this.modalContent = e.detail.errMsg || '未知错误';
 					return;
 				};
 				// 获取到 code（注意：是 e.detail.code，不是 encryptedData）
@@ -137,7 +161,7 @@
 					this.modalShow = true;
 					this.modalContent = `${err}`
 				} finally {
-					this.showLoadingHint = false;
+					this.modalShow = false;
 				}
 			},
 			

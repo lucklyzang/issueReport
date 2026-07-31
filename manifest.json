@@ -55,9 +55,10 @@
         "optimization" : {
             "subPackages" : true
         },
+				"libVersion": "2.32.3",
 				"__usePrivacyCheck__": true,
 				"permission": {
-					"scope.userPhone": {
+					"scope.userPhoneNumber": {
 						"desc": "用于快捷注册/登录账号"
 					}
 				}
