@@ -26,7 +26,7 @@
 						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
-						placeholder="请选择"
+						:placeholder="hospitalListText"
 						color="#333"
 						selectColor="#43c3f3"
 						bgColor="#f9f9f9"
@@ -442,6 +442,7 @@
 				hospitalList: [],
 				hospitalListTwovalue: '',
 				hospitalListValue: '',
+				hospitalListText: '请选择',
 				endHospitalListValue: '',
 				temporaryHospitalList: [],
 				bedNumber: '',
@@ -537,6 +538,7 @@
 		mounted() {
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
+			this.hospitalListText = this.depName ? this.depName : '请选择';
 			this.parallelFunction()
 		},
 		methods: {

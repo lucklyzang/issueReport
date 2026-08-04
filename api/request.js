@@ -44,34 +44,59 @@ instance.interceptors.response.use(function (response) {
        store.commit('changeToken', response.headers['token']);
        setCache('token', response.headers['token']);
      };
-		 if (!response.headers.hasOwnProperty('token')) {
-		   if (response.data.msg == `当前用户[${getCache('userName')}]已登陆,不可重复登陆` || response.data.msg == `当前登陆用户[${getCache('userName')}]不存在`) {
-				return response
-		   };
+		 if (response.data.code == '401') {
+		 	if (!store.getters.overDueWay) { 
+		 		uni.showToast({
+		 			title: 'token已过期,请重新登录!',
+		 			duration: 1000
+		 		});
+		 		setTimeout(() => {
+		 			uni.redirectTo({
+		 			 url: '/pages/login/login'
+		 			})
+		 		},2000);
+		 	 } else {
+		 		uni.redirectTo({
+		 			url: '/pages/login/login'
+		 		})
+		 	};
+		 	// 清空store和localStorage
+		 	removeAllLocalStorage();
+			store.commit('changeIsProjectTask', false);
+			store.commit('changeIsLogin', false);
+			store.commit('changeWeixinInfo', false);
+		 }
+	};
+	return response;
+}, function (error) {
+  // 处理响应错误
+	if (Object.prototype.toString.call(error.response) === '[object Object]') {
+		if (error.response.hasOwnProperty('status')) {
+			if (error.response.status === 401) {
+				if (!store.getters.overDueWay) { 
+					uni.showToast({
+						title: 'token已过期,请重新登录!',
+						duration: 1000
+					});
+					setTimeout(() => {
+						uni.redirectTo({
+						 url: '/pages/login/login'
+						})
+					},2000);
+				 } else {
+					uni.redirectTo({
+						url: '/pages/login/login'
+					})
+				};
+				// 清空store和localStorage
 				removeAllLocalStorage();
 				store.commit('changeIsProjectTask', false);
 				store.commit('changeIsLogin', false);
 				store.commit('changeWeixinInfo', false);
-		   if (!store.getters.overDueWay) {
-        uni.showToast({
-          title: 'token已过期,请重新登录',
-          duration: 1000
-        });
-        setTimeout(() => {
-          uni.redirectTo({
-           url: '/pages/login/login'
-          })
-        },2000);
-		   } else {
-			  uni.redirectTo({
-			    url: '/pages/login/login'
-			  })
-		   }
+			} else {
+			}
 		}
-	}
-	return response;
-}, function (error) {
-  // 处理响应错误
+	};		
   return Promise.reject(error);
 });
 

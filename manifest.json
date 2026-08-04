@@ -71,5 +71,6 @@
             "base" : "/h5",
             "mode" : "hash"
         }
-    }
+    },
+		"sassImplementationName": "node-sass"
 }

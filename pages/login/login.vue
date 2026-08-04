@@ -43,7 +43,7 @@
         </view>
       </view> -->
 			<!-- 隐私弹窗组件：会自动判断是否需要弹出 -->
-			<privacy-agreement
+			<!-- <privacy-agreement
 				v-if="showPrivacy"
 				@agree="onPrivacyAgree"
 				@disagree="onPrivacyDisagree"
@@ -54,7 +54,7 @@
 				@getphonenumber="onGetPhoneNumber"
 			>
 				手机号一键登录
-			</button>
+			</button> -->
       <view class="bottom-character">
         <text>内部系统,仅限医护进行下单使用</text>
       </view>

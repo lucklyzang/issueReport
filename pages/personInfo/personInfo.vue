@@ -155,6 +155,9 @@
 				setCache('storeOverDueWay', true);
 				userSignOut(this.proId, this.workerId).then((res) => {
 					if (res && res.data.code == 200) {
+						uni.redirectTo({
+							url: '/pages/login/login'
+						});
 						removeAllLocalStorage();
 						this.changeIsProjectTask(false);
 						this.changeIsLogin(false);
