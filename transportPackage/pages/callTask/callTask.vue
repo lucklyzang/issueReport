@@ -577,6 +577,7 @@
 			
 			// 起点科室选择列表变化时
 			listChangeEvent(val) {
+				this.hospitalListText = '请选择';
 				this.hospitalListValue = val;
 			},
 			

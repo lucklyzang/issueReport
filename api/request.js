@@ -6,7 +6,7 @@ import { setCache, getCache, removeAllLocalStorage } from '@/common/js/utils'
 // 准生产环境：https://ver.blinktech.cn
 // 生产环境：https://blinktech.cn
 const instance = axios.create({
-  baseURL: 'https://ver.blinktech.cn',
+  baseURL: 'https://blinktech.cn',
   headers: {
     // common: { 
     //   'Accept': 'application/json, test/plain,'
@@ -19,7 +19,7 @@ const instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  config.baseURL = config['url'] == 'user/update-password' ? 'https://ver.blinktech.cn/project' : store.state.transport.isProjectTask ? 'https://ver.blinktech.cn/project' : 'https://ver.blinktech.cn/trans';
+  config.baseURL = config['url'] == 'user/update-password' ? 'https://blinktech.cn/project' : store.state.transport.isProjectTask ? 'https://blinktech.cn/project' : 'https://blinktech.cn/trans';
 	if (config['url'] == 'project/queryAll') {
 		config.headers['HTTP_REQUEST_TYPE'] = 1
 	};
@@ -72,7 +72,7 @@ instance.interceptors.response.use(function (response) {
   // 处理响应错误
 	if (Object.prototype.toString.call(error.response) === '[object Object]') {
 		if (error.response.hasOwnProperty('status')) {
-			if (error.response.status === 401) {
+			if (error.response.status === 401) { 
 				if (!store.getters.overDueWay) { 
 					uni.showToast({
 						title: 'token已过期,请重新登录!',

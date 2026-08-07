@@ -37,7 +37,7 @@
 						@ldHide="ldSelectHide"
 						label-key="value" value-key="id"
 						clearable
-						placeholder="请选择"
+						:placeholder="departmentText"
 						color="#333"
 						selectColor="#43c3f3"
 						bgColor="#f9f9f9"
@@ -79,6 +79,7 @@
 			</view>
 			<view class="view-photoList">
 				<view>
+					<text>*</text>
 					<text>问题拍照</text>
 				</view>
 				<view>
@@ -93,18 +94,26 @@
 			</view>
 			<view class="concat-box">
 				<view class="concat-box-left">
+					<text>*</text>
 					<text>联系人(电话)</text>
 				</view>
 				<view class="concat-box-right">
 					<u-input
 					    placeholder="请输入联系人及联系方式"
+							placeholder-style="color:#909090"
 					    v-model="contact"
 					></u-input>
 				</view>
 			</view>
-			<view class="task-describe">
-				<u-field v-model="taskDescribe" label="任务描述" :border-bottom="true" :border-top="true" placeholder="请输入任务描述" type="textarea">
-				</u-field>
+			<view class="task-describe-box">
+				<view class="task-describe-text">
+					<text>*</text>
+					<text>任务描述</text>
+				</view>
+				<view class="task-describe-value">
+					<u-field v-model="taskDescribe" label-width="0" placeholder-style="color:#909090" :border-bottom="false" :border-top="false" placeholder="请输入任务描述" type="textarea">
+					</u-field>
+				</view>
 			</view>
 			<view class="preinstall-box" v-if="preinstallList.length > 0">
 				<text v-for="(item,index) in preinstallList" :key="item" :class="{'preinstallStyle':index == preinstallIndex}"
@@ -158,6 +167,7 @@
 				departmentShow: true,
 				content: '',
 				departmentValue: '',
+				departmentText: '请选择',
 				sureCancelShow: false,
 				controlListShow: false,
 				destinationListShow: false,
@@ -220,6 +230,7 @@
 		mounted() {
 			this.startPointId = this.depId;
 			this.startPointName = this.depName;
+			this.departmentText = this.depName ? this.depName : '请选择';
 			this.parallelFunction();
 			// 登陆人员为医务人员时，根据默认科室id查询母的房间列表
 			if (this.isMedicalMan) {
@@ -263,7 +274,7 @@
 			},
 			// 选择图片方法
 			getImg() {
-				var that = this
+				var that = this;
 				uni.chooseImage({
 					count: 3,
 					sizeType: ['original', 'compressed'],
@@ -283,11 +294,19 @@
 								}
 							})
 						}
+					},
+					fail: function(err) {
+						console.log(err);
+						that.$refs.uToast.show({
+							title: err.errMsg,
+							type: 'warning'
+						})
 					}
-				});
+				})
 			},
 			// 科室选择列表变化时
 			listChangeEvent(val) {
+				this.departmentText = '请选择';
 				this.departmentValue = val;
 				this.hospitalListValue = '';
 				this.departmentShow = false;
@@ -607,10 +626,24 @@
 						});
 						return
 					}
-				};	
-				if (this.taskDescribe === '' && this.imgArr.length == 0) {
+				};
+				if (this.imgArr.length == 0) {
 					this.$refs.uToast.show({
-						title: '任务描述和问题照片至少一项不能为空',
+						title: '问题拍照不能为空',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.contact === '') {
+					this.$refs.uToast.show({
+						title: '联系人(电话)不能为空',
+						type: 'warning'
+					});
+					return
+				};
+				if (this.taskDescribe === '') {
+					this.$refs.uToast.show({
+						title: '任务描述不能为空',
 						type: 'warning'
 					});
 					return
@@ -792,6 +825,11 @@
 						height: 100px;
 						padding-left: 4px;
 						line-height: 100px;
+						>text {
+							&:first-child {
+								color: red
+							}
+						}
 					};
 					&:nth-child(2) {
 						width: calc(100% - 80px);
@@ -972,12 +1010,17 @@
 				align-items: center;
 				font-size: 14px;
 				margin-top: 6px;
+				border-bottom: 1px solid #d5d5d5;
 				.concat-box-left {
 					width: 105px;
 					>text {
 						color: #7d7d7d;
 						padding-right: 6px;
-						box-sizing: border-box
+						box-sizing: border-box;
+						&:first-child {
+							color: red;
+							padding-right: 0 !important;
+						}
 					}
 				};
 				.concat-box-right {
@@ -988,27 +1031,44 @@
 					}
 				}
 			};
-			.task-describe {
-				height: 112px;
+			.task-describe-box {
+				width: 100%;
+				padding: 6px;
+				box-sizing: border-box;
+				background: #fff;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 14px;
 				border-bottom: 12px solid #f6f6f6;
-	
-				/deep/ .u-field {
-					padding: 16px 2px;
-					color: $color-text-left;
-					.u-label-text {
-						font-size: 14px
-					};
-					.u-label {
-						margin-top: 8px;
-					};
-					.fild-body {
-						color: #333;
-						height: 68px;
-						-webkit-overflow-scrolling: touch;
-						overflow: auto;
-						background: #f9f9f9;
-						.u-flex-1 {
-							font-size: 15px !important
+				.task-describe-text {
+					width: 105px;
+					>text {
+						color: #7d7d7d;
+						padding-right: 6px;
+						box-sizing: border-box;
+						&:first-child {
+							color: red;
+							padding-right: 0 !important;
+						}
+					}
+				};
+				.task-describe-value {
+					flex: 1;
+					background: #f9f9f9;
+					/deep/ .u-field {
+						padding: 10px 2px;
+						color: $color-text-left;
+						.fild-body {
+							color: #333;
+							height: 68px;
+							padding: 0 3px;
+							box-sizing: border-box;
+							-webkit-overflow-scrolling: touch;
+							overflow: auto;
+							.u-flex-1 {
+								font-size: 15px !important
+							}
 						}
 					}
 				}
