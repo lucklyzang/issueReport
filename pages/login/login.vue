@@ -114,11 +114,11 @@
 				'changeIsLogin'
 			]),
 			
-			onAgree() {
+			onPrivacyAgree() {
 				this.showPrivacy = false;
 			},
 			
-			onDisagree() {
+			onPrivacyDisagree() {
 				this.showPrivacy = false;
 				uni.showToast({ title: '需同意隐私协议才能登录', icon: 'none' });
 			},

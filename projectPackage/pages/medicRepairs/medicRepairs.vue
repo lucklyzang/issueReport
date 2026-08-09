@@ -272,38 +272,60 @@
 			  this.preinstallIndex = index;
 			  this.taskDescribe = item
 			},
+			
+			requirePrivacyAuth() {
+			  return new Promise((resolve, reject) => {
+			    // #ifdef MP-WEIXIN
+			    if (uni.requirePrivacyAuthorize) {
+			      uni.requirePrivacyAuthorize({
+			        success: () => resolve(),
+			        fail: () => reject('用户拒绝授权')
+			      })
+			    } else {
+			      resolve()
+			    };
+			    // #endif
+			    // #ifndef MP-WEIXIN
+			    resolve()
+			    // #endif
+			  })
+			},
+			
 			// 选择图片方法
 			getImg() {
-				var that = this;
-				uni.chooseImage({
-					count: 3,
-					sizeType: ['original', 'compressed'],
-					sourceType: ['album', 'camera'],
-					success: function(res) {
-						uni.previewImage({
-							urls: res.tempFilePaths
-						});
-						for (let imgI = 0, len = res.tempFilePaths.length; imgI < len; imgI++) {
-							that.srcImage = res.tempFilePaths[imgI];
-							uni.getFileSystemManager().readFile({
-								filePath: that.srcImage,
-								encoding: 'base64',
-								success: res => {
-									let base64 = 'data:image/jpeg;base64,' + res.data;
-									that.imgArr.push(base64);
-								}
-							})
+			  try {
+			    // await requirePrivacyAuth();
+					var that = this;
+			    uni.chooseImage({
+						count: 3,
+						sizeType: ['original', 'compressed'],
+						sourceType: ['album', 'camera'],
+						success: function(res) {
+							uni.previewImage({
+								urls: res.tempFilePaths
+							});
+							for (let imgI = 0, len = res.tempFilePaths.length; imgI < len; imgI++) {
+								that.srcImage = res.tempFilePaths[imgI];
+								uni.getFileSystemManager().readFile({
+									filePath: that.srcImage,
+									encoding: 'base64',
+									success: res => {
+										let base64 = 'data:image/jpeg;base64,' + res.data;
+										that.imgArr.push(base64);
+									}
+								})
+							}
+						},
+						fail: function(err) {
+							console.log(err);
+							uni.showToast({ title: `${err.errMsg}`, icon: 'none' });
 						}
-					},
-					fail: function(err) {
-						console.log(err);
-						that.$refs.uToast.show({
-							title: err.errMsg,
-							type: 'warning'
-						})
-					}
-				})
+			    })
+			  } catch (e) {
+					uni.showToast({ title: e, icon: 'none' })
+			  }
 			},
+		
 			// 科室选择列表变化时
 			listChangeEvent(val) {
 				this.departmentText = '请选择';
@@ -1057,7 +1079,7 @@
 					flex: 1;
 					background: #f9f9f9;
 					/deep/ .u-field {
-						padding: 10px 2px;
+						padding: 6px 2px;
 						color: $color-text-left;
 						.fild-body {
 							color: #333;
