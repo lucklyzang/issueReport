@@ -84,7 +84,7 @@
 				return this.userInfo.name
 			}
 		},
-		mounted() {
+		onLoad() {
 			this.changeBottomBarIndex(0);
 			this.parallelFunctionTwo()
 		},
@@ -132,6 +132,7 @@
 				this.noDataShow = false;
 				Promise.all([this.getTransportsType()])
 					.then((res) => {
+						console.log('res',res);
 						this.showLoadingHint = false;
 						if (res && res[0] && res[0].length > 0) {
 							this.noDataShow = false;
