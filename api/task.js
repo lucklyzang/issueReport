@@ -26,6 +26,14 @@ export function queryAllDestination(proId) {
   })
 };
 
+// 查询目的地(科室)排序
+export function queryAllDestinationSort(proId) {
+  return request({
+    url: `department/dict-sort/${proId}`,
+    method: 'get'
+  })
+};
+
 // 查询转运工具
 export function queryTransportTools(data) {
   return request({

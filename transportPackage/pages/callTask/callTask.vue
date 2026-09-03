@@ -410,6 +410,7 @@
 		queryTransportTools,
 		queryTransportType,
 		queryAllDestination,
+		queryAllDestinationSort,
 		generateDispatchTask,
 		generateDispatchTaskMany,
 		queryTransConfig
@@ -753,7 +754,7 @@
 			// 查询目的地
 			getAllDestination() {
 				return new Promise((resolve, reject) => {
-					queryAllDestination(this.proId).then((res) => {
+					queryAllDestinationSort(this.proId).then((res) => {
 							if (res && res.data.code == 200) {
 								resolve(res.data.data)
 							}
@@ -859,12 +860,12 @@
 							this.transportTypeChild = [];
 							let [item1, item2, item3, item4] = res;
 							if (item1) {
-								Object.keys(item1).forEach((item) => {
+								for (let item of item1) {
 									this.hospitalList.push({
-										value: item1[item],
-										id: item
+										value: item['departmentName'],
+										id: item['id']
 									})
-								});
+								};
 								this.temporaryHospitalList = this.hospitalList
 							};
 							if (item2) {

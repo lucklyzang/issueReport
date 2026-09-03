@@ -94,7 +94,7 @@
 				'changeTitleText',
 				'changeIsToCallTaskPage'
 			]),
-
+			
 			// 返回上一页
 			backTo() {
 				uni.switchTab({
